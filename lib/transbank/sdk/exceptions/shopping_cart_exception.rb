@@ -1,0 +1,2 @@
+class ShoppingCartException < TransbankException
+end

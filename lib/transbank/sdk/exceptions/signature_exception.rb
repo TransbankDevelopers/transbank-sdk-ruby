@@ -1,0 +1,2 @@
+class SignatureException < TransbankException
+end

@@ -1,0 +1,2 @@
+class TransactionCommitException < TransbankException
+end
