@@ -1,2 +1,0 @@
-class RefundCreateException < TransbankException
-end

@@ -1,2 +1,0 @@
-class TransactionCreateException < TransbankException
-end

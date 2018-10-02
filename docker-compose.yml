@@ -9,5 +9,12 @@ services:
     command: bash
     volumes:
     - .:/sdk
+    volumes_from:
+      - bundle_cache
     ports:
     - "8000:8000"
+
+  bundle_cache:
+    image: ruby:2.2-jessie # Should be the same as the app Dockerfile.dev base image
+    volumes:
+    - /usr/local/bundle
