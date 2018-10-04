@@ -9,19 +9,25 @@ require 'transbank/sdk/onepay/errors/transaction_create_error'
 require 'transbank/sdk/onepay/errors/signature_error'
 require 'transbank/sdk/onepay/errors/shopping_cart_error'
 require 'transbank/sdk/onepay/errors/transaction_commit_error'
-require 'transbank/sdk/onepay/utils/signer'
+
+require 'transbank/sdk/onepay/requests/transaction_create_request'
+require 'transbank/sdk/onepay/responses/transaction_create_response'
+
+require 'transbank/sdk/onepay/requests/transaction_commit_request'
+require 'transbank/sdk/onepay/responses/transaction_commit_response'
 
 module Transbank
   module Onepay
     ## Class Transaction
     #  This class creates or commits a Transaction (that is, a purchase)
     class Transaction
+      extend Utils::NetHelper, Utils::RequestBuilder
+
       SEND_TRANSACTION = 'sendtransaction'.freeze
       COMMIT_TRANSACTION = 'gettransactionnumber'.freeze
       TRANSACTION_BASE_PATH = '/ewallet-plugin-api-services/services/transactionservice/'.freeze
 
       class << self
-        ##
         # @param shopping_cart [ShoppingCart] contains the [Item]s to be purchased
         # @param channel [String] The channel that the transaction is going to be done through. Valid values are contained on the [Transbank::Onepay::Channel] class
         # @param external_unique_number [String] a unique value (per Merchant, not global) that is used to identify a Transaction
@@ -29,44 +35,51 @@ module Transbank
         def create(shopping_cart, channel = nil,
                    external_unique_number = nil, options = nil)
 
-          if channel.is_a? Options
+          if is_options_hash?(channel)
             options = channel
             channel = nil
           end
 
-          if external_unique_number.is_a? Options
+          if is_options_hash?(external_unique_number)
             options = external_unique_number
             external_unique_number = nil
           end
 
           validate_channel!(channel)
           validate_shopping_cart!(shopping_cart)
-          options = Utils::RequestBuilder.complete_options(options)
-          create_request = Utils::RequestBuilder.create_transaction(shopping_cart,
+
+          options = complete_options(options)
+          create_request = create_transaction(shopping_cart,
                                                              channel,
                                                              external_unique_number,
                                                              options)
-          response = Utils::NetHelper.post(transaction_create_path, JSON.parse(create_request.jsonify))
+          response = http_post(transaction_create_path, create_request.to_h)
 
           validate_create_response!(response)
           transaction_create_response = TransactionCreateResponse.new response
-          validate_signature!(transaction_create_response, options)
+          transaction_create_response.validate_signature!(options[:shared_secret])
           transaction_create_response
         end
 
         # TODO: Document
         def commit(occ, external_unique_number, options = nil)
-          options = Utils::RequestBuilder.complete_options(options)
-          commit_request = Utils::RequestBuilder.commit_transaction(occ, external_unique_number, options)
-          response = Utils::NetHelper.post(transaction_commit_path, JSON.parse(commit_request.jsonify))
+          options = complete_options(options)
+          commit_request = commit_transaction(occ, external_unique_number, options)
+          response = http_post(transaction_commit_path, commit_request.to_h)
           validate_commit_response!(response)
           transaction_commit_response = TransactionCommitResponse.new(response)
-          validate_signature!(transaction_commit_response, options)
+          transaction_commit_response.validate_signature!(options[:shared_secret])
           transaction_commit_response
         end
 
 
         private
+
+        def is_options_hash?(hash)
+          return false unless hash.respond_to? :keys
+          # Intersection of the two arrays
+          ([:app_key, :api_key, :shared_secret] & hash.keys).any?
+        end
 
         def validate_channel!(channel)
           if channel_is_app?(channel) && Base::app_scheme.nil?
@@ -85,14 +98,6 @@ module Transbank
 
           if shopping_cart.items.nil? || shopping_cart.items.empty?
             raise Errors::ShoppingCartError, 'Shopping cart is null or empty.'
-          end
-        end
-
-        def validate_signature!(response, options)
-          signature_is_valid = Utils::Signer.validate(response, options.shared_secret)
-
-          unless signature_is_valid
-            raise Errors::SignatureError, 'The response signature is not valid.'
           end
         end
 

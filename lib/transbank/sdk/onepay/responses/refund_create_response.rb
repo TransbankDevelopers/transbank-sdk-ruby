@@ -1,12 +1,12 @@
 require 'transbank/sdk/onepay/responses/response'
-require 'transbank/sdk/onepay/utils/jsonify'
 require 'transbank/sdk/onepay/errors/response_error'
+require 'transbank/sdk/onepay/errors/refund_create_error'
 require 'json'
 
 module Transbank
   module Onepay
     class RefundCreateResponse
-      include Response, Utils::JSONifier
+      include Response
       attr_accessor :occ
       attr_accessor :external_unique_number
       attr_accessor :reverse_code
@@ -20,7 +20,11 @@ module Transbank
       def from_json(json)
         json = JSON.parse(json) if json.is_a? String
         unless json.is_a? Hash
-          raise ResponseError('JSON must be a Hash (or a String decodeable to one).')
+          raise Errors::ResponseError, 'JSON must be a Hash (or a String decodeable to one).'
+        end
+
+        unless json['responseCode'].downcase == 'ok'
+          raise Errors::RefundCreateError, "#{json['responseCode']} : #{json['description']}"
         end
         result = json['result']
         self.response_code = json['responseCode']

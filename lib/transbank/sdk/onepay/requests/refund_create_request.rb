@@ -13,6 +13,12 @@ module Transbank
       attr_accessor :authorization_code
       attr_accessor :issued_at
       attr_accessor :signature
+
+      SIGNATURE_PARAMS = [:occ,
+                          :external_unique_number,
+                          :authorization_code,
+                          :issued_at,
+                          :nullify_amount].freeze
       # rep_par_eun
       # rep_par_occ
       # rep_par_iat
@@ -29,6 +35,11 @@ module Transbank
         @authorization_code = authorization_code
         @issued_at = issued_at
         @signature = signature
+      end
+
+      def sign(secret)
+        self.signature = signature_for(to_data, secret)
+        self
       end
     end
   end

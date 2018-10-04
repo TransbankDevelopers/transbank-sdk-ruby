@@ -16,17 +16,21 @@ module Transbank
       attr_accessor :app_scheme
       attr_accessor :signature
 
-      def initialize(external_unique_number, total, items_quantity, issued_at, items,
-                     callback_url = nil, channel = Channel::WEB, app_scheme = nil)
-
-        @external_unique_number = validate_external_unique_number(external_unique_number)
-        @total = validate_total(total)
-        @items_quantity = validate_items_quantity(items_quantity)
-        @items = validate_items(items)
-        @issued_at = issued_at
-        @callback_url = validate_callback_url(callback_url)
+      SIGNATURE_PARAMS = [:external_unique_number,
+                          :total,
+                          :items_quantity,
+                          :issued_at,
+                          :callback_url].freeze
+      def initialize(opts = {})
+        @external_unique_number = validate_external_unique_number(opts[:external_unique_number])
+        @total = validate_total(opts[:total])
+        @items_quantity = validate_items_quantity(opts[:items_quantity])
+        @items = validate_items(opts[:items])
+        @issued_at = opts[:issued_at]
+        @callback_url = validate_callback_url(opts[:callback_url])
+        channel = opts.fetch(:channel, Channel::WEB)
         @channel = validate_channel(channel)
-        @app_scheme = app_scheme || ''
+        @app_scheme = opts.fetch(:app_scheme, '')
         @signature = nil
       end
 
@@ -61,6 +65,11 @@ module Transbank
       def validate_channel(channel)
         raise TransactionCreateError('Channel cannot be null.') if channel.nil?
         channel
+      end
+
+      def sign(secret)
+        self.signature = signature_for(to_data, secret)
+        self
       end
     end
   end

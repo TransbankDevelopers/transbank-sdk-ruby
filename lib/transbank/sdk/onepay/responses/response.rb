@@ -1,7 +1,8 @@
-
+require 'transbank/sdk/onepay/utils/signature_utils'
 module Transbank
   module Onepay
     module Response
+      include Utils::SignatureUtils
       attr_accessor :response_code
       attr_accessor :description
 

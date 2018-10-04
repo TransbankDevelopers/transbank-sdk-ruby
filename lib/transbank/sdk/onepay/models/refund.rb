@@ -2,10 +2,13 @@
 
 
 require 'transbank/sdk/onepay/utils/net_helper'
-
+require 'transbank/sdk/onepay/utils/request_builder'
+require 'transbank/sdk/onepay/requests/refund_create_request'
+require 'transbank/sdk/onepay/responses/refund_create_response'
 module Transbank
   module Onepay
     class Refund
+      extend Utils::NetHelper, Utils::RequestBuilder
       # Manages Refunds
       REFUND_TRANSACTION = 'nullifytransaction'.freeze
       TRANSACTION_BASE_PATH = '/ewallet-plugin-api-services/services/transactionservice/'.freeze
@@ -22,14 +25,14 @@ module Transbank
         # is successfully committed (with the #commit method of [Transaction])
         # @param options [Options, nil]
         def create(amount, occ, external_unique_number, authorization_code, options = nil)
-          refund_request = RequestBuilder.refund_transaction(amount,
-                                                             occ,
-                                                             external_unique_number,
-                                                             authorization_code,
-                                                             options)
+          refund_request = refund_transaction(amount,
+                                              occ,
+                                              external_unique_number,
+                                              authorization_code,
+                                              options)
           # TODO: If this fails then Net::HTTP will probably raise a NetError (or whatever it's called, so this will have to be refactored)
           #
-          response = Utils::NetHelper.post(refund_path, refund_request.jsonify)
+          response = http_post(refund_path, refund_request.to_h)
 
           if response.nil? || !response['responseCode']
             raise RefundCreateError('Could not obtain a response from the service.')

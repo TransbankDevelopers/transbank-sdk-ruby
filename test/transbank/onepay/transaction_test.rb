@@ -72,7 +72,7 @@ class TransactionTest < Transbank::Onepay::Test
       assert_raises Transbank::Onepay::Errors::SignatureError do
         Transbank::Onepay::Transaction.create(cart)
       end
-    assert_equal error.message, 'The response signature is not valid.'
+    assert_equal error.message, "The response's signature is not valid."
   end
 
   def test_transaction_creation_works_taking_keys_from_env
@@ -113,8 +113,8 @@ class TransactionTest < Transbank::Onepay::Test
   def test_transaction_creation_works_with_options
     WebMock.allow_net_connect!
     cart = Transbank::Onepay::ShoppingCart.new
-    options = Transbank::Onepay::Options.new("mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
-                                             "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX")
+    options = {api_key: "mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
+               shared_secret: "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX"}
     first_item = Transbank::Onepay::Item.new("Zapatos", 1, 15000, nil, -1)
     second_item = Transbank::Onepay::Item.new("Pantalon", 1, 12500, nil, -1)
 
@@ -133,8 +133,8 @@ class TransactionTest < Transbank::Onepay::Test
 
   def test_transaction_commit_works_with_options
     WebMock.allow_net_connect!
-    options = Transbank::Onepay::Options.new("mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
-                                             "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX")
+    options = {api_key:"mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
+               shared_secret: "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX"}
 
     response = Transbank::Onepay::Transaction.commit(OCC_TO_COMMIT_TRANSACTION_TEST,
                                                      EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST,
@@ -205,7 +205,7 @@ class TransactionTest < Transbank::Onepay::Test
           Transbank::Onepay::Transaction.commit(OCC_TO_COMMIT_TRANSACTION_TEST,
                                                 EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
         end
-    assert_equal error.message, "The response signature is not valid."
+    assert_equal error.message, "The response's signature is not valid."
   end
 
   def test_transaction_fails_when_channel_is_mobile_and_callback_url_nil
@@ -290,6 +290,8 @@ class TransactionTest < Transbank::Onepay::Test
 
     Transbank::Onepay::Base.app_scheme = original_app_scheme
   end
+
+
 
 end
 

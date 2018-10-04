@@ -39,6 +39,23 @@ module Transbank
               end
           JSON.generate instance_as_hash
         end
+
+        def transform_hash_keys(hash)
+          hash.reduce({}) do |new_hsh, (key, val)|
+            new_key = underscore(key).to_sym
+            new_hsh[new_key] = val
+            new_hsh
+          end
+        end
+
+        # FROM https://stackoverflow.com/a/1509957
+        def underscore(camel_cased_word)
+          camel_cased_word.to_s.gsub(/::/, '/')
+              .gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
+              .gsub(/([a-z\d])([A-Z])/,'\1_\2')
+              .tr("-", "_")
+              .downcase
+        end
       end
     end
   end

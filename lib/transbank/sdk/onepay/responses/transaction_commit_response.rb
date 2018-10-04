@@ -1,12 +1,11 @@
 require 'transbank/sdk/onepay/responses/response'
 require 'json'
-require 'transbank/sdk/onepay/utils/jsonify'
 require 'transbank/sdk/onepay/errors/response_error'
 
 module Transbank
   module Onepay
     class TransactionCommitResponse
-      include Response, Utils::JSONifier
+      include Response
 
       attr_accessor :occ
       attr_accessor :authorization_code
@@ -17,6 +16,14 @@ module Transbank
       attr_accessor :amount
       attr_accessor :installments_amount
       attr_accessor :installments_number
+
+      SIGNATURE_PARAMS = [:occ,
+                          :authorization_code,
+                          :issued_at,
+                          :amount,
+                          :installments_amount,
+                          :installments_number,
+                          :buy_order].freeze
 
       def initialize(json)
         from_json json
@@ -41,6 +48,11 @@ module Transbank
         self.installments_number = result['installmentsNumber']
         self
       end
+
+      def sign(secret)
+        self.signature = signature_for(to_data, secret)
+      end
+
     end
   end
 end

@@ -1,12 +1,11 @@
 require 'transbank/sdk/onepay/responses/response'
 require 'json'
-require 'transbank/sdk/onepay/utils/jsonify'
 
 
 module Transbank
   module Onepay
     class TransactionCreateResponse
-      include Response, Utils::JSONifier
+      include Response
 
       attr_accessor :occ
       attr_accessor :ott
@@ -14,6 +13,10 @@ module Transbank
       attr_accessor :qr_code_as_base64
       attr_accessor :issued_at
       attr_accessor :signature
+
+      SIGNATURE_PARAMS = [:occ,
+                          :external_unique_number,
+                          :issued_at].freeze
 
       def initialize(response_json)
         from_json response_json
@@ -35,6 +38,12 @@ module Transbank
         self.signature = result['signature']
         self
       end
+
+      def sign(secret)
+        self.signature = signature_for(to_data, secret)
+        self
+      end
+
     end
   end
 end
