@@ -4,6 +4,7 @@ require 'json'
 
 module Transbank
   module Onepay
+    # Serializes the response to a TransactionCreateRequest
     class TransactionCreateResponse
       include Response
 
@@ -13,6 +14,7 @@ module Transbank
       SIGNATURE_PARAMS = [:occ,
                           :external_unique_number,
                           :issued_at].freeze
+      # @raise [KeyError] upon trying to fetch a missing key from the response
       def initialize(json)
         result = json.fetch('result')
         @response_code = json.fetch('responseCode')

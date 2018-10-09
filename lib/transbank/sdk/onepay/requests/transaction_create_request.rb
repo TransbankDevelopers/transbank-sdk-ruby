@@ -3,6 +3,7 @@ require 'transbank/sdk/onepay/models/channels'
 
 module Transbank
   module Onepay
+    # Create a payload to create [Transaction] on Transbank
     class TransactionCreateRequest
       include Request
 
@@ -14,6 +15,17 @@ module Transbank
                           :items_quantity,
                           :issued_at,
                           :callback_url].freeze
+      # @param opts [Hash] options hash with params needed to initialize this
+      # @param external_unique_number [String] Unique identifier (per Merchant) of the [Transaction] that
+      # @param total [Numeric] the total amount to pay for the items
+      # @param items_quantity [Numeric] the quantity of items on the shopping cart
+      # @param items [Array<Item] the items on the shopping cart
+      # @param issued_at [Numeric] timestamp at the moment the transaction is created
+      # @param callback_url [String] used when the channel is mobile, to be able to finish the [Transaction]
+      # @param channel [String] The channel the operation is made on. Valid values
+      # are on the [Channel] class
+      # @param app_scheme [String] identificator for the Merchant's app
+      # @param signature [String, nil] a hashstring created for verification purposes
       def initialize(opts = {})
         self.external_unique_number = opts.fetch(:external_unique_number)
         self.total = opts.fetch(:total)

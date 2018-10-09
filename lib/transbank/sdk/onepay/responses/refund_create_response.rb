@@ -5,11 +5,12 @@ require 'json'
 
 module Transbank
   module Onepay
+    # Serializes the response to a RefundCreateRequest
     class RefundCreateResponse
       include Response
       attr_accessor :occ, :external_unique_number, :reverse_code, :issued_at,
                     :signature
-
+      # @raise []RefundCreateError] if the responseCode from the service is not 'OK'
       def initialize(json)
         unless json.fetch('responseCode').downcase == 'ok'
           raise Errors::RefundCreateError, "#{json.fetch('responseCode')} : #{json.fetch('description')}"

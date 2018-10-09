@@ -1,6 +1,7 @@
 require 'transbank/sdk/onepay/utils/signature_utils'
 module Transbank
   module Onepay
+    # Shared methods and attributes between all types of Responses
     module Response
       include Utils::SignatureUtils
       attr_accessor :response_code

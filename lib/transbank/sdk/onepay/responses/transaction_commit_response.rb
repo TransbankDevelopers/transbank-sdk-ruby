@@ -4,6 +4,7 @@ require 'transbank/sdk/onepay/errors/response_error'
 
 module Transbank
   module Onepay
+    # Serializes the response to a TransactionCommitRequest
     class TransactionCommitResponse
       include Response
 
@@ -18,6 +19,7 @@ module Transbank
                           :installments_amount,
                           :installments_number,
                           :buy_order].freeze
+      # @raise [KeyError] upon missing a response parameter
       def initialize(json)
         result = json.fetch('result')
         @response_code = json.fetch('responseCode')

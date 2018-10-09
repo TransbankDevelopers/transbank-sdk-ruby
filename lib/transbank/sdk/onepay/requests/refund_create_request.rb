@@ -3,10 +3,10 @@ require 'transbank/sdk/onepay/utils/json_utils'
 
 module Transbank
   module Onepay
+    # Creates a Refund request
     class RefundCreateRequest
       include Request
-
-      attr_accessor :nullify_amount, :occm, :external_unique_number,
+      attr_accessor :nullify_amount, :occ, :external_unique_number,
                     :authorization_code, :issued_at, :signature
 
       # These are the params used to build this class's @signature
@@ -16,7 +16,7 @@ module Transbank
                           :issued_at,
                           :nullify_amount].freeze
 
-      # @param nullify_amount [Number, nil] The total amount of the [Transaction] to Refund.
+      # @param nullify_amount [Integer, nil] The total amount of the [Transaction] to Refund.
       # No partial refunds are possible
       # @param external_unique_number [String] a unique value (per Merchant, not global) that is used to identify a Transaction
       # @param occ [String] Merchant purchase order

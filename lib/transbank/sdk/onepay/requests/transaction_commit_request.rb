@@ -3,6 +3,7 @@ require 'transbank/sdk/onepay/errors/transaction_commit_error'
 
 module Transbank
   module Onepay
+    # Creates a request to Transbank attempting to commit a [Transaction]
     class TransactionCommitRequest
       include Request
       attr_reader :occ,  :external_unique_number, :issued_at, :signature
@@ -38,6 +39,8 @@ module Transbank
         @issued_at = issued_at
       end
 
+      # Create a signature string and assign it to @signature
+      # @return [TransactionCommitRequest] self
       def sign(secret)
         @signature = signature_for(to_data, secret)
         self

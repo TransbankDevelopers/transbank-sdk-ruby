@@ -34,6 +34,9 @@ module Transbank
         # @param options[Hash, nil] an optional Hash with configuration overrides
         # @return [TransactionCreateResponse] the response to your request.
         # Includes data that you will need to #commit your [Transaction]
+        # @raise [ShoppingCartError] if shopping cart is nil or empty
+        # @raise [TransactionCreateError] if channel is not valid
+        # @raise [TransactionCreateError] if no response is gotten, or responseCode of the response is not 'OK'
         def create(shopping_cart:, channel: nil, external_unique_number: nil,
                    options: nil)
           if is_options_hash?(channel)
@@ -68,6 +71,7 @@ module Transbank
         # @param external_unique_number [String] a unique value (per Merchant, not global) that is used to identify a Transaction
         # @param options[Hash, nil] an optional Hash with configuration overrides
         # @return [TransactionCommitResponse] The response to your commit request.
+        # @raise [TransactionCommitError] if response is nil or responseCode of the response is not 'OK'
         def commit(occ:, external_unique_number:, options: nil)
           options = complete_options(options)
           commit_request = commit_transaction(occ: occ,

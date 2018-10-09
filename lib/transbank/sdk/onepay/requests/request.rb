@@ -3,6 +3,7 @@ require 'transbank/sdk/onepay/errors/invalid_options_error'
 require 'transbank/sdk/onepay/utils/signature_utils'
 module Transbank
   module Onepay
+    # Base module with methods & attributes common to Requests
     module Request
       include Utils::JSONUtils, Utils::SignatureUtils
       attr_accessor :api_key

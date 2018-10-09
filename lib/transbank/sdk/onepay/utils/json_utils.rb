@@ -5,28 +5,31 @@ module Transbank
     module Utils
       module JSONUtils
         def self.included(mod)
+          # Implement #to_h if the class that includes this module doesn't have it
+          # implemented. Used in several model classes to make them easier to
+          # transform to hashes so they can be transformed to JSON afterwards
           unless mod.respond_to? :to_h
             mod.send(:define_method, :to_h) do
               JSON.parse(self.jsonify)
             end
           end
         end
-
+        # Get all instance variables of an instance of a class,
+        # then for all of these variables,
+        # if the instance of the class' respond_to? returns true,
+        # #send the variable name (so, you'll get the value of the instance variable's
+        # getter), then save that to a Hash where [key] is the instance variable's name
+        # and [value] is its value
+        #
+        # Finally, generate a JSON string from this hash
+        # @return [String] a JSON string created from the Hash resulting from the
+        # above operation
         def jsonify
-          # Get all instance variables of an instance of a class,
-          # then for all of these variables,
-          # if the instance of the class' respond_to? returns true,
-          # #send the variable name (so, you'll get the value of the instance variable's
-          # getter), then save that to a Hash where [key] is the instance variable's name
-          # and [value] is its value
-          #
-          # Finally, generate a JSON string from this hash
           instance_vars = instance_variables.map! { |var| var.to_s.gsub!(/^@/, '') }
           instance_as_hash =
               instance_vars.reduce({}) do |resulting_hash, instance_variable|
                 if respond_to? instance_variable
                   value = send(instance_variable)
-
                   value = value.to_h if value.respond_to? :to_h unless value.is_a? Array
                   value = value.to_a if value.respond_to? :to_a unless value.is_a? Hash
                   if value.is_a? Array
@@ -54,6 +57,7 @@ module Transbank
         end
 
         # FROM https://stackoverflow.com/a/1509957
+        # Transforms camelCaseWords to snake_case_words
         def underscore(camel_cased_word)
           camel_cased_word.to_s.gsub(/::/, '/')
               .gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2')

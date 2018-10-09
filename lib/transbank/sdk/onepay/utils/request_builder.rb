@@ -6,9 +6,14 @@ require 'transbank/sdk/onepay/requests/refund_create_request'
 module Transbank
   module Onepay
     module Utils
-      # TODO: Complete docs for this class
       module RequestBuilder
-        # Create a [Transaction] request
+        # Create a [Transaction] request. Used internally by [Transaction]#create
+        # @param shopping_cart [ShoppingCart] the user's ShoppingCart, with [Item]s
+        # he/she intends to purchase
+        # @param channel [String] The channel the operation is made on. Valid values
+        # are on the [Channel] class
+        # @param external_unique_number [String, nil] a unique value (per Merchant, not global) that is used to identify a Transaction
+        # @param options [Hash, nil] a hash with config overrides
         def create_transaction(shopping_cart:, channel:, external_unique_number: nil, options: nil)
           Base.callback_url = Base::DEFAULT_CALLBACK  if Base.callback_url.nil?
           channel = Base.default_channel if channel.nil?
@@ -28,10 +33,10 @@ module Transbank
           request.sign(options.fetch(:shared_secret))
         end
 
-        # TODO: Complete documentation
-        # @param occ [String]
-        # @param external_unique_number [String]
-        # @param options [Options]
+        # Used internally by [Transaction]#commit
+        # @param occ [String] Merchant purchase order
+        # @param external_unique_number [String] a unique value (per Merchant, not global) that is used to identify a Transaction
+        # @param options [Hash, nil] a hash with config overrides
         def commit_transaction(occ:, external_unique_number:, options: nil)
           options = complete_options(options)
           issued_at = Time.now.to_i
@@ -40,7 +45,13 @@ module Transbank
           request.sign(options.fetch(:shared_secret))
         end
 
-        # TODO: YARDify
+        # Used internally by [Refund]#create
+        # @param refund_amount [Integer] the full amount of the [Transaction] to refund. No partial refunds allowed.
+        # @param occ [String] Merchant purchase order of the order to refund
+        # @param external_unique_number [String] external unique number of the [Transaction] to refund
+        # @param authorization_code [String] authorization code for the [Transaction] to refund.
+        # This is given when you successfully #commit a [Transaction]
+        # @param options [Hash, nil] a hash with config overrides
         def refund_transaction(refund_amount:, occ:, external_unique_number:, authorization_code:, options: nil)
           options = complete_options(options)
           issued_at = Time.now.to_i
@@ -59,11 +70,17 @@ module Transbank
           (number + decimals[0..2]).to_i
         end
 
+        # Fill options with default values
         def complete_options(options = {})
           options = {} if options.nil?
           options.merge(default_options)
         end
 
+        # Return the default options values:
+        # api_key: Base::api_key
+        # app_key: Base::current_integration_type_app_key
+        # shared_secret: Base::shared_secret
+        # @return [Hash] a hash with the aforementioned keys/values
         def default_options
           { api_key: Base::api_key,
             app_key: Base::current_integration_type_app_key,

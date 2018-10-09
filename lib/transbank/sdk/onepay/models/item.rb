@@ -22,12 +22,14 @@ module Transbank
 
       # @return expire [Integer] Expiry for the Item
       attr_reader :expire
+      # @param [Hash] opts options Hash
       # @param description [String] The item's description
       # @param quantity [Integer] How many of units of [Item]
       # @param amount [Integer] The value of each unit of [Item]
       # @param additional_data [String] A string with whatever additional data the
       # Merchant might want to add
       # @param expire [Integer] Expiry for the Item
+      # @raise [ItemError] when opts is not a [Hash]
       def initialize(opts = {})
         raise Errors::ItemError, 'Item must be a Hash' unless opts.is_a? Hash
         opts = transform_hash_keys opts
@@ -39,14 +41,14 @@ module Transbank
       end
 
       # @param description [String] An item's description
-      # @raise [ItemError] when description is not [String]
+      # @raise [ItemError] when description is null
       def description=(description)
         raise Errors::ItemError, "Description cannot be null" if description.nil?
         @description = description
       end
 
       # @param quantity [Integer] How many of units of [Item]
-      # @raise [ItemError] when given quantity is not an [Integer] or is less than zero
+      # @raise [ItemError] when given quantity is nil or less than zero.
       def quantity=(quantity)
         raise Errors::ItemError, "Quantity cannot be null" if quantity.nil?
         if quantity < 0
@@ -56,7 +58,7 @@ module Transbank
       end
 
       # @param amount [Integer] The value of each unit of [Item]
-      # @raise [ItemError] when amount is not an [Integer] or is less than zero.
+      # @raise [ItemError] when amount is nil or less than zero.
       def amount=(amount)
         raise Errors::ItemError, "Amount cannot be null" if amount.nil?
         if amount < 0
@@ -73,16 +75,19 @@ module Transbank
       end
 
       # @param expire [Integer] Expiry for the Item
-      # @raise [ItemError] if value is not an [Integer]
       def expire=(expire)
         expire = 0 if expire.nil?
         @expire = expire
       end
 
+      # Return the total amount to pay for the Item, that is, amount * quantity
+      # @return [Numeric] the total amount to pay for the [Item]
       def total
         self.quantity * self.amount
       end
 
+      # Override == to allow comparison between [Item]s
+      # @return [boolean] true if equal, false otherwise
       def ==(another_item)
         instance_variables.map! { |var| var.to_s.gsub!(/^@/, '') }
           .reduce(true) do |result, current_instance_variable|
@@ -93,6 +98,7 @@ module Transbank
           end
       end
 
+      # Alias for ##==
       def eql?(another_item)
         self.==(another_item)
       end
