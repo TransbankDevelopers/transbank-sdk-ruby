@@ -15,7 +15,6 @@ module Transbank
         # @param external_unique_number [String, nil] a unique value (per Merchant, not global) that is used to identify a Transaction
         # @param options [Hash, nil] a hash with config overrides
         def create_transaction(shopping_cart:, channel:, external_unique_number: nil, options: nil)
-          Base.callback_url = Base::DEFAULT_CALLBACK  if Base.callback_url.nil?
           channel = Base.default_channel if channel.nil?
           external_unique_number = time_as_number if external_unique_number.nil?
           options = complete_options(options)
