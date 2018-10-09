@@ -40,34 +40,34 @@ module Transbank
       end
 
       def external_unique_number=(external_unique_number)
-        raise TransactionCreateError, 'External Unique Number cannot be null.' if external_unique_number.nil?
+        raise Errors::TransactionCreateError, 'External Unique Number cannot be null.' if external_unique_number.nil?
         @external_unique_number = external_unique_number
       end
 
       def total=(total)
-        raise TransactionCreateError, 'Total cannot be null.' if total.nil?
-        raise TransactionCreateError, 'Total cannot be less than zero.' if total < 0
+        raise Errors::TransactionCreateError, 'Total cannot be null.' if total.nil?
+        raise Errors::TransactionCreateError, 'Total cannot be less than zero.' if total < 0
         @total = total
       end
 
       def items_quantity=(items_quantity)
-        raise TransactionCreateError, 'Items quantity cannot be null.' if items_quantity.nil?
-        raise TransactionCreateError, 'Items quantity cannot be less than zero.' if items_quantity < 0
+        raise Errors::TransactionCreateError, 'Items quantity cannot be null.' if items_quantity.nil?
+        raise Errors::TransactionCreateError, 'Items quantity cannot be less than zero.' if items_quantity < 0
         @items_quantity = items_quantity
       end
 
       def items=(items)
-        raise TransactionCreateError, 'Items must not be empty.' if items.empty?
+        raise Errors::TransactionCreateError, 'Items must not be empty.' if items.empty?
         @items = items
       end
 
       def callback_url=(callback_url)
-        raise TransactionCreateError, 'Callback url cannot be null.' if callback_url.nil?
+        raise Errors::TransactionCreateError, 'Callback url cannot be null.' if callback_url.nil?
         @callback_url = callback_url
       end
 
       def channel=(channel)
-        raise TransactionCreateError, 'Channel cannot be null.' if channel.nil?
+        raise Errors::TransactionCreateError, 'Channel cannot be null.' if channel.nil?
         channel
       end
 
