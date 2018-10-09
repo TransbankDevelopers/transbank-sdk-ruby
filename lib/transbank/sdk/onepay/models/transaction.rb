@@ -1,6 +1,5 @@
 require "net/http"
 require "transbank/sdk/onepay/models/channels"
-require "transbank/sdk/onepay/models/options"
 require 'transbank/sdk/onepay/models/shopping_cart'
 require 'transbank/sdk/onepay/utils/net_helper'
 require 'transbank/sdk/onepay/utils/request_builder'
@@ -28,13 +27,15 @@ module Transbank
       TRANSACTION_BASE_PATH = '/ewallet-plugin-api-services/services/transactionservice/'.freeze
 
       class << self
+        # Create a [Transaction], initiating the purchase process.
         # @param shopping_cart [ShoppingCart] contains the [Item]s to be purchased
         # @param channel [String] The channel that the transaction is going to be done through. Valid values are contained on the [Transbank::Onepay::Channel] class
         # @param external_unique_number [String] a unique value (per Merchant, not global) that is used to identify a Transaction
-        # @param options [Options] An [Options] object.
-        def create(shopping_cart, channel = nil,
-                   external_unique_number = nil, options = nil)
-
+        # @param options[Hash, nil] an optional Hash with configuration overrides
+        # @return [TransactionCreateResponse] the response to your request.
+        # Includes data that you will need to #commit your [Transaction]
+        def create(shopping_cart:, channel: nil, external_unique_number: nil,
+                   options: nil)
           if is_options_hash?(channel)
             options = channel
             channel = nil
@@ -49,29 +50,35 @@ module Transbank
           validate_shopping_cart!(shopping_cart)
 
           options = complete_options(options)
-          create_request = create_transaction(shopping_cart,
-                                                             channel,
-                                                             external_unique_number,
-                                                             options)
+          create_request = create_transaction(shopping_cart: shopping_cart,
+                                              channel: channel,
+                                              external_unique_number: external_unique_number,
+                                              options: options)
           response = http_post(transaction_create_path, create_request.to_h)
 
           validate_create_response!(response)
           transaction_create_response = TransactionCreateResponse.new response
-          transaction_create_response.validate_signature!(options[:shared_secret])
+          transaction_create_response.validate_signature!(options.fetch(:shared_secret))
           transaction_create_response
         end
 
-        # TODO: Document
-        def commit(occ, external_unique_number, options = nil)
+        # Commit a [Transaction]. It is MANDATORY for this to be done, and you have
+        # 30 seconds to do so, otherwise the [Transaction] is automatically REVERSED
+        # @param occ [String] Merchant purchase order
+        # @param external_unique_number [String] a unique value (per Merchant, not global) that is used to identify a Transaction
+        # @param options[Hash, nil] an optional Hash with configuration overrides
+        # @return [TransactionCommitResponse] The response to your commit request.
+        def commit(occ:, external_unique_number:, options: nil)
           options = complete_options(options)
-          commit_request = commit_transaction(occ, external_unique_number, options)
+          commit_request = commit_transaction(occ: occ,
+                                              external_unique_number: external_unique_number,
+                                              options: options)
           response = http_post(transaction_commit_path, commit_request.to_h)
           validate_commit_response!(response)
           transaction_commit_response = TransactionCommitResponse.new(response)
-          transaction_commit_response.validate_signature!(options[:shared_secret])
+          transaction_commit_response.validate_signature!(options.fetch(:shared_secret))
           transaction_commit_response
         end
-
 
         private
 
@@ -92,10 +99,6 @@ module Transbank
         end
 
         def validate_shopping_cart!(shopping_cart)
-          unless shopping_cart.is_a? ShoppingCart
-            raise Errors::ShoppingCartError, 'Shopping cart must be an instance of ShoppingCart'
-          end
-
           if shopping_cart.items.nil? || shopping_cart.items.empty?
             raise Errors::ShoppingCartError, 'Shopping cart is null or empty.'
           end
@@ -106,8 +109,8 @@ module Transbank
             raise Errors::TransactionCommitError, 'Could not obtain a response from the service.'
           end
 
-          unless response['responseCode'] == 'OK'
-            msg = "#{response['responseCode']} : #{response['description']}"
+          unless response.fetch('responseCode') == 'OK'
+            msg = "#{response.fetch('responseCode')} : #{response.fetch('description')}"
             raise Errors::TransactionCommitError,  msg
           end
           response
@@ -118,8 +121,8 @@ module Transbank
             raise Errors::TransactionCreateError, 'Could not obtain a response from the service.'
           end
 
-          unless response['responseCode'] == 'OK'
-            msg = "#{response['responseCode']} : #{response['description']}"
+          unless response.fetch('responseCode') == 'OK'
+            msg = "#{response.fetch('responseCode')} : #{response['description']}"
             raise Errors::TransactionCreateError, msg
           end
           response

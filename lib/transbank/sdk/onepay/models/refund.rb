@@ -1,6 +1,3 @@
-# TODO: Document
-
-
 require 'transbank/sdk/onepay/utils/net_helper'
 require 'transbank/sdk/onepay/utils/request_builder'
 require 'transbank/sdk/onepay/requests/refund_create_request'
@@ -14,7 +11,6 @@ module Transbank
       TRANSACTION_BASE_PATH = '/ewallet-plugin-api-services/services/transactionservice/'.freeze
 
       class << self
-        # TODO: Complete this documentation
         # Create a request for a Refund
         # @param amount [Integer] Amount to be refunded. Must be the full amount of the
         # [Transaction] to be refunded
@@ -23,25 +19,23 @@ module Transbank
         # will be refunded
         # @param authorization_code [String] Authorization code. This is given when the [Transaction]
         # is successfully committed (with the #commit method of [Transaction])
-        # @param options [Options, nil]
-        def create(amount, occ, external_unique_number, authorization_code, options = nil)
-          refund_request = refund_transaction(amount,
-                                              occ,
-                                              external_unique_number,
-                                              authorization_code,
-                                              options)
-          # TODO: If this fails then Net::HTTP will probably raise a NetError (or whatever it's called, so this will have to be refactored)
-          #
+        # @param options[Hash, nil] an optional Hash with configuration overrides
+        def create(amount:, occ:, external_unique_number:, authorization_code:, options: nil)
+          refund_request = refund_transaction(refund_amount: amount,
+                                              occ: occ,
+                                              external_unique_number: external_unique_number,
+                                              authorization_code: authorization_code,
+                                              options: options)
           response = http_post(refund_path, refund_request.to_h)
 
           if response.nil? || !response['responseCode']
-            raise RefundCreateError('Could not obtain a response from the service.')
+            raise RefundCreateError, 'Could not obtain a response from the service.'
           end
 
           refund_create_response = RefundCreateResponse.new(response)
 
           unless refund_create_response.response_ok?
-            raise RefundCreateError(refund_create_response.full_description, -1)
+            raise RefundCreateError, refund_create_response.full_description
           end
 
           refund_create_response

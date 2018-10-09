@@ -3,7 +3,7 @@ require 'json'
 module Transbank
   module Onepay
     module Utils
-      module JSONifier
+      module JSONUtils
         def self.included(mod)
           unless mod.respond_to? :to_h
             mod.send(:define_method, :to_h) do
@@ -40,6 +40,11 @@ module Transbank
           JSON.generate instance_as_hash
         end
 
+        # Receive a Hash and return a new hash same as the one we received,
+        # but all keys that were strings or camelCase'd are snake_case'd and
+        # turned into symbols.
+        # Example: {'camelCaseKey': "somevalue"}
+        # Would return: {camel_case_key: "somevalue"}
         def transform_hash_keys(hash)
           hash.reduce({}) do |new_hsh, (key, val)|
             new_key = underscore(key).to_sym

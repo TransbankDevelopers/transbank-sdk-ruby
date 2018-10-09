@@ -7,43 +7,28 @@ module Transbank
     class TransactionCreateResponse
       include Response
 
-      attr_accessor :occ
-      attr_accessor :ott
-      attr_accessor :external_unique_number
-      attr_accessor :qr_code_as_base64
-      attr_accessor :issued_at
-      attr_accessor :signature
+      attr_accessor :occ, :ott, :external_unique_number, :qr_code_as_base64,
+                    :issued_at, :signature
 
       SIGNATURE_PARAMS = [:occ,
                           :external_unique_number,
                           :issued_at].freeze
-
-      def initialize(response_json)
-        from_json response_json
-      end
-
-      def from_json(json)
-        json = JSON.parse(json) if json.is_a? String
-        unless json.is_a? Hash
-          raise ResponseError('JSON must be a Hash (or a String decodeable to one).')
-        end
-        result = json['result']
-        self.response_code = json['responseCode']
-        self.description = json['description']
-        self.occ = result['occ']
-        self.ott = result['ott']
-        self.external_unique_number = result['externalUniqueNumber']
-        self.qr_code_as_base64 = result['qrCodeAsBase64']
-        self.issued_at = result['issuedAt']
-        self.signature = result['signature']
-        self
+      def initialize(json)
+        result = json.fetch('result')
+        @response_code = json.fetch('responseCode')
+        @description = json.fetch('description')
+        @occ = result.fetch('occ')
+        @ott = result.fetch('ott')
+        @external_unique_number = result.fetch('externalUniqueNumber')
+        @qr_code_as_base64 = result.fetch('qrCodeAsBase64')
+        @issued_at = result.fetch('issuedAt')
+        @signature = result.fetch('signature')
       end
 
       def sign(secret)
-        self.signature = signature_for(to_data, secret)
+        @signature = signature_for(to_data, secret)
         self
       end
-
     end
   end
 end

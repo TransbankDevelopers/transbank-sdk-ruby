@@ -8,8 +8,8 @@ module Transbank
 
         @mocks = []
         cart = ShoppingCart.new
-        item1 = Item.new('Zapatos', 1, 15000, nil, -1)
-        item2 = Item.new('Pantalon', 1, 12500, nil, -1)
+        item1 = Item.new(description: 'Zapatos', quantity: 1, amount: 15000, additional_data: nil, expire:  -1)
+        item2 = Item.new(description: 'Pantalon', quantity: 1, amount: 12500, additional_data: nil, expire: -1)
 
         cart << item1
         cart << item2
@@ -21,11 +21,11 @@ module Transbank
           attr_accessor :mocks
 
           def [](index)
-            self.mocks[index]
+            @mocks[index]
           end
 
           def << (shopping_cart_mock)
-            self.mocks << shopping_cart_mock
+            @mocks << shopping_cart_mock
           end
         end
       end

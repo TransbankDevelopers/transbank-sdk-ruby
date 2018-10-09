@@ -2,7 +2,6 @@ require 'transbank/sdk/onepay/base'
 require 'transbank/sdk_test'
 require 'transbank/sdk/onepay/models/refund'
 require 'transbank/onepay/mocks/shopping_cart_mocks'
-require 'transbank/sdk/onepay/models/options'
 require 'json'
 require 'transbank/sdk/onepay/errors/refund_create_error'
 
@@ -29,12 +28,12 @@ class RefundTest < Transbank::Onepay::Test
     WebMock.allow_net_connect!
     api_key = Transbank::Onepay::Base.api_key
     shared_secret = Transbank::Onepay::Base.shared_secret
-    options = {api_key: api_key, shared_secret: shared_secret}
-    response = Transbank::Onepay::Refund.create(@refund_amount,
-                                                @occ,
-                                                @external_unique_number,
-                                                @authorization_code,
-                                                options)
+    options = { api_key: api_key, shared_secret: shared_secret }
+    response = Transbank::Onepay::Refund.create(amount: @refund_amount,
+                                                occ: @occ,
+                                                external_unique_number: @external_unique_number,
+                                                authorization_code: @authorization_code,
+                                                options: options)
     assert_equal response.response_code, 'OK'
     assert_equal response.description, 'OK'
   end
@@ -43,10 +42,10 @@ class RefundTest < Transbank::Onepay::Test
     WebMock.allow_net_connect!
     api_key = Transbank::Onepay::Base.api_key
     shared_secret = Transbank::Onepay::Base.shared_secret
-    response = Transbank::Onepay::Refund.create(@refund_amount,
-                                                @occ,
-                                                @external_unique_number,
-                                                @authorization_code)
+    response = Transbank::Onepay::Refund.create(amount: @refund_amount,
+                                                occ: @occ,
+                                                external_unique_number: @external_unique_number,
+                                                authorization_code: @authorization_code)
     assert_equal response.response_code, 'OK'
     assert_equal response.description, 'OK'
   end
@@ -59,10 +58,10 @@ class RefundTest < Transbank::Onepay::Test
 
     error =
       assert_raises Transbank::Onepay::Errors::RefundCreateError do
-        Transbank::Onepay::Refund.create(@refund_amount,
-                                         @invalid_occ,
-                                         '1111',
-                                         "f506a955-800c-4185-8818-4ef9fca97aae")
+        Transbank::Onepay::Refund.create(amount: @refund_amount,
+                                         occ: @invalid_occ,
+                                         external_unique_number: '1111',
+                                         authorization_code: "f506a955-800c-4185-8818-4ef9fca97aae")
       end
     assert_equal error.message, "INVALID_PARAMS : Parametros invalidos"
   end

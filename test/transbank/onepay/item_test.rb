@@ -4,34 +4,20 @@ require 'transbank/sdk/onepay/errors/item_error'
 
 class ItemTest < Transbank::Onepay::Test
 
-  def test_from_json_raises_if_param_is_not_json
+  def test_creating_item_raises_if_param_is_not_hash
     some_string = "a string"
     error =
       assert_raises Transbank::Onepay::Errors::ItemError do
-        Transbank::Onepay::Item.from_json some_string
+        Transbank::Onepay::Item.new some_string
       end
-    assert_equal error.message, "json must be a Hash or a String JSON.parse'able to one"
-  end
-
-  def test_creates_an_item_from_a_json_string
-    json_string = '{"amount": 5000, "quantity": 5, "description": "something valuable"}'
-
-    item = Transbank::Onepay::Item.from_json json_string
-
-    assert item.is_a? Transbank::Onepay::Item
-    assert_equal item.amount, 5000
-    assert_equal item.quantity, 5
-    assert_equal item.description, 'something valuable'
-
-    assert_equal item.expire, 0
-    assert_equal item.additional_data, ''
+    assert_equal error.message, "Item must be a Hash"
   end
 
   def test_creates_an_item_from_a_hash
     hash = {"amount": 5000,
             "quantity": 5,
             "description": "something valuable"}
-    item = Transbank::Onepay::Item.from_json hash
+    item = Transbank::Onepay::Item.new hash
 
     assert item.is_a? Transbank::Onepay::Item
     assert_equal item.amount, 5000
@@ -42,9 +28,11 @@ class ItemTest < Transbank::Onepay::Test
     assert_equal item.additional_data, ''
   end
 
-  def test_creates_an_item_from_json_with_extra_keys
-    json = '{"amount": 2000, "quantity": 2, "description": "something else", "useless key": "irrelevant value will be ignored"}'
-    item = Transbank::Onepay::Item.from_json json
+  def test_creates_an_item_from_a_hash_with_extra_keys
+    json = {"amount": 2000, "quantity": 2,
+            "description": "something else",
+            "useless key": "irrelevant value will be ignored"}
+    item = Transbank::Onepay::Item.new json
     assert item.is_a? Transbank::Onepay::Item
     assert_equal item.amount, 2000
     assert_equal item.quantity, 2
@@ -54,9 +42,9 @@ class ItemTest < Transbank::Onepay::Test
     assert_equal item.additional_data, ''
   end
 
-  def test_creates_an_item_from_json_with_optional_values
-    json = '{"amount": 2000, "quantity": 2, "description": "something else", "expire": 123456789, "additionalData": "additional data here"}'
-    item = Transbank::Onepay::Item.from_json json
+  def test_creates_an_item_from_a_hash_with_optional_values
+    json = {"amount": 2000, "quantity": 2, "description": "something else", "expire": 123456789, "additionalData": "additional data here"}
+    item = Transbank::Onepay::Item.new json
     assert item.is_a? Transbank::Onepay::Item
     assert_equal item.amount, 2000
     assert_equal item.quantity, 2
@@ -67,101 +55,101 @@ class ItemTest < Transbank::Onepay::Test
   end
 
   def test_raises_if_no_description_is_given
-    json = '{"amount": 5000, "quantity": 5}'
+    json = {"amount": 5000, "quantity": 5}
     error =
-      assert_raises Transbank::Onepay::Errors::ItemError do
-        Transbank::Onepay::Item.from_json json
+      assert_raises KeyError do
+        Transbank::Onepay::Item.new json
       end
-    assert_equal error.message, "Description is not a String"
+    assert_equal error.message, "key not found: :description"
   end
 
   def test_raises_if_no_description_is_nil
-    json = '{"amount": 5000, "quantity": 5, "description": null}'
+    json = {"amount": 5000, "quantity": 5, "description": nil}
     error =
         assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+          Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Description is not a String"
+    assert_equal error.message, "Description cannot be null"
   end
 
   def test_raises_if_amount_is_not_given
-    json = '{"description": "something pretty", "quantity": 5}'
+    json = { "description": "something pretty", "quantity": 5 }
     error =
-        assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+        assert_raises KeyError do
+          Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Amount must be an Integer"
+    assert_equal error.message, "key not found: :amount"
   end
 
-  def test_raises_if_amount_is_null
-    json = '{"description": "something pretty", "quantity": 5, "amount": null}'
+  def test_raises_if_amount_is_nil
+    json = {"description": "something pretty", "quantity": 5, "amount": nil}
     error =
         assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+          Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Amount must be an Integer"
+    assert_equal error.message, "Amount cannot be null"
   end
 
   def test_raises_if_amount_is_a_string
-    json = '{"amount": "55", "quantity": 5, "description": "something pretty"}'
+    json = {"amount": "55", "quantity": 5, "description": "something pretty"}
     error =
-        assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+        assert_raises ArgumentError do
+          Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Amount must be an Integer"
+    assert_equal error.message, "comparison of String with 0 failed"
   end
 
   def test_raises_if_quantity_is_not_given
-    json = '{"description": "something pretty", "amount": 5000}'
+    json = {"description": "something pretty", "amount": 5000}
     error =
-        assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+        assert_raises KeyError do
+          Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Quantity must be an Integer"
+    assert_equal error.message, "key not found: :quantity"
   end
 
-  def test_raises_if_quantity_is_null
-    json =  '{"amount": 5000, "quantity": null, "description": "something pretty"}'
+  def test_raises_if_quantity_is_nil
+    json = {"amount": 5000, "quantity": nil, "description": "something pretty"}
     error =
         assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+          Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Quantity must be an Integer"
+    assert_equal error.message, "Quantity cannot be null"
   end
 
 
   def test_raises_if_quantity_is_string
-    json = '{"amount": 66, "quantity": "5", "description": "something pretty"}'
+    json = {"amount": 66, "quantity": "5", "description": "something pretty"}
     error =
-        assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+        assert_raises ArgumentError do
+          Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Quantity must be an Integer"
+    assert_equal error.message, "comparison of String with 0 failed"
   end
 
   def test_raises_if_amount_is_less_than_zero
-    json = '{"amount": -2000, "quantity": 5, "description": "something valuable"}'
+    json = {"amount": -2000, "quantity": 5, "description": "something valuable"}
 
     error =
         assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+          Transbank::Onepay::Item.new json
         end
     assert_equal error.message, "Amount cannot be less than zero"
   end
 
   def test_raises_if_quantity_is_less_than_zero
-    json = '{"amount": 2000, "quantity": -5, "description": "something valuable"}'
+    json = {"amount": 2000, "quantity": -5, "description": "something valuable"}
     error =
         assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.from_json json
+          Transbank::Onepay::Item.new json
         end
     assert_equal error.message, "Quantity cannot be less than zero"
   end
 
   def test_calculates_the_total_amount_to_pay_for_the_item
-    json_string = '{"amount": 5000, "quantity": 5, "description": "something valuable"}'
+    json = {"amount": 5000, "quantity": 5, "description": "something valuable"}
 
-    item = Transbank::Onepay::Item.from_json json_string
+    item = Transbank::Onepay::Item.new json
     # amount * quantity
     expected_total = 5000 * 5
     assert_equal expected_total, item.total

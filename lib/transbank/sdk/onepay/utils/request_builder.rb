@@ -9,16 +9,7 @@ module Transbank
       # TODO: Complete docs for this class
       module RequestBuilder
         # Create a [Transaction] request
-        # @param shopping_cart [ShoppingCart] Shopping cart with the [Item]s the user
-        # intends to purchase
-        # @param channel [String] channel that the [Transaction] is happening through
-        # valid values are on the [Channel] class
-        # @param external_unique_number [String, nil] a per Merchant unique identifier for the
-        # [Transaction]
-        # @param options [Options, nil] an [Options] object that allows you to modify certain parameters
-        # on a per request basis.
-        # @return [TransactionCreateRequest] a Signed [TransactionCreateRequest]
-        def create_transaction(shopping_cart, channel, external_unique_number = nil, options = nil)
+        def create_transaction(shopping_cart:, channel:, external_unique_number: nil, options: nil)
           Base.callback_url = Base::DEFAULT_CALLBACK  if Base.callback_url.nil?
           channel = Base.default_channel if channel.nil?
           external_unique_number = time_as_number if external_unique_number.nil?
@@ -34,32 +25,32 @@ module Transbank
                                                  channel: channel,
                                                  app_scheme: Base.app_scheme)
           request.set_keys_from_options(options)
-          request.sign(options[:shared_secret])
+          request.sign(options.fetch(:shared_secret))
         end
 
         # TODO: Complete documentation
         # @param occ [String]
         # @param external_unique_number [String]
         # @param options [Options]
-        def commit_transaction(occ, external_unique_number, options = nil)
+        def commit_transaction(occ:, external_unique_number:, options: nil)
           options = complete_options(options)
           issued_at = Time.now.to_i
           request = TransactionCommitRequest.new(occ, external_unique_number, issued_at)
           request.set_keys_from_options(options)
-          request.sign(options[:shared_secret])
+          request.sign(options.fetch(:shared_secret))
         end
 
         # TODO: YARDify
-        def refund_transaction(refund_amount, occ, external_unique_number, authorization_code, options = nil)
+        def refund_transaction(refund_amount:, occ:, external_unique_number:, authorization_code:, options: nil)
           options = complete_options(options)
           issued_at = Time.now.to_i
-          request = RefundCreateRequest.new(refund_amount,
-                                            occ,
-                                            external_unique_number,
-                                            authorization_code,
-                                            issued_at)
+          request = RefundCreateRequest.new(nullify_amount: refund_amount,
+                                            occ: occ,
+                                            external_unique_number: external_unique_number,
+                                            authorization_code: authorization_code,
+                                            issued_at: issued_at)
           request.set_keys_from_options(options)
-          request.sign(options[:shared_secret])
+          request.sign(options.fetch(:shared_secret))
         end
 
         def time_as_number
@@ -74,7 +65,9 @@ module Transbank
         end
 
         def default_options
-          {api_key: Base::api_key, app_key: Base::current_integration_type_app_key, shared_secret: Base::shared_secret}
+          { api_key: Base::api_key,
+            app_key: Base::current_integration_type_app_key,
+            shared_secret: Base::shared_secret }
         end
       end
     end

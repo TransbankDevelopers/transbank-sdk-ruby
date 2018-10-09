@@ -1,39 +1,53 @@
-require 'transbank/sdk/onepay/utils/jsonify'
-
+require 'transbank/sdk/onepay/utils/json_utils'
+require 'transbank/sdk/onepay/errors/shopping_cart_error'
 module Transbank
   module Onepay
-    # TODO: YARD this class
+    # Represents a Shopping Cart, which contains [Item]s that the user wants to buy
     class ShoppingCart
-      include Utils::JSONifier
-      # Represents a Shopping Cart, which contains [Item]s that the user wants to buy
-
-
+      include Utils::JSONUtils
       # @return [Integer] The amount in CLP of the [Item]s included in the [ShoppingCart]
       attr_reader :total
 
-      def initialize
+      # @param items [Array, nil] an array of Hashes that can be converted to [Item]
+      # if nil, an empty shopping cart is created
+      def initialize(items = [])
         # The amount in CLP of the [Item]s included in the [ShoppingCart]
         @total = 0
         # An [Array<Item>] with the [ShoppingCart] contents
         @items = []
+        items = [] if items.nil?
+
+        items.each do |it|
+          it = transform_hash_keys it
+          item = Item.new it
+          self << item
+        end
       end
 
       # @param item [Item] an instance of [Item]
       # @return [boolean] return true if item is successfully added
       def add(item)
-        new_total = calculate_total(item)
+        new_total = total + item.total
+        if new_total < 0
+          raise Errors::ShoppingCartError "New total amount cannot be less than zero."
+        end
         @items << item
         @total = new_total
         true
       end
 
-      # Call #add(item) on self, see docs for #add
+      # Alias for #add
       def << item
         add item
       end
 
+      # Remove an [Item] from self
+      # @return [boolean] return true if the item is successfully removed
       def remove(item)
         new_total = total - item.total
+        if new_total < 0
+          raise Errors::ShoppingCartError "New total amount cannot be less than zero."
+        end
         first_instance_of_item = @items.index(item)
         if first_instance_of_item.nil?
           raise Errors::ShoppingCartError, 'Item not found'
@@ -43,9 +57,12 @@ module Transbank
         true
       end
 
+      # Clear the cart, setting @total to 0 and @items to []
+      # @return [boolean] true
       def remove_all
         @total = 0
         @items = []
+        true
       end
 
       # @return [Array<Item>] An [Array<Item>] with the [ShoppingCart] contents
@@ -55,40 +72,10 @@ module Transbank
         @items.map &:clone
       end
 
-      # TODO: YARD
+      # Sum the quantity of items in the cart
       def items_quantity
+        # Array#sum is Ruby 2.4+
         @items.reduce(0) { |total, item| total + item.quantity }
-      end
-
-      def self.from_json(json)
-        json = JSON.parse(json) if json.is_a? String
-        unless json.is_a? Hash
-          raise Errors::ShoppingCartError, 'json must be a Hash or a String JSON.parse\'able to one'
-        end
-
-        cart = ShoppingCart.new
-        json = cart.transform_hash_keys(json)
-        items = json[:items]
-
-        items.each do |it|
-          item = Item.from_json it
-          #
-          # (it.description, it.quantity, it.amount, it.additional_data, it.expire)
-          cart << item
-        end
-
-        cart
-      rescue JSON::ParserError
-        raise Errors::ShoppingCartError, 'json must be a Hash or a String JSON.parse\'able to one'
-      end
-
-      private
-      def calculate_total(item)
-        new_total = @total + item.amount * item.quantity
-        if new_total < 0
-          raise Errors::ShoppingCartError "New total amount cannot be less than zero."
-        end
-        new_total
       end
     end
   end

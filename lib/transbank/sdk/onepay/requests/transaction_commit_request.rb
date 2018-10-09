@@ -5,10 +5,7 @@ module Transbank
   module Onepay
     class TransactionCommitRequest
       include Request
-      attr_reader :occ
-      attr_reader :external_unique_number
-      attr_reader :issued_at
-      attr_accessor :signature
+      attr_reader :occ,  :external_unique_number, :issued_at, :signature
 
       SIGNATURE_PARAMS = [:occ,
                           :external_unique_number,
@@ -19,7 +16,7 @@ module Transbank
       def initialize(occ, external_unique_number, issued_at)
         self.occ = occ
         self.external_unique_number = external_unique_number
-        @issued_at = issued_at
+        self.issued_at = issued_at
         @signature = nil
       end
 
@@ -42,7 +39,7 @@ module Transbank
       end
 
       def sign(secret)
-        self.signature = signature_for(to_data, secret)
+        @signature = signature_for(to_data, secret)
         self
       end
 
