@@ -1,5 +1,6 @@
-require_relative '../../../../lib/transbank/sdk/onepay/models/channels'
-require_relative '../../../../lib/transbank/sdk/onepay/errors/integration_type_error'
+require 'transbank/sdk/onepay/models/channels'
+require 'transbank/sdk/onepay/errors/integration_type_error'
+
 module Transbank
   module Onepay
     class Base

@@ -1,4 +1,4 @@
-require_relative '../../../../lib/transbank/sdk/onepay/responses/transaction_create_response'
+require 'transbank/sdk/onepay/responses/transaction_create_response'
 
 module Transbank
   module Onepay
