@@ -1,7 +1,3 @@
-require 'transbank/sdk/onepay/responses/response'
-require 'json'
-
-
 module Transbank
   module Onepay
     # Serializes the response to a TransactionCreateRequest

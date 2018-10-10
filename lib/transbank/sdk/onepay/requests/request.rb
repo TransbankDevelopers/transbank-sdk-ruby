@@ -1,6 +1,3 @@
-require 'transbank/sdk/onepay/utils/json_utils'
-require 'transbank/sdk/onepay/errors/invalid_options_error'
-require 'transbank/sdk/onepay/utils/signature_utils'
 module Transbank
   module Onepay
     # Base module with methods & attributes common to Requests

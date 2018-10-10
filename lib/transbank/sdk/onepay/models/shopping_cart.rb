@@ -1,5 +1,3 @@
-require 'transbank/sdk/onepay/utils/json_utils'
-require 'transbank/sdk/onepay/errors/shopping_cart_error'
 module Transbank
   module Onepay
     # Represents a Shopping Cart, which contains [Item]s that the user wants to buy

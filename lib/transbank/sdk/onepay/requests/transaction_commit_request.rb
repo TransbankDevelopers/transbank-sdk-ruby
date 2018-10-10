@@ -1,6 +1,3 @@
-require 'transbank/sdk/onepay/requests/request'
-require 'transbank/sdk/onepay/errors/transaction_commit_error'
-
 module Transbank
   module Onepay
     # Creates a request to Transbank attempting to commit a [Transaction]

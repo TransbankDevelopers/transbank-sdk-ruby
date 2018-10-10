@@ -1,5 +1,3 @@
-require 'json'
-
 module Transbank
   module Onepay
     module Utils

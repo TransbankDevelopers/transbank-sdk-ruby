@@ -1,6 +1,3 @@
-require 'transbank/sdk/onepay/utils/json_utils'
-require 'transbank/sdk/onepay/errors/item_error'
-
 module Transbank
   module Onepay
     class Item

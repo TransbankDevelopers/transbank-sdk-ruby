@@ -1,6 +1,3 @@
-require 'transbank/sdk/onepay/requests/request'
-require 'transbank/sdk/onepay/utils/json_utils'
-
 module Transbank
   module Onepay
     # Creates a Refund request

@@ -1,7 +1,3 @@
-require 'uri'
-require 'net/http'
-require 'json'
-
 module Transbank
   module Onepay
     module Utils

@@ -1,5 +1,5 @@
-require 'transbank/sdk/onepay/models/item'
-require 'transbank/sdk/onepay/models/shopping_cart'
+#require 'transbank/sdk/onepay/models/item'
+#require 'transbank/sdk/onepay/models/shopping_cart'
 
 module Transbank
   module Onepay

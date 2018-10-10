@@ -1,4 +1,3 @@
-
 module Transbank
   module Onepay
     class Channel

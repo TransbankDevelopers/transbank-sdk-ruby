@@ -1,6 +1,3 @@
-require 'transbank/sdk/onepay/requests/request'
-require 'transbank/sdk/onepay/models/channels'
-
 module Transbank
   module Onepay
     # Create a payload to create [Transaction] on Transbank

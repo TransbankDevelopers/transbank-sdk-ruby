@@ -1,7 +1,3 @@
-require 'transbank/sdk/onepay/utils/net_helper'
-require 'transbank/sdk/onepay/utils/request_builder'
-require 'transbank/sdk/onepay/requests/refund_create_request'
-require 'transbank/sdk/onepay/responses/refund_create_response'
 module Transbank
   module Onepay
     class Refund

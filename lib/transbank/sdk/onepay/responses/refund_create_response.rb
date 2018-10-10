@@ -1,8 +1,3 @@
-require 'transbank/sdk/onepay/responses/response'
-require 'transbank/sdk/onepay/errors/response_error'
-require 'transbank/sdk/onepay/errors/refund_create_error'
-require 'json'
-
 module Transbank
   module Onepay
     # Serializes the response to a RefundCreateRequest

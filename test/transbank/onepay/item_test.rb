@@ -1,6 +1,6 @@
-require 'transbank/sdk/onepay/models/item'
+#require 'transbank/sdk/onepay/models/item'
 require 'transbank/sdk_test'
-require 'transbank/sdk/onepay/errors/item_error'
+#require 'transbank/sdk/onepay/errors/item_error'
 
 class ItemTest < Transbank::Onepay::Test
 

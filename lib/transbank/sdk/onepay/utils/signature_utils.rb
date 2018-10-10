@@ -1,6 +1,3 @@
-require 'openssl'
-require 'base64'
-
 module Transbank
   module Onepay
     module Utils

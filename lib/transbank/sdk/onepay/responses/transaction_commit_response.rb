@@ -1,7 +1,3 @@
-require 'transbank/sdk/onepay/responses/response'
-require 'json'
-require 'transbank/sdk/onepay/errors/response_error'
-
 module Transbank
   module Onepay
     # Serializes the response to a TransactionCommitRequest

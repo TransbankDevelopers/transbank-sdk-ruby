@@ -1,20 +1,3 @@
-require "net/http"
-require "transbank/sdk/onepay/models/channels"
-require 'transbank/sdk/onepay/models/shopping_cart'
-require 'transbank/sdk/onepay/utils/net_helper'
-require 'transbank/sdk/onepay/utils/request_builder'
-require 'transbank/sdk/onepay/base'
-require 'transbank/sdk/onepay/errors/transaction_create_error'
-require 'transbank/sdk/onepay/errors/signature_error'
-require 'transbank/sdk/onepay/errors/shopping_cart_error'
-require 'transbank/sdk/onepay/errors/transaction_commit_error'
-
-require 'transbank/sdk/onepay/requests/transaction_create_request'
-require 'transbank/sdk/onepay/responses/transaction_create_response'
-
-require 'transbank/sdk/onepay/requests/transaction_commit_request'
-require 'transbank/sdk/onepay/responses/transaction_commit_response'
-
 module Transbank
   module Onepay
     ## Class Transaction

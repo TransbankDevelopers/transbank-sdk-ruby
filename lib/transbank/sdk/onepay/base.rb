@@ -1,6 +1,3 @@
-require 'transbank/sdk/onepay/models/channels'
-require 'transbank/sdk/onepay/errors/integration_type_error'
-
 module Transbank
   module Onepay
     class Base
@@ -21,7 +18,7 @@ module Transbank
 
       @integration_type = 'TEST'
       @app_scheme = nil
-      @default_channel = ::Transbank::Onepay::Channel::WEB
+      @default_channel = Transbank::Onepay::Channel::WEB
 
       class << self
         # Contains all valid integration types

@@ -1,4 +1,3 @@
-require 'transbank/sdk/onepay/utils/signature_utils'
 module Transbank
   module Onepay
     # Shared methods and attributes between all types of Responses
