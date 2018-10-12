@@ -6,7 +6,7 @@ module Transbank
 
       attr_accessor :external_unique_number, :total, :items_quantity, :issued_at,
                     :items, :callback_url, :channel, :app_scheme, :signature
-      attr_reader :generate_ott_qr_code_base64
+      attr_reader :generate_ott_qr_code
 
       SIGNATURE_PARAMS = [:external_unique_number,
                           :total,
@@ -36,7 +36,7 @@ module Transbank
         self.app_scheme = opts.fetch(:app_scheme, '')
         self.signature = nil
         # This is never anything but true, but it is required by the server
-        @generate_ott_qr_code_base64 = true
+        @generate_ott_qr_code = true
       end
 
       def external_unique_number=(external_unique_number)
