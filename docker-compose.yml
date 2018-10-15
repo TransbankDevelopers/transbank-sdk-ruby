@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: bash
+    command: rake test
     volumes:
     - .:/sdk
     volumes_from:
