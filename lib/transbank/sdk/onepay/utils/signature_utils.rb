@@ -44,11 +44,7 @@ module Transbank
           # We should be able to recreate the same signature from the signable's data
           # and the secret
           recalculated_signature = signature_for(self.to_data, secret)
-          signature_is_valid = given_signature == recalculated_signature
-          unless signature_is_valid
-            raise Errors::SignatureError, "The response's signature is not valid."
-          end
-          true
+          given_signature == recalculated_signature
         end
       end
     end
