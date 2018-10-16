@@ -95,7 +95,7 @@ module Transbank
           end
       end
 
-      # Alias for ##==
+      # Alias for #==
       def eql?(another_item)
         self.==(another_item)
       end
