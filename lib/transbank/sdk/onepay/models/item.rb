@@ -73,7 +73,7 @@ module Transbank
 
       # @param expire [Integer] Expiry for the Item
       def expire=(expire)
-        expire = 0 if expire.nil?
+        expire = expire || 0
         @expire = expire
       end
 
