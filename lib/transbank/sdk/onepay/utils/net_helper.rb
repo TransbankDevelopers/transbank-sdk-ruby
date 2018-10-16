@@ -11,11 +11,7 @@ module Transbank
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = uri.scheme == 'https'
           request = Net::HTTP::Post.new(uri.path, 'Content-Type'=> 'application/json')
-          puts body
-          "\n\n"
           camel_cased_body = keys_to_camel_case(body)
-          puts camel_cased_body
-          puts "\n\n"
           request.body = JSON.generate(camel_cased_body)
           result = http.request(request)
           JSON.parse(result.body)
