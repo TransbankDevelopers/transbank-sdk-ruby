@@ -13,7 +13,7 @@ module Transbank
         @total = 0
         # An [Array<Item>] with the [ShoppingCart] contents
         @items = []
-        items = [] if items.nil?
+        return if items.nil? || items.empty?
 
         items.each do |it|
           it = transform_hash_keys it
@@ -27,7 +27,7 @@ module Transbank
       def add(item)
         new_total = total + item.total
         if new_total < 0
-          raise Errors::ShoppingCartError "New total amount cannot be less than zero."
+          raise Errors::ShoppingCartError, "New total amount cannot be less than zero."
         end
         @items << item
         @total = new_total
@@ -44,7 +44,7 @@ module Transbank
       def remove(item)
         new_total = total - item.total
         if new_total < 0
-          raise Errors::ShoppingCartError "New total amount cannot be less than zero."
+          raise Errors::ShoppingCartError, "New total amount cannot be less than zero."
         end
         first_instance_of_item = @items.index(item)
         if first_instance_of_item.nil?
