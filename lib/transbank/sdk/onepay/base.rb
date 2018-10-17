@@ -1,5 +1,3 @@
-require_relative '../../../../lib/transbank/sdk/onepay/models/channels'
-require_relative '../../../../lib/transbank/sdk/onepay/errors/integration_type_error'
 module Transbank
   module Onepay
     class Base
@@ -14,16 +12,15 @@ module Transbank
       @integration_types = {"TEST": 'https://onepay.ionix.cl'.freeze,
                             "LIVE": 'https://www.onepay.cl'.freeze,
                             "MOCK": 'http://onepay.getsandbox.com'.freeze}.freeze
-      @callback_url = nil
+      @callback_url = self::DEFAULT_CALLBACK
       @api_key = ENV['ONEPAY_API_KEY'].nil? ? DEFAULT_API_KEY : ENV['ONEPAY_API_KEY']
       @shared_secret = ENV['ONEPAY_SHARED_SECRET'].nil? ? DEFAULT_SHARED_SECRET : ENV['ONEPAY_SHARED_SECRET']
 
       @integration_type = 'TEST'
       @app_scheme = nil
-      @default_channel = ::Transbank::Onepay::Channel::WEB
+      @default_channel = Transbank::Onepay::Channel::WEB
 
       class << self
-
         # Contains all valid integration types
         # @return [Hash<String, String>]
         attr_reader :integration_types

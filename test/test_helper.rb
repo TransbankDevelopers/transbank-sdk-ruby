@@ -5,7 +5,8 @@ require 'pry'
 require 'minitest/reporters'
 Minitest::Reporters.use!
 require 'webmock/minitest'
-
+require 'transbank/sdk'
+require_relative './transbank/onepay/mocks/mocks'
 
 module Transbank
   module Onepay

@@ -1,10 +1,7 @@
-require 'transbank/sdk/onepay/utils/jsonify'
-require 'transbank/sdk/onepay/errors/item_error'
-
 module Transbank
   module Onepay
     class Item
-      include Utils::JSONifier
+      include Utils::JSONUtils
       # An Item to be purchased by the user, and to be added to a [ShoppingCart]
 
       # @return [String] An item's description
@@ -22,73 +19,83 @@ module Transbank
 
       # @return expire [Integer] Expiry for the Item
       attr_reader :expire
+      # @param [Hash] opts options Hash
       # @param description [String] The item's description
       # @param quantity [Integer] How many of units of [Item]
       # @param amount [Integer] The value of each unit of [Item]
       # @param additional_data [String] A string with whatever additional data the
       # Merchant might want to add
       # @param expire [Integer] Expiry for the Item
-      def initialize(description, quantity, amount, additional_data, expire = 0)
-        self.description = description
-        self.quantity = quantity
-        self.amount = amount
-        self.additional_data = additional_data
-        self.expire = expire
+      # @raise [ItemError] when opts is not a [Hash]
+      def initialize(opts = {})
+        raise Errors::ItemError, 'Item must be a Hash' unless opts.is_a? Hash
+        opts = transform_hash_keys opts
+        self.description = opts.fetch(:description)
+        self.quantity = opts.fetch(:quantity)
+        self.amount = opts.fetch(:amount)
+        self.additional_data = opts.fetch(:additional_data, nil)
+        self.expire = opts.fetch(:expire, nil)
       end
 
       # @param description [String] An item's description
-      # @raise [ItemError] when description is not [String]
+      # @raise [ItemError] when description is null
       def description=(description)
-        unless description.is_a? String
-          raise ItemError "Description is not a String"
-        end
+        raise Errors::ItemError, "Description cannot be null" if description.nil?
         @description = description
       end
 
       # @param quantity [Integer] How many of units of [Item]
-      # @raise [ItemError] when given quantity is not an [Integer] or is less than zero
+      # @raise [ItemError] when given quantity is nil or less than zero.
       def quantity=(quantity)
-        unless quantity.is_a? Integer
-          raise ItemError "Quantity must be an Integer"
-        end
-
+        raise Errors::ItemError, "Quantity cannot be null" if quantity.nil?
         if quantity < 0
-          raise ItemError "Quantity cannot be less than zero"
+          raise Errors::ItemError, "Quantity cannot be less than zero"
         end
         @quantity = quantity
       end
 
       # @param amount [Integer] The value of each unit of [Item]
-      # @raise [ItemError] when amount is not an [Integer] or is less than zero.
+      # @raise [ItemError] when amount is nil or less than zero.
       def amount=(amount)
-        unless amount.is_a? Integer
-          raise ItemError "Amount must be an Integer"
-        end
-
+        raise Errors::ItemError, "Amount cannot be null" if amount.nil?
         if amount < 0
-          raise ItemError "Amount cannot be less than zero"
+          raise Errors::ItemError, "Amount cannot be less than zero"
         end
         @amount = amount
       end
 
       # @param additional_data [String] A string with whatever additional data the
       # Merchant might want to add
-      # @raise [ItemError] when additional_data is not a [String]
       def additional_data=(additional_data)
         additional_data = '' if additional_data.nil?
-        unless additional_data.is_a? String
-          raise ItemError 'Additional data must be a String'
-        end
         @additional_data = additional_data
       end
 
       # @param expire [Integer] Expiry for the Item
-      # @raise [ItemError] if value is not an [Integer]
       def expire=(expire)
-        unless expire.is_a? Integer
-          raise ItemError 'Expire must be an Integer'
-        end
+        expire = expire || 0
         @expire = expire
+      end
+
+      # Return the total amount to pay for the Item, that is, amount * quantity
+      # @return [Numeric] the total amount to pay for the [Item]
+      def total
+        self.quantity * self.amount
+      end
+
+      # Override == to allow comparison between [Item]s
+      # @return [boolean] true if equal, false otherwise
+      def ==(another_item)
+         self.description == another_item.description &&
+         self.quantity == another_item.quantity &&
+         self.amount == another_item.amount &&
+         self.additional_data == another_item.additional_data &&
+         self.expire == another_item.expire
+      end
+
+      # Alias for #==
+      def eql?(another_item)
+        self.==(another_item)
       end
     end
   end

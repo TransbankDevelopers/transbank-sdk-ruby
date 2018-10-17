@@ -1,7 +1,8 @@
-
 module Transbank
   module Onepay
+    # Shared methods and attributes between all types of Responses
     module Response
+      include Utils::SignatureUtils
       attr_accessor :response_code
       attr_accessor :description
 

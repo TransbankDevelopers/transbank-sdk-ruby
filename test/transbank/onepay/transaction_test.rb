@@ -4,9 +4,6 @@ require 'transbank/sdk/onepay/models/transaction'
 require 'transbank/onepay/mocks/shopping_cart_mocks'
 require 'json'
 
-
-# TODO: There should probably be a setup where Net::HTTP raises because it couldn't reach the server
-
 class TransactionTest < Transbank::Onepay::Test
   EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST = "1532376544050";
   OCC_TO_COMMIT_TRANSACTION_TEST = "1807829988419927";
@@ -27,9 +24,11 @@ class TransactionTest < Transbank::Onepay::Test
         .to_return(status: 200, body: "{}" )
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
 
-    assert_raises Transbank::Onepay::Errors::TransactionCreateError do
-      Transbank::Onepay::Transaction.create(cart)
-    end
+    error =
+        assert_raises KeyError do
+          Transbank::Onepay::Transaction.create(shopping_cart: cart)
+        end
+    assert_equal error.message, "key not found: \"responseCode\""
   end
 
   def test_transaction_raises_when_response_is_not_ok
@@ -45,7 +44,7 @@ class TransactionTest < Transbank::Onepay::Test
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
     error =
       assert_raises Transbank::Onepay::Errors::TransactionCreateError  do
-        Transbank::Onepay::Transaction.create(cart)
+        Transbank::Onepay::Transaction.create(shopping_cart: cart)
       end
     assert_equal error.message, 'INVALID_PARAMS : Parametros invalidos'
   end
@@ -70,9 +69,9 @@ class TransactionTest < Transbank::Onepay::Test
         .to_return(status: 200, body: mock_response)
     error =
       assert_raises Transbank::Onepay::Errors::SignatureError do
-        Transbank::Onepay::Transaction.create(cart)
+        Transbank::Onepay::Transaction.create(shopping_cart: cart)
       end
-    assert_equal error.message, 'The response signature is not valid.'
+    assert_equal error.message, "The response's signature is not valid."
   end
 
   def test_transaction_creation_works_taking_keys_from_env
@@ -91,7 +90,7 @@ class TransactionTest < Transbank::Onepay::Test
     assert_equal ENV['ONEPAY_SHARED_SECRET'], Transbank::Onepay::Base.shared_secret
 
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
-    response = Transbank::Onepay::Transaction.create(cart)
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart)
 
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
@@ -102,7 +101,7 @@ class TransactionTest < Transbank::Onepay::Test
     # This uses the MOCK environment
     WebMock.allow_net_connect!
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
-    response = Transbank::Onepay::Transaction.create(cart)
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart)
 
     assert response.is_a?(Transbank::Onepay::TransactionCreateResponse)
     assert_equal response.response_code, "OK"
@@ -113,10 +112,10 @@ class TransactionTest < Transbank::Onepay::Test
   def test_transaction_creation_works_with_options
     WebMock.allow_net_connect!
     cart = Transbank::Onepay::ShoppingCart.new
-    options = Transbank::Onepay::Options.new("mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
-                                             "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX")
-    first_item = Transbank::Onepay::Item.new("Zapatos", 1, 15000, nil, -1)
-    second_item = Transbank::Onepay::Item.new("Pantalon", 1, 12500, nil, -1)
+    options = {api_key: "mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
+               shared_secret: "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX"}
+    first_item = Transbank::Onepay::Item.new(description: "Zapatos", quantity: 1, amount: 15000, additional_data: nil, expire: -1)
+    second_item = Transbank::Onepay::Item.new(description: "Pantalon", quantity: 1, amount: 12500, additional_data:  nil, expire: -1)
 
     cart << first_item
     cart.add(second_item)
@@ -124,7 +123,7 @@ class TransactionTest < Transbank::Onepay::Test
     assert_equal first_item.description, "Zapatos"
     assert_equal second_item.description, "Pantalon"
 
-    response = Transbank::Onepay::Transaction.create(cart, options)
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart, options: options)
     assert response.is_a?(Transbank::Onepay::TransactionCreateResponse)
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
@@ -133,12 +132,12 @@ class TransactionTest < Transbank::Onepay::Test
 
   def test_transaction_commit_works_with_options
     WebMock.allow_net_connect!
-    options = Transbank::Onepay::Options.new("mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
-                                             "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX")
+    options = {api_key:"mUc0GxYGor6X8u-_oB3e-HWJulRG01WoC96-_tUA3Bg",
+               shared_secret: "P4DCPS55QB2QLT56SQH6#W#LV76IAPYX"}
 
-    response = Transbank::Onepay::Transaction.commit(OCC_TO_COMMIT_TRANSACTION_TEST,
-                                                     EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST,
-                                                     options)
+    response = Transbank::Onepay::Transaction.commit(occ: OCC_TO_COMMIT_TRANSACTION_TEST,
+                                                     external_unique_number: EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST,
+                                                     options: options)
     assert response.is_a?(Transbank::Onepay::TransactionCommitResponse)
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
@@ -146,8 +145,8 @@ class TransactionTest < Transbank::Onepay::Test
 
   def test_transaction_commit_works_without_options
     WebMock.allow_net_connect!
-    response = Transbank::Onepay::Transaction.commit(OCC_TO_COMMIT_TRANSACTION_TEST,
-                                                     EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
+    response = Transbank::Onepay::Transaction.commit(occ: OCC_TO_COMMIT_TRANSACTION_TEST,
+                                                     external_unique_number: EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
     assert response.is_a?(Transbank::Onepay::TransactionCommitResponse)
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
@@ -158,10 +157,12 @@ class TransactionTest < Transbank::Onepay::Test
         .with(body:  /.*/ , headers: {'Content-Type' => 'application/json'})
         .to_return(status: 200, body: "{}" )
 
-    assert_raises Transbank::Onepay::Errors::TransactionCommitError do
-    Transbank::Onepay::Transaction.commit(OCC_TO_COMMIT_TRANSACTION_TEST,
-                                         EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
-    end
+    error =
+        assert_raises KeyError do
+          Transbank::Onepay::Transaction.commit(occ: OCC_TO_COMMIT_TRANSACTION_TEST,
+                                                external_unique_number: EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
+        end
+    assert_equal error.message, "key not found: \"responseCode\""
   end
 
   def test_transaction_commit_raises_when_response_is_not_ok
@@ -174,8 +175,8 @@ class TransactionTest < Transbank::Onepay::Test
         .to_return(status: 200, body: mock_response )
     error =
       assert_raises Transbank::Onepay::Errors::TransactionCommitError do
-        Transbank::Onepay::Transaction.commit(OCC_TO_COMMIT_TRANSACTION_TEST,
-                                              EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
+        Transbank::Onepay::Transaction.commit(occ: OCC_TO_COMMIT_TRANSACTION_TEST,
+                                              external_unique_number: EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
       end
 
     assert_equal error.message, 'INVALID_PARAMS : Parametros invalidos'
@@ -202,10 +203,10 @@ class TransactionTest < Transbank::Onepay::Test
         .to_return(status: 200, body: mock_response )
     error =
         assert_raises Transbank::Onepay::Errors::SignatureError do
-          Transbank::Onepay::Transaction.commit(OCC_TO_COMMIT_TRANSACTION_TEST,
-                                                EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
+          Transbank::Onepay::Transaction.commit(occ: OCC_TO_COMMIT_TRANSACTION_TEST,
+                                                external_unique_number: EXTERNAL_UNIQUE_NUMBER_TO_COMMIT_TRANSACTION_TEST)
         end
-    assert_equal error.message, "The response signature is not valid."
+    assert_equal error.message, "The response's signature is not valid."
   end
 
   def test_transaction_fails_when_channel_is_mobile_and_callback_url_nil
@@ -215,7 +216,7 @@ class TransactionTest < Transbank::Onepay::Test
 
     error =
       assert_raises Transbank::Onepay::Errors::TransactionCreateError do
-        Transbank::Onepay::Transaction.create(cart, Transbank::Onepay::Channel::MOBILE)
+        Transbank::Onepay::Transaction.create(shopping_cart: cart, channel: Transbank::Onepay::Channel::MOBILE)
       end
     assert_equal error.message, "You need to set a valid callback if you want to use the MOBILE channel"
     Transbank::Onepay::Base.callback_url = original_callback_url
@@ -228,7 +229,7 @@ class TransactionTest < Transbank::Onepay::Test
 
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
 
-    response = Transbank::Onepay::Transaction.create(cart)
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart)
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
     refute_nil response.qr_code_as_base64
@@ -242,7 +243,7 @@ class TransactionTest < Transbank::Onepay::Test
 
     error =
       assert_raises Transbank::Onepay::Errors::TransactionCreateError do
-        Transbank::Onepay::Transaction.create(cart, Transbank::Onepay::Channel::APP)
+        Transbank::Onepay::Transaction.create(shopping_cart: cart, channel: Transbank::Onepay::Channel::APP)
       end
 
     assert_equal error.message, "You need to set an app_scheme if you want to use the APP channel"
@@ -255,7 +256,7 @@ class TransactionTest < Transbank::Onepay::Test
     Transbank::Onepay::Base.app_scheme = 'somescheme'
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
 
-    response = Transbank::Onepay::Transaction.create(cart, Transbank::Onepay::Channel::APP)
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart, channel: Transbank::Onepay::Channel::APP)
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
     refute_nil response.qr_code_as_base64
@@ -269,7 +270,7 @@ class TransactionTest < Transbank::Onepay::Test
     Transbank::Onepay::Base.app_scheme = 'somescheme'
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
 
-    response = Transbank::Onepay::Transaction.create(cart, Transbank::Onepay::Channel::APP, nil)
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart, channel: Transbank::Onepay::Channel::APP, external_unique_number: nil)
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
     refute_nil response.qr_code_as_base64
@@ -283,13 +284,15 @@ class TransactionTest < Transbank::Onepay::Test
     Transbank::Onepay::Base.app_scheme = 'somescheme'
     cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
 
-    response = Transbank::Onepay::Transaction.create(cart, Transbank::Onepay::Channel::APP, "1234abc")
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart, channel: Transbank::Onepay::Channel::APP,external_unique_number: "1234abc")
     assert_equal response.response_code, "OK"
     assert_equal response.description, "OK"
     refute_nil response.qr_code_as_base64
 
     Transbank::Onepay::Base.app_scheme = original_app_scheme
   end
+
+
 
 end
 

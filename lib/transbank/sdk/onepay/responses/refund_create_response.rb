@@ -1,36 +1,23 @@
-require 'transbank/sdk/onepay/responses/response'
-require 'transbank/sdk/onepay/utils/jsonify'
-require 'transbank/sdk/onepay/errors/response_error'
-require 'json'
-
 module Transbank
   module Onepay
+    # Serializes the response to a RefundCreateRequest
     class RefundCreateResponse
-      include Response, Utils::JSONifier
-      attr_accessor :occ
-      attr_accessor :external_unique_number
-      attr_accessor :reverse_code
-      attr_accessor :issued_at
-      attr_accessor :signature
-
+      include Response
+      attr_accessor :occ, :external_unique_number, :reverse_code, :issued_at,
+                    :signature
+      # @raise []RefundCreateError] if the responseCode from the service is not 'OK'
       def initialize(json)
-        from_json json
-      end
-
-      def from_json(json)
-        json = JSON.parse(json) if json.is_a? String
-        unless json.is_a? Hash
-          raise ResponseError('JSON must be a Hash (or a String decodeable to one).')
+        unless json.fetch('responseCode').downcase == 'ok'
+          raise Errors::RefundCreateError, "#{json.fetch('responseCode')} : #{json.fetch('description')}"
         end
-        result = json['result']
-        self.response_code = json['responseCode']
-        self.description = json['description']
-        self.occ = result['occ']
-        self.external_unique_number = result['externalUniqueNumber']
-        self.reverse_code = result['reverseCode']
-        self.issued_at = result['issuedAt']
-        self.signature = result['signature']
-        self
+        result = json.fetch('result')
+        @response_code = json.fetch('responseCode')
+        @description = json.fetch('description')
+        @occ = result.fetch('occ')
+        @external_unique_number = result.fetch('externalUniqueNumber')
+        @reverse_code = result.fetch('reverseCode')
+        @issued_at = result.fetch('issuedAt')
+        @signature = result.fetch('signature')
       end
     end
   end
