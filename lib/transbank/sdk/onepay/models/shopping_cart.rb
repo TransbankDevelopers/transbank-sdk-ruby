@@ -38,16 +38,8 @@ module Transbank
       # Remove an [Item] from self
       # @return [boolean] return true if the item is successfully removed
       def remove(item)
-        new_total = total - item.total
-        if new_total < 0
-          raise Errors::ShoppingCartError, "New total amount cannot be less than zero."
-        end
-        first_instance_of_item = @items.index(item)
-        if first_instance_of_item.nil?
-          raise Errors::ShoppingCartError, 'Item not found'
-        end
-        @items.delete_at first_instance_of_item
-        @total = new_total
+        @items.delete item
+        @total = total - item.total
         true
       end
 
