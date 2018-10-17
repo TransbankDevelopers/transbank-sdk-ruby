@@ -3,17 +3,16 @@ module Transbank
     # Represents a Shopping Cart, which contains [Item]s that the user wants to buy
     class ShoppingCart
       include Utils::JSONUtils
-      # @return [Integer] The amount in CLP of the [Item]s included in the [ShoppingCart]
-      attr_reader :total
+
+      # @return [Array<Item>] An [Array<Item>] with the [ShoppingCart] contents
+      attr_reader :items
 
       # @param items [Array, nil] an array of Hashes that can be converted to [Item]
       # if nil, an empty shopping cart is created
       def initialize(items = [])
-        # The amount in CLP of the [Item]s included in the [ShoppingCart]
-        @total = 0
         # An [Array<Item>] with the [ShoppingCart] contents
         @items = []
-        items = [] if items.nil?
+        return if items.nil? || items.empty?
 
         items.each do |it|
           it = transform_hash_keys it
@@ -25,13 +24,7 @@ module Transbank
       # @param item [Item] an instance of [Item]
       # @return [boolean] return true if item is successfully added
       def add(item)
-        new_total = total + item.total
-        if new_total < 0
-          raise Errors::ShoppingCartError "New total amount cannot be less than zero."
-        end
         @items << item
-        @total = new_total
-        true
       end
 
       # Alias for #add
@@ -40,34 +33,22 @@ module Transbank
       end
 
       # Remove an [Item] from self
-      # @return [boolean] return true if the item is successfully removed
+      # @raise [ShoppingCartError] if item is not found
       def remove(item)
-        new_total = total - item.total
-        if new_total < 0
-          raise Errors::ShoppingCartError "New total amount cannot be less than zero."
+        if @items.delete(item).nil?
+          raise Errors::ShoppingCartError, "Item not found"
         end
-        first_instance_of_item = @items.index(item)
-        if first_instance_of_item.nil?
-          raise Errors::ShoppingCartError, 'Item not found'
-        end
-        @items.delete_at first_instance_of_item
-        @total = new_total
-        true
       end
 
-      # Clear the cart, setting @total to 0 and @items to []
-      # @return [boolean] true
+      # Clear the cart, setting @items to []
       def remove_all
-        @total = 0
         @items = []
-        true
       end
 
-      # @return [Array<Item>] An [Array<Item>] with the [ShoppingCart] contents
-      def items
-        # Return a copy of the items so you cannot modify the items that are
-        # in the cart from the outside, since that could cause inconsistencies
-        @items.map &:clone
+      # @return [Integer] The amount in CLP of the [Item]s included in the [ShoppingCart]
+      def total
+        # Array#sum is Ruby 2.4+
+        @items.reduce(0) { |total, item| total + item.total }
       end
 
       # Sum the quantity of items in the cart

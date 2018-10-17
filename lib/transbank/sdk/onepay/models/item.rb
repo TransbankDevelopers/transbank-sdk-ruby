@@ -73,7 +73,7 @@ module Transbank
 
       # @param expire [Integer] Expiry for the Item
       def expire=(expire)
-        expire = 0 if expire.nil?
+        expire = expire || 0
         @expire = expire
       end
 
@@ -86,16 +86,14 @@ module Transbank
       # Override == to allow comparison between [Item]s
       # @return [boolean] true if equal, false otherwise
       def ==(another_item)
-        instance_variables.map! { |var| var.to_s.gsub!(/^@/, '') }
-          .reduce(true) do |result, current_instance_variable|
-            original_value = send(current_instance_variable)
-            compared_value = another_item.send(current_instance_variable)
-            next (result && true) if (original_value == compared_value)
-            false
-          end
+         self.description == another_item.description &&
+         self.quantity == another_item.quantity &&
+         self.amount == another_item.amount &&
+         self.additional_data == another_item.additional_data &&
+         self.expire == another_item.expire
       end
 
-      # Alias for ##==
+      # Alias for #==
       def eql?(another_item)
         self.==(another_item)
       end

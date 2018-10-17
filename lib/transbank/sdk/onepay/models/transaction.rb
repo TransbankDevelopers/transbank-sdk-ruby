@@ -40,11 +40,13 @@ module Transbank
                                               channel: channel,
                                               external_unique_number: external_unique_number,
                                               options: options)
-         # puts "CREATE REQUEST IS:\n #{create_request.to_h}"
           response = http_post(transaction_create_path, create_request.to_h)
           validate_create_response!(response)
           transaction_create_response = TransactionCreateResponse.new response
-          transaction_create_response.validate_signature!(options.fetch(:shared_secret))
+          signature_is_valid = transaction_create_response.valid_signature?(options.fetch(:shared_secret))
+          unless signature_is_valid
+            raise Errors::SignatureError, "The response's signature is not valid."
+          end
           transaction_create_response
         end
 
@@ -63,7 +65,10 @@ module Transbank
           response = http_post(transaction_commit_path, commit_request.to_h)
           validate_commit_response!(response)
           transaction_commit_response = TransactionCommitResponse.new(response)
-          transaction_commit_response.validate_signature!(options.fetch(:shared_secret))
+          signature_is_valid = transaction_commit_response.valid_signature?(options.fetch(:shared_secret))
+          unless signature_is_valid
+            raise Errors::SignatureError, "The response's signature is not valid."
+          end
           transaction_commit_response
         end
 
