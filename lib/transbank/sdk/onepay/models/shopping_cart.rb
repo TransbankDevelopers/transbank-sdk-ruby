@@ -33,24 +33,21 @@ module Transbank
       end
 
       # Remove an [Item] from self
-      # @return [boolean] return true if the item is successfully removed
+      # @raise [ShoppingCartError] if item is not found
       def remove(item)
-        first_instance_of_item = @items.index item
-        if first_instance_of_item.nil?
+        if @items.delete(item).nil?
           raise Errors::ShoppingCartError, "Item not found"
         end
-        @items.delete_at first_instance_of_item
-        @total = total - item.total
       end
 
-      # Clear the cart, setting @total to 0 and @items to []
+      # Clear the cart, setting @items to []
       def remove_all
-        @total = 0
         @items = []
       end
 
       # @return [Integer] The amount in CLP of the [Item]s included in the [ShoppingCart]
       def total
+        # Array#sum is Ruby 2.4+
         @items.reduce(0) { |total, item| total + item.total }
       end
 

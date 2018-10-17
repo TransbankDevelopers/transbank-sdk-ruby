@@ -124,64 +124,6 @@ class ShoppingCartTest < Transbank::Onepay::Test
     assert_equal error.message, 'Item not found'
   end
 
-  def test_shopping_cart_can_add_and_remove_the_same_item_multiple_times
-    cart = Transbank::Onepay::ShoppingCart.new @cart_items
-    first_item = cart.items.first
-
-    first_item_total = first_item.total
-    first_item_quantity = first_item.quantity
-    cart_total = cart.total
-    cart_items_quantity = cart.items_quantity
-
-    # This is the total amount, when the cart has just been created with these
-    # {"amount": 100, "quantity": 10, "description": "something"},
-    # {"amount": 200, "quantity": 20, "description": "something else"},
-    # {"amount": 300, "quantity": 30, "description": "third element"}
-    assert_equal cart_total, 14000
-    assert_equal cart_items_quantity, (10 + 20 + 30)
-
-    cart << first_item
-    cart_total += first_item_total
-    cart_items_quantity += first_item_quantity
-    assert_equal cart.items.size, 4
-    assert_equal cart.total, cart_total
-    assert_equal cart.items_quantity, cart_items_quantity
-
-    cart << first_item
-    cart_total += first_item_total
-    cart_items_quantity += first_item_quantity
-    assert_equal cart.items.size, 5
-    assert_equal cart.total, cart_total
-    assert_equal cart.items_quantity, cart_items_quantity
-
-    cart.remove first_item
-    cart_total -= first_item_total
-    cart_items_quantity -= first_item_quantity
-    assert_equal cart.items.size, 4
-    assert_equal cart.total, cart_total
-    assert_equal cart.items_quantity, cart_items_quantity
-
-    cart.remove first_item
-    cart_total -= first_item_total
-    cart_items_quantity -= first_item_quantity
-    assert_equal cart.items.size, 3
-    assert_equal cart.total, cart_total
-    assert_equal cart.items_quantity, cart_items_quantity
-
-    cart.remove first_item
-    cart_total -= first_item_total
-    cart_items_quantity -= first_item_quantity
-    assert_equal cart.items.size, 2
-    assert_equal cart.total, cart_total
-    assert_equal cart.items_quantity, cart_items_quantity
-
-    error =
-      assert_raises Transbank::Onepay::Errors::ShoppingCartError do
-        cart.remove first_item
-      end
-    assert_equal error.message, 'Item not found'
-  end
-
   def test_total_should_be_updated_if_an_item_is_modified
     cart = Transbank::Onepay::ShoppingCart.new @cart_items
     first_item = cart.items.first
