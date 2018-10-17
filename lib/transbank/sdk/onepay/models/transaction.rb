@@ -36,11 +36,11 @@ module Transbank
           validate_shopping_cart!(shopping_cart)
 
           options = complete_options(options)
+
           create_request = create_transaction(shopping_cart: shopping_cart,
                                               channel: channel,
                                               external_unique_number: external_unique_number,
                                               options: options)
-          puts "CREATE REQUEST IS:\n #{create_request.to_h}"
           response = http_post(transaction_create_path, create_request.to_h)
 
           validate_create_response!(response)

@@ -182,20 +182,33 @@ class ShoppingCartTest < Transbank::Onepay::Test
     assert_equal error.message, 'Item not found'
   end
 
-  def test_should_not_remove_an_item_if_it_was_modified
+  def test_total_should_be_updated_if_an_item_is_modified
     cart = Transbank::Onepay::ShoppingCart.new @cart_items
     first_item = cart.items.first
 
     assert_equal first_item.quantity, 10
     assert_equal first_item.amount, 100
-
+    original_total = 14000
+    assert_equal original_total, 14000
     first_item.amount = 200
-    error =
-      assert_raises Transbank::Onepay::Errors::ShoppingCartError do
-        cart.remove first_item
-      end
-    assert_equal error.message, 'Item not found'
+
+    # 200 * 10  + 200 * 20 + 300 * 30
+    new_total = 15000
+    assert_equal new_total, 15000
   end
 
+  def items_quantity_should_be_updated_if_an_item_is_modified
+    cart = Transbank::Onepay::ShoppingCart.new @cart_items
+    first_item = cart.items.first
 
+    assert_equal first_item.quantity, 10
+    assert_equal first_item.amount, 100
+    original_total = 14000
+    assert_equal original_total, 14000
+    first_item.amount = 200
+
+    # 200 * 10  + 200 * 20 + 300 * 30
+    new_total = 15000
+    assert_equal new_total, 15000
+  end
 end

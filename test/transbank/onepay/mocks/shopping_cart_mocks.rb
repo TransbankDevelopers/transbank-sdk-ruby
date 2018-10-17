@@ -13,7 +13,6 @@ module Transbank
 
         cart << item1
         cart << item2
-
         @mocks.push cart
 
 
