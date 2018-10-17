@@ -203,12 +203,11 @@ class ShoppingCartTest < Transbank::Onepay::Test
 
     assert_equal first_item.quantity, 10
     assert_equal first_item.amount, 100
-    original_total = 14000
-    assert_equal original_total, 14000
-    first_item.amount = 200
 
-    # 200 * 10  + 200 * 20 + 300 * 30
-    new_total = 15000
-    assert_equal new_total, 15000
+    original_quantity = cart.items_quantity
+    assert_equal original_quantity, 60
+    first_item.quantity = 100
+
+    assert_equal cart.items, 150
   end
 end
