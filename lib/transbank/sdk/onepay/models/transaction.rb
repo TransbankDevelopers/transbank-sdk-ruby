@@ -45,7 +45,7 @@ module Transbank
 
           validate_create_response!(response)
           transaction_create_response = TransactionCreateResponse.new response
-          signature_is_valid = transaction_create_response.validate_signature(options.fetch(:shared_secret))
+          signature_is_valid = transaction_create_response.validate_signature?(options.fetch(:shared_secret))
           unless signature_is_valid
             raise Errors::SignatureError, "The response's signature is not valid."
           end
@@ -67,7 +67,7 @@ module Transbank
           response = http_post(transaction_commit_path, commit_request.to_h)
           validate_commit_response!(response)
           transaction_commit_response = TransactionCommitResponse.new(response)
-          signature_is_valid = transaction_commit_response.validate_signature(options.fetch(:shared_secret))
+          signature_is_valid = transaction_commit_response.validate_signature?(options.fetch(:shared_secret))
           unless signature_is_valid
             raise Errors::SignatureError, "The response's signature is not valid."
           end
