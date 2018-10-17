@@ -38,7 +38,7 @@ module Transbank
         # the secret param. Return true if equal
         # @param secret [String] the secret used to create the signature with.
         # @return [boolean] return true if signatures match, false otherwise
-        def validate_signature?(secret)
+        def valid_signature?(secret)
           # We should be able to recreate the same signature from the signable's data
           # and the secret
           self.signature == signature_for(self.to_data, secret)
