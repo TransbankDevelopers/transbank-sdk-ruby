@@ -90,8 +90,7 @@ module Transbank
           .reduce(true) do |result, current_instance_variable|
             original_value = send(current_instance_variable)
             compared_value = another_item.send(current_instance_variable)
-            next (result && true) if (original_value == compared_value)
-            false
+            result && original_value == compared_value
           end
       end
 
