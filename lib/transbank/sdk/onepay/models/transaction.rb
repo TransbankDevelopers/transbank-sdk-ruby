@@ -36,13 +36,11 @@ module Transbank
           validate_shopping_cart!(shopping_cart)
 
           options = complete_options(options)
-
           create_request = create_transaction(shopping_cart: shopping_cart,
                                               channel: channel,
                                               external_unique_number: external_unique_number,
                                               options: options)
           response = http_post(transaction_create_path, create_request.to_h)
-
           validate_create_response!(response)
           transaction_create_response = TransactionCreateResponse.new response
           signature_is_valid = transaction_create_response.valid_signature?(options.fetch(:shared_secret))

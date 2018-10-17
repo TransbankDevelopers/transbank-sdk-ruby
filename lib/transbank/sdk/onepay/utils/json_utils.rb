@@ -28,8 +28,9 @@ module Transbank
               instance_vars.reduce({}) do |resulting_hash, instance_variable|
                 if respond_to? instance_variable
                   value = send(instance_variable)
-                  value = value.to_h if value.respond_to? :to_h unless value.is_a? Array
-                  value = value.to_a if value.respond_to? :to_a unless value.is_a? Hash
+                  # Safe navigation operator is Ruby 2.3+
+                  value = value.to_h if value && value.respond_to?(:to_h) unless value.is_a? Array
+                  value = value.to_a if value && value.respond_to?(:to_a) unless value.is_a? Hash
                   if value.is_a? Array
                     value.map {|x| x.respond_to?(:jsonify) ? JSON.parse(x.jsonify) : x }
                   end
