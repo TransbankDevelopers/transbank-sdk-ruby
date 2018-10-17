@@ -86,12 +86,11 @@ module Transbank
       # Override == to allow comparison between [Item]s
       # @return [boolean] true if equal, false otherwise
       def ==(another_item)
-        instance_variables.map! { |var| var.to_s.gsub!(/^@/, '') }
-          .reduce(true) do |result, current_instance_variable|
-            original_value = send(current_instance_variable)
-            compared_value = another_item.send(current_instance_variable)
-            result && original_value == compared_value
-          end
+         self.description == another_item.description &&
+         self.quantity == another_item.quantity &&
+         self.amount == another_item.amount &&
+         self.additional_data == another_item.additional_data &&
+         self.expire == another_item.expire
       end
 
       # Alias for #==
