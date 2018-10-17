@@ -30,7 +30,7 @@ module Transbank
         end
 
         def snake_to_camel_case(str)
-          str.split('_').reduce { |m, p| m + p.capitalize }
+          str.split('_').reduce { |string, current_word| string + current_word.capitalize }
         end
       end
     end
