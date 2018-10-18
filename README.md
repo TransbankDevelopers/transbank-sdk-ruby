@@ -8,8 +8,6 @@ SDK Oficial de Transbank
 
 # Instalación
 
-### Instalación
-
 Puedes instalar el SDK directamente
 ```bash
 gem install transbank-sdk
