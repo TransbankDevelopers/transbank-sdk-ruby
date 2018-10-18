@@ -9,9 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Transbank Developers"]
   spec.email         = ["transbankdevelopers@continuum.cl"]
 
-  spec.summary       = %q{Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{Write a longer description or delete this line.}
-  spec.homepage      = "http://mygemserver.com"
+  spec.summary       = %q{Transbank SDK for Ruby}
+  spec.homepage      = "https://www.transbankdevelopers.cl/"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
