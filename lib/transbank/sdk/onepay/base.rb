@@ -6,17 +6,17 @@ module Transbank
       DEFAULT_API_KEY = 'dKVhq1WGt_XapIYirTXNyUKoWTDFfxaEV63-O5jcsdw'.freeze
       DEFAULT_SHARED_SECRET = '?XW#WOLG##FBAGEAYSNQ5APD#JF@$AYZ'.freeze
 
-      @app_keys = {'TEST': '1a0c0639-bd2f-4846-8d26-81f43187e797',
-                   'LIVE': '2B571C49-C1B6-4AD1-9806-592AC68023B7',
-                   'MOCK': '04533c31-fe7e-43ed-bbc4-1c8ab1538afp'}.freeze
-      @integration_types = {"TEST": 'https://onepay.ionix.cl'.freeze,
-                            "LIVE": 'https://www.onepay.cl'.freeze,
-                            "MOCK": 'http://onepay.getsandbox.com'.freeze}.freeze
+      @app_keys = {TEST: '1a0c0639-bd2f-4846-8d26-81f43187e797',
+                   LIVE: '2B571C49-C1B6-4AD1-9806-592AC68023B7',
+                   MOCK: '04533c31-fe7e-43ed-bbc4-1c8ab1538afp'}.freeze
+      @integration_types = {TEST: 'https://onepay.ionix.cl'.freeze,
+                            LIVE: 'https://www.onepay.cl'.freeze,
+                            MOCK: 'http://onepay.getsandbox.com'.freeze}.freeze
       @callback_url = self::DEFAULT_CALLBACK
       @api_key = ENV['ONEPAY_API_KEY'].nil? ? DEFAULT_API_KEY : ENV['ONEPAY_API_KEY']
       @shared_secret = ENV['ONEPAY_SHARED_SECRET'].nil? ? DEFAULT_SHARED_SECRET : ENV['ONEPAY_SHARED_SECRET']
 
-      @integration_type = 'TEST'
+      @integration_type = :TEST
       @app_scheme = nil
       @default_channel = Transbank::Onepay::Channel::WEB
 
@@ -41,8 +41,8 @@ module Transbank
         attr_writer :shared_secret
 
         # The current integration type
-        # @param [String]
-        # @return [String]
+        # @param [String, Symbol]
+        # @return [Symbol]
         attr_reader :integration_type
 
         # The URI for the app (eg the Android Intent that starts the app/the iOS

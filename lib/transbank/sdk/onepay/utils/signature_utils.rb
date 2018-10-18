@@ -37,18 +37,11 @@ module Transbank
         # Compare the @signature of self with the one recreated from self using
         # the secret param. Return true if equal
         # @param secret [String] the secret used to create the signature with.
-        # @return [boolean] return true if signatures match
-        # @raise [SignatureError] if signatures do not match.
-        def validate_signature!(secret)
-          given_signature = self.signature
+        # @return [boolean] return true if signatures match, false otherwise
+        def valid_signature?(secret)
           # We should be able to recreate the same signature from the signable's data
           # and the secret
-          recalculated_signature = signature_for(self.to_data, secret)
-          signature_is_valid = given_signature == recalculated_signature
-          unless signature_is_valid
-            raise Errors::SignatureError, "The response's signature is not valid."
-          end
-          true
+          self.signature == signature_for(self.to_data, secret)
         end
       end
     end

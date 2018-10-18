@@ -11,11 +11,7 @@ module Transbank
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = uri.scheme == 'https'
           request = Net::HTTP::Post.new(uri.path, 'Content-Type'=> 'application/json')
-          puts body
-          "\n\n"
           camel_cased_body = keys_to_camel_case(body)
-          puts camel_cased_body
-          puts "\n\n"
           request.body = JSON.generate(camel_cased_body)
           result = http.request(request)
           JSON.parse(result.body)
@@ -25,7 +21,7 @@ module Transbank
         def keys_to_camel_case(hash)
           hash.reduce({}) do |new_hash, (key, val)|
             if val.is_a? Array
-              val.map! {|value| value.is_a?(Hash) ? keys_to_camel_case(value) : value }
+              val.map {|value| value.is_a?(Hash) ? keys_to_camel_case(value) : value }
             end
             new_key = snake_to_camel_case(key.to_s)
             new_hash[new_key] = val
@@ -34,7 +30,7 @@ module Transbank
         end
 
         def snake_to_camel_case(str)
-          str.split('_').reduce { |m, p| m + p.capitalize }
+          str.split('_').reduce { |string, current_word| string + current_word.capitalize }
         end
       end
     end
