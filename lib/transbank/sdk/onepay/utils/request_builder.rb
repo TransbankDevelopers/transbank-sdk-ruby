@@ -24,6 +24,7 @@ module Transbank
                                                  channel: channel,
                                                  app_scheme: Base.app_scheme)
           request.set_keys_from_options(options)
+          request.app_key = Base::current_integration_type_app_key
           request.sign(options.fetch(:shared_secret))
         end
 
@@ -36,6 +37,7 @@ module Transbank
           issued_at = Time.now.to_i
           request = TransactionCommitRequest.new(occ, external_unique_number, issued_at)
           request.set_keys_from_options(options)
+          request.app_key = Base::current_integration_type_app_key
           request.sign(options.fetch(:shared_secret))
         end
 
@@ -55,6 +57,7 @@ module Transbank
                                             authorization_code: authorization_code,
                                             issued_at: issued_at)
           request.set_keys_from_options(options)
+          request.app_key = Base::current_integration_type_app_key
           request.sign(options.fetch(:shared_secret))
         end
 
@@ -67,7 +70,7 @@ module Transbank
         # Fill options with default values
         def complete_options(options = {})
           options = {} if options.nil?
-          options.merge(default_options)
+          default_options.merge(options)
         end
 
         # Return the default options values:
@@ -77,7 +80,6 @@ module Transbank
         # @return [Hash] a hash with the aforementioned keys/values
         def default_options
           { api_key: Base::api_key,
-            app_key: Base::current_integration_type_app_key,
             shared_secret: Base::shared_secret }
         end
       end

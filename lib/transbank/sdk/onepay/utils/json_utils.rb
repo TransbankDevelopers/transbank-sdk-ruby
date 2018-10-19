@@ -32,8 +32,9 @@ module Transbank
                   value = value.to_h if value && value.respond_to?(:to_h) unless value.is_a? Array
                   value = value.to_a if value && value.respond_to?(:to_a) unless value.is_a? Hash
                   if value.is_a? Array
-                    value.map {|x| x.respond_to?(:jsonify) ? JSON.parse(x.jsonify) : x }
+                    value = value.map {|x| x.respond_to?(:jsonify) ? JSON.parse(x.jsonify) : x }
                   end
+
                   value = value.jsonify if value.respond_to? :jsonify
                   resulting_hash[instance_variable] = value
                 end
