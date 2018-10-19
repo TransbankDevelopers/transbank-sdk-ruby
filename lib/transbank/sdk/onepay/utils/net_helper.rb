@@ -21,7 +21,7 @@ module Transbank
         def keys_to_camel_case(hash)
           hash.reduce({}) do |new_hash, (key, val)|
             if val.is_a? Array
-              val.map {|value| value.is_a?(Hash) ? keys_to_camel_case(value) : value }
+              val = val.map {|value| value.is_a?(Hash) ? keys_to_camel_case(value) : value }
             end
             new_key = snake_to_camel_case(key.to_s)
             new_hash[new_key] = val
