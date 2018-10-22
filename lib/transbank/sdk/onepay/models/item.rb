@@ -58,9 +58,7 @@ module Transbank
       # @raise [ItemError] when amount is nil or less than zero.
       def amount=(amount)
         raise Errors::ItemError, "Amount cannot be null" if amount.nil?
-        if amount < 0
-          raise Errors::ItemError, "Amount cannot be less than zero"
-        end
+        amount < 0 #if amount is not a number will throw ArgumentError
         @amount = amount
       end
 
