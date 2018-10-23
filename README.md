@@ -25,15 +25,14 @@ bundle install
 
 Puedes encontrar toda la documentación de cómo usar este SDK en el sitio https://www.transbankdevelopers.cl.
 
+Actualmente este SDK contiene sólo Onepay.
+
 La documentación relevante para usar este SDK es:
 
-- Documentación general sobre los productos y sus diferencias:
-  [Webpay](https://www.transbankdevelopers.cl/producto/webpay) y
-  [Onepay](https://www.transbankdevelopers.cl/producto/onepay).
+- Documentación general sobre [Onepay](https://www.transbankdevelopers.cl/producto/onepay).
 - Documentación sobre [ambientes, deberes del comercio, puesta en producción,
   etc](https://www.transbankdevelopers.cl/documentacion/como_empezar#ambientes).
-- Primeros pasos con [Webpay](https://www.transbankdevelopers.cl/documentacion/webpay) y [Onepay](https://www.transbankdevelopers.cl/documentacion/onepay).
-- Referencia detallada sobre [Webpay](https://www.transbankdevelopers.cl/referencia/webpay) y [Onepay](https://www.transbankdevelopers.cl/referencia/onepay).
+- Referencia detallada sobre [Onepay](https://www.transbankdevelopers.cl/referencia/onepay).
 
 ## Información para contribuir y desarrollar este SDK
 
