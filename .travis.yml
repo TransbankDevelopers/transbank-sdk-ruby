@@ -1,5 +1,13 @@
 sudo: false
 language: ruby
 rvm:
-  - 2.5.1
+- 2.5.1
 before_install: gem install bundler -v 1.16.2
+deploy:
+  provider: rubygems
+  api_key:
+    secure: FdarAMhSTab0mv2kW36hasWQh6ckQgJnq+pFWX9LFvGXUlDpp9F7GNqS79ZUHvbcADFY3cgqi6DYhrssOHszPflDL3Ed/AP1CDX/FJX8XvNuS8i38jiG5rnYuBUo8LgiMf/9iZZ2EBEOsWmEg1HMaTfx6A90BWq1wdihXOD7q/huhWkA3xhJAuKKCEaOm/YDEraz8gv3DY6I2H8LDNpC960WiJTh8zJ56DyaxN9nq9QIrePOLgeqNfBB9HmsXGRxRzGf45gewS8ODqx2yigk6c1j8ciWp9lhyX5xgd0V932Ic/D+Q4mlTcc6Jzn6UslA2m0ekXeeC8dkA44EjUuUJUYpg378d0XYTAwqzjCpAQ/53b6lAV7iMA5vqtjWFZn8zi7CJ7oz3gQ2Jw+uWc8SjBUUgRdpPN3FXxACY9haFLBsEHcMG9Dy9Oj3MU/y1NivGHOV4RazcZ3CPQY1aO3zGwqNQRaCWsArYJKM3zLlhWO6sGxrezmjFih+7mfAx52N0GG4kPZd3kZUAUJdVgUbPCV6GxMVZMSHI2vilmnjawQnMUvQjow4CCSl4zDA2KF/8v9IVS3R9cce4gWb4DwsCj1BrfUduQJWAojW1wJTZidtKmSHxE6+lM/vAjmpamzt83yVlNLTAW+hrgFV0Kec+z6OxUYZm1eHMsWnZq06ZOU=
+  gem: transbank-sdk
+  on:
+    tags: true
+    repo: TransbankDevelopers/transbank-sdk-ruby
