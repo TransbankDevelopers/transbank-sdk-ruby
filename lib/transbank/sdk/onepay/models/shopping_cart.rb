@@ -24,7 +24,7 @@ module Transbank
       # @param item [Item] an instance of [Item]
       # @return [boolean] return true if item is successfully added
       def add(item)
-        new_total = total + item.amount * item.quantity
+        new_total = total + item.total
         if new_total < 0
           raise Errors::ShoppingCartError, "Total amount cannot be less than zero."
         end
