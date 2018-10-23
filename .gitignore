@@ -8,3 +8,6 @@
 /tmp/
 .idea
 *.gem
+.built
+.bundled
+Gemfile.lock

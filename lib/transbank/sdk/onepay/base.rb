@@ -11,7 +11,7 @@ module Transbank
                    MOCK: '04533c31-fe7e-43ed-bbc4-1c8ab1538afp'}.freeze
       @integration_types = {TEST: 'https://onepay.ionix.cl'.freeze,
                             LIVE: 'https://www.onepay.cl'.freeze,
-                            MOCK: 'http://onepay.getsandbox.com'.freeze}.freeze
+                            MOCK: 'https://transbank-onepay-ewallet-mock.herokuapp.com'.freeze}.freeze
       @callback_url = self::DEFAULT_CALLBACK
       @api_key = ENV['ONEPAY_API_KEY'].nil? ? DEFAULT_API_KEY : ENV['ONEPAY_API_KEY']
       @shared_secret = ENV['ONEPAY_SHARED_SECRET'].nil? ? DEFAULT_SHARED_SECRET : ENV['ONEPAY_SHARED_SECRET']
