@@ -9,3 +9,6 @@
 .idea
 *.gem
 Gemfile.lock
+.built
+.bundled
+
