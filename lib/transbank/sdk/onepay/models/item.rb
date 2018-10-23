@@ -55,11 +55,12 @@ module Transbank
       end
 
       # @param amount [Integer] The value of each unit of [Item]
-      # @raise [ItemError] when amount is nil or less than zero.
+      # @raise [ItemError] when amount cannot be null.
+      # @raise [ArgumentError] when amount is not an Integer.
       def amount=(amount)
         raise Errors::ItemError, "Amount cannot be null" if amount.nil?
-        if amount < 0
-          raise Errors::ItemError, "Amount cannot be less than zero"
+        if amount != Integer(amount)
+          raise ArgumentError, "Amount is not an Integer"
         end
         @amount = amount
       end

@@ -64,6 +64,11 @@ La documentación relevante para usar este SDK es:
 ### Todas las mezclas a master se hacen mediante Pull Request.
 
 ### Test
+Primero y solamente una vez para instalar gemas debes usar el siguiente comando en una terminal.
+```bash
+make build
+```
+
 Para ejecutar los test localmente debes usar el siguiente comando en una terminal.
 ```bash
 make

@@ -96,7 +96,7 @@ class ItemTest < Transbank::Onepay::Test
         assert_raises ArgumentError do
           Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "comparison of String with 0 failed"
+    assert_equal error.message, "Amount is not an Integer"
   end
 
   def test_raises_if_quantity_is_not_given
@@ -125,16 +125,6 @@ class ItemTest < Transbank::Onepay::Test
           Transbank::Onepay::Item.new json
         end
     assert_equal error.message, "comparison of String with 0 failed"
-  end
-
-  def test_raises_if_amount_is_less_than_zero
-    json = {"amount": -2000, "quantity": 5, "description": "something valuable"}
-
-    error =
-        assert_raises Transbank::Onepay::Errors::ItemError do
-          Transbank::Onepay::Item.new json
-        end
-    assert_equal error.message, "Amount cannot be less than zero"
   end
 
   def test_raises_if_quantity_is_less_than_zero

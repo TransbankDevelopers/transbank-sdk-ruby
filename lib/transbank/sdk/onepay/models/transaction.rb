@@ -77,7 +77,7 @@ module Transbank
         def is_options_hash?(hash)
           return false unless hash.respond_to? :keys
           # Intersection of the two arrays
-          ([:app_key, :api_key, :shared_secret] & hash.keys).any?
+          ([:api_key, :shared_secret] & hash.keys).any?
         end
 
         def validate_channel!(channel)

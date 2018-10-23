@@ -69,6 +69,48 @@ class ShoppingCartTest < Transbank::Onepay::Test
     assert_equal cart.total, (100 * 10 + 200 * 20)
   end
 
+  def test_can_add_items_to_cart_with_item_negative_value
+    cart = Transbank::Onepay::ShoppingCart.new
+    assert cart.items.empty?
+    item1 = Transbank::Onepay::Item.new({"amount": 200, "quantity": 1, "description": "something"})
+
+    assert cart.items.empty?
+
+    cart << item1
+    assert cart.items.first == item1
+    assert_equal cart.items.size, 1
+    assert_equal cart.total, 200
+
+    item2 = Transbank::Onepay::Item.new({"amount": -10, "quantity": 1, "description": "discount"})
+
+    cart.add item2
+    assert cart.items[1], item2
+    assert_equal cart.items.size, 2
+    assert_equal cart.total, 190
+  end
+
+  def test_can_add_items_to_cart_with_item_negative_value_greater_than_total_amount
+    cart = Transbank::Onepay::ShoppingCart.new
+    assert cart.items.empty?
+    item1 = Transbank::Onepay::Item.new({"amount": 200, "quantity": 1, "description": "something"})
+
+    assert cart.items.empty?
+
+    cart << item1
+    assert cart.items.first == item1
+    assert_equal cart.items.size, 1
+    assert_equal cart.total, 200
+
+    item2 = Transbank::Onepay::Item.new({"amount": -201, "quantity": 1, "description": "discount"})
+
+    error =
+      assert_raises Transbank::Onepay::Errors::ShoppingCartError do
+        cart.add item2
+      end
+
+    assert_equal error.message, "Total amount cannot be less than zero."
+  end
+
   def test_can_remove_items_from_a_cart
     cart = Transbank::Onepay::ShoppingCart.new @cart_items
     assert cart.is_a? Transbank::Onepay::ShoppingCart
