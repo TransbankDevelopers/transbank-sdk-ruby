@@ -1,6 +1,7 @@
 deploy:
   provider: rubygems
-  api_key: 2c3ae95712d46b8d518abe4b3bc8fbc8
+  api_key:
+    secure: KXzfUWBchfDP4l+6JkfBxZMQ78L5r3GniHQ/fwbXa5573w3ph/BEeHPsJIyPBCtYZppXVw9LvrchQJ/NQE82zJO6WLvLh3k1r0+q5ApJymSU46aokxY/VnCcN+Ozy7bnEZuUIwA9XRqLA6WKWY6gUv5HVboGJhQEDKIyAA/aDK3Y+a/UqZdxfo5wedFRtFq9ndYqM+bHKMwU46seboGR+GBm2d1uV2Ku6p6Ej4IVdp9yvS784S7DkMA7v/ZuJalzge782lC7WRoz6FZsjHtWeTu3DdD+n8zntcIJ5O/c6AiPnOqC1lLqlTldVtF/aERvkD6b4WqKkAiE5n/RTYC31gDi93Jzjq+/CRW2lodIEcP3RegvDLowlOFYe788Fx0TXU68XiaamMi4wA9Yz1n2L3kyn+D3mLjZzHFBFhpVdIquDb1i19qoLPWuvRz+T31IXWo8+l4N58e58Q3tG1r7hzco/2WDdS/gGDfA5rdhhNwe9yXIjAWa2PczZ03fTBcVpF9rkClfZ7mTmCZziO9LpdZ9QLfS6msHYqgyzSGnuiCZ+b9mZjmsnTXUTabDVFDI6DH+RkAOwR6SHMN5u/a63qMIphHW/oZYCqIHLr7uLwOa/tUp2Lx5HfPmvxfWHPt+yHR5xLj4axufRxKiB/LRyQQ4YsDNt3XAYLS8wImcT4M=
   gem: transbank-sdk
   on:
     tags: true
