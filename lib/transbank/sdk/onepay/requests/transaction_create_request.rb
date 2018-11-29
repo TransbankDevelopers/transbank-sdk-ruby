@@ -68,7 +68,7 @@ module Transbank
 
       def channel=(channel)
         raise Errors::TransactionCreateError, 'Channel cannot be null.' if channel.nil?
-        channel
+        @channel = channel
       end
 
       def sign(secret)
