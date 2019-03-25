@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 0.59.2"
   spec.add_development_dependency "pry", "~> 0.11.3"
   spec.add_development_dependency 'minitest-reporters', '~> 1.1.9'
-  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'byebug', '~> 10.0.2'
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'webmock'
 end
