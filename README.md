@@ -66,7 +66,7 @@ La documentación relevante para usar este SDK es:
 ### Test
 Primero y solamente una vez para instalar gemas debes usar el siguiente comando en una terminal.
 ```bash
-docker-compose run web bundle install
+make build
 ```
 
 Para ejecutar los test localmente debes usar el siguiente comando en una terminal.
