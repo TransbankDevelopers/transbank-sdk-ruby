@@ -4,7 +4,7 @@ SDK Oficial de Transbank
 
 ## Requisitos:
 
-- Ruby 2.2+
+- Ruby 2.4+
 
 # Instalación
 
@@ -66,7 +66,7 @@ La documentación relevante para usar este SDK es:
 ### Test
 Primero y solamente una vez para instalar gemas debes usar el siguiente comando en una terminal.
 ```bash
-make build
+docker-compose run web bundle install
 ```
 
 Para ejecutar los test localmente debes usar el siguiente comando en una terminal.

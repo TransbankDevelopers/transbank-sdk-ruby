@@ -15,6 +15,6 @@ services:
     - "8000:8000"
 
   bundle_cache:
-    image: ruby:2.2-jessie # Should be the same as the app Dockerfile.dev base image
+    image: ruby:2.4-jessie # Should be the same as the app Dockerfile.dev base image
     volumes:
     - /usr/local/bundle
