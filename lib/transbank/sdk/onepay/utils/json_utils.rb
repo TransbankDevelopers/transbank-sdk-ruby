@@ -40,6 +40,10 @@ module Transbank
                 end
                 resulting_hash
               end
+          # Some values can't be null and must be removed if they are
+          instance_as_hash.reject! do |key, value|
+            %w[commerce_logo_url width_height].include?(key) && value.nil?
+          end
           JSON.generate instance_as_hash
         end
 

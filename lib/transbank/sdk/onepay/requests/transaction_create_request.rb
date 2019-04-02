@@ -5,7 +5,8 @@ module Transbank
       include Request
 
       attr_accessor :external_unique_number, :total, :items_quantity, :issued_at,
-                    :items, :callback_url, :channel, :app_scheme, :signature
+                    :items, :callback_url, :channel, :app_scheme, :signature,
+                    :commerce_logo_url, :width_height
       attr_reader :generate_ott_qr_code
 
       SIGNATURE_PARAMS = [:external_unique_number,
@@ -24,6 +25,8 @@ module Transbank
       # are on the [Channel] class
       # @param app_scheme [String] identificator for the Merchant's app
       # @param signature [String, nil] a hashstring created for verification purposes
+      # @param commerce_logo_url [String] The URL pointing to the Merchant's logo
+      # @param width_height [Numeric] qr width and height used by the frontend JS SDK.
       def initialize(opts = {})
         self.external_unique_number = opts.fetch(:external_unique_number)
         self.total = opts.fetch(:total)
@@ -35,6 +38,8 @@ module Transbank
         self.channel = channel
         self.app_scheme = opts.fetch(:app_scheme, '')
         self.signature = nil
+        self.commerce_logo_url = opts.fetch(:commerce_logo_url)
+        self.width_height = opts.fetch(:width_height)
         # This is never anything but true, but it is required by the server
         @generate_ott_qr_code = true
       end

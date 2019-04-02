@@ -15,14 +15,18 @@ module Transbank
           options = complete_options(options)
           issued_at = Time.now.to_i
 
-          request = TransactionCreateRequest.new(external_unique_number: external_unique_number,
-                                                 total: shopping_cart.total,
-                                                 items_quantity: shopping_cart.items_quantity,
-                                                 issued_at: issued_at,
-                                                 items: shopping_cart.items,
-                                                 callback_url: Base.callback_url,
-                                                 channel: channel,
-                                                 app_scheme: Base.app_scheme)
+          request = TransactionCreateRequest.new(
+            external_unique_number: external_unique_number,
+            total: shopping_cart.total,
+            items_quantity: shopping_cart.items_quantity,
+            issued_at: issued_at,
+            items: shopping_cart.items,
+            callback_url: Base.callback_url,
+            channel: channel,
+            app_scheme: Base.app_scheme,
+            commerce_logo_url: options[:commerce_logo_url],
+            width_height: options[:width_height]
+          )
           request.set_keys_from_options(options)
           request.app_key = Base::current_integration_type_app_key
           request.sign(options.fetch(:shared_secret))

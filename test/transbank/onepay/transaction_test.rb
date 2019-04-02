@@ -292,7 +292,35 @@ class TransactionTest < Transbank::Onepay::Test
     Transbank::Onepay::Base.app_scheme = original_app_scheme
   end
 
+  def test_transaction_create_request_succeeds_when_commerce_logo_url_is_present
+    WebMock.allow_net_connect!
+    Transbank::Onepay::Base.app_scheme = 'somescheme'
+    cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
+    response = Transbank::Onepay::Transaction.create(
+      shopping_cart: cart,
+      channel: Transbank::Onepay::Channel::WEB,
+      external_unique_number: '1234abc',
+      options: {
+        commerce_logo_url: 'https://via.placeholder.com/150'
+      }
+    )
+    assert_equal response.response_code, 'OK'
+    refute_nil response.qr_code_as_base64
+  end
 
-
+  def test_transaction_create_request_succeeds_when_width_height_is_present
+    WebMock.allow_net_connect!
+    Transbank::Onepay::Base.app_scheme = 'somescheme'
+    cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
+    response = Transbank::Onepay::Transaction.create(
+      shopping_cart: cart,
+      channel: Transbank::Onepay::Channel::WEB,
+      external_unique_number: '1234abc',
+      options: {
+        width_height: 250
+      }
+    )
+    assert_equal response.response_code, 'OK'
+    refute_nil response.qr_code_as_base64
+  end
 end
-
