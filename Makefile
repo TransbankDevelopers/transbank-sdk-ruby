@@ -11,7 +11,7 @@ build: .built .bundled
 	docker-compose build
 	touch .built
 
-.bundled: Gemfile Gemfile.lock
+.bundled: Gemfile
 	docker-compose run --rm web bundle install
 	touch .bundled
 
