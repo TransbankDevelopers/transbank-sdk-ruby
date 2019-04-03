@@ -3,8 +3,8 @@
 module Transbank
   module Webpay
     # Base class for Transbank's Webpay
-    class Base
-      @environment = {
+    class Webpay
+      @environments = {
         INTEGRACION: 'INTEGRACION'.freeze,
         CERTIFICACION: 'INTEGRACION'.freeze,
         TEST: 'INTEGRACION'.freeze,
@@ -58,8 +58,15 @@ module Transbank
       "R48O6P0ZpWLlZwScyqDWcsg/4wNCL5Kaa5VgM03SKM6XoWTzkT7p0t0FPZVoGCyG\n" \
       "MX5lzVXafBH/sPd545fBH2J3xAY3jtP764G4M8JayOFzGB0=\n" \
       "-----END CERTIFICATE-----\n".freeze
+
+      @configuration = nil
+
+      def initialize(configuration)
+        @configuration = configuration
+      end
+
       class << self
-        attr_accessor :environment
+        attr_accessor :environments
 
         def default_cert(environment = nil)
           return TEST_CERT unless environment.eql?('PRODUCCION')
