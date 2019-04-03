@@ -19,6 +19,7 @@ require 'transbank/sdk/onepay/base'
 
 require 'transbank/sdk/webpay/configuration/configuration'
 require 'transbank/sdk/webpay/webpay'
+require 'transbank/sdk/webpay/webpay_normal'
 
 module Transbank
   module Onepay

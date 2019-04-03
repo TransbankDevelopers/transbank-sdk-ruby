@@ -5,6 +5,7 @@ module Transbank
       attr_accessor :public_cert
       attr_accessor :webpay_cert
       attr_accessor :commerce_code
+      attr_accessor :environment
 
       DEFAULT_WEBPAY_CERTS = {
         TEST:
@@ -108,12 +109,13 @@ module Transbank
 
       # Returns a Configuration object ready to be used
       def self.for_testing_webpay_plus_normal
-        configuration = Configuration.new
-        configuration.private_key = WEBPAY_NORMAL_TEST_PRIVATE_KEY
-        configuration.public_cert = WEBPAY_NORMAL_TEST_CERT
-        configuration.webpay_cert = DEFAULT_WEBPAY_CERTS[:TEST]
-        configuration.commerce_code = '597020000540'
-        configuration
+        config = Configuration.new
+        config.environment = ::Transbank::Webpay::Webpay.environments[:TEST]
+        config.private_key = WEBPAY_NORMAL_TEST_PRIVATE_KEY
+        config.public_cert = WEBPAY_NORMAL_TEST_CERT
+        config.webpay_cert = DEFAULT_WEBPAY_CERTS[:TEST]
+        config.commerce_code = '597020000540'
+        config
       end
     end
   end

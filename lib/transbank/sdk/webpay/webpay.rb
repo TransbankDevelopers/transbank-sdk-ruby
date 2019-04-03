@@ -65,6 +65,10 @@ module Transbank
         @configuration = configuration
       end
 
+      def normal_transaction
+        WebpayNormal.new(@configuration)
+      end
+
       class << self
         attr_accessor :environments
 
