@@ -25,7 +25,7 @@ module Transbank
             channel: channel,
             app_scheme: Base.app_scheme,
             commerce_logo_url: options[:commerce_logo_url],
-            width_height: options[:width_height]
+            width_height: options[:qr_width_height]
           )
           request.set_keys_from_options(options)
           request.app_key = Base::current_integration_type_app_key
@@ -83,8 +83,12 @@ module Transbank
         # shared_secret: Base::shared_secret
         # @return [Hash] a hash with the aforementioned keys/values
         def default_options
-          { api_key: Base::api_key,
-            shared_secret: Base::shared_secret }
+          {
+            api_key: Base::api_key,
+            shared_secret: Base::shared_secret,
+            commerce_logo_url: Base::commerce_logo_url,
+            qr_width_height: Base::qr_width_height
+          }
         end
       end
     end

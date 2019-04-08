@@ -55,6 +55,16 @@ module Transbank
         # @return [String] One of the values from Channel.values
         attr_reader :default_channel
 
+        # The width and height in pixels for the returned QR.
+        # @param [Integer]
+        # @return [Integer]
+        attr_accessor :qr_width_height
+
+        # The url of the commerce logo to be displayed in the Onepay mobile app.
+        # @param [String]
+        # @return [String]
+        attr_accessor :commerce_logo_url
+
         # @return [String] the URL that is used by the current integration type
         def current_integration_type_url
           @integration_types[@integration_type]
