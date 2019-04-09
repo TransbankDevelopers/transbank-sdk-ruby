@@ -1,5 +1,5 @@
 # frozen_string_literals: true
-
+require 'savon'
 module Transbank
   module Webpay
     # Normal transaction class
@@ -21,16 +21,28 @@ module Transbank
         '-8': 'Rubro no autorizado'
       }.freeze
 
-      @configuration = nil
-      @wsdl = nil
-
       def initialize(configuration)
         @configuration = configuration
-        @wsdl = WSDL_URL[@configuration.environment.to_sym]
       end
 
-      def init_transaction(amount, buy_order, session_id, url_return, url_final)
-        
+      def init_transaction(amount, buy_order, session_id, return_url, final_url)
+        ws_client = ::Savon.client(wsdl: wsdl)
+        input = WebServiceInput.init_transaction(
+          amount: amount, buy_order: buy_order, session_id: session_id,
+          return_url: return_url, final_url: final_url,
+          commerce_code: @configuration.commerce_code
+        )
+        request_xml = ws_client.build_request(:init_transaction, message: input)
+        ws_client.call(
+          :init_transaction,
+          xml: XmlSigner.perform(request_xml.body, @configuration)
+        )
+      end
+
+      private
+
+      def wsdl
+        WSDL_URL[@configuration.environment.to_sym]
       end
     end
   end
