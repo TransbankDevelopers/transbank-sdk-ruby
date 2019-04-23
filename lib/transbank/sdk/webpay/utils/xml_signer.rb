@@ -17,7 +17,7 @@ module Transbank
         digest_nodes(signer)
 
         signer.sign!(issuer_serial: true, issuer_in_security_token: true)
-        signer.to_xml.to_s
+        signer.to_xml
       end
 
       def self.instantiate_signer(document, configuration)

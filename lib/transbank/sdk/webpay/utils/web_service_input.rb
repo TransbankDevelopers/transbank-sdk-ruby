@@ -18,6 +18,12 @@ module Transbank
             }
           }
         end
+
+        def transaction_result(token)
+          {
+            token_input: token
+          }
+        end
       end
     end
   end

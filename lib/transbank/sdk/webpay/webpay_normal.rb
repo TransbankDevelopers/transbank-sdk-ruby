@@ -39,6 +39,18 @@ module Transbank
         )
       end
 
+      def transaction_result(token)
+        ws_client = ::Savon.client(wsdl: wsdl)
+        request_xml = ws_client.build_request(
+          :get_transaction_result,
+          message: WebServiceInput.transaction_result(token)
+        )
+        ws_client.call(
+          :get_transaction_result,
+          xml: XmlSigner.perform(request_xml.body, @configuration)
+        )
+      end
+
       private
 
       def wsdl
