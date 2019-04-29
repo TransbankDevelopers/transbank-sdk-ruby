@@ -21,6 +21,7 @@ require 'transbank/sdk/webpay/webpay'
 require 'transbank/sdk/webpay/webpay_normal'
 require 'transbank/sdk/webpay/utils/web_service_input'
 require 'transbank/sdk/webpay/utils/xml_signer'
+require 'transbank/sdk/webpay/utils/web_service_output'
 
 module Transbank
   module Onepay
