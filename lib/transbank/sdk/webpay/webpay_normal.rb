@@ -39,9 +39,7 @@ module Transbank
           xml: XmlSigner.perform(request_xml.body, @configuration)
         ).body.to_h[:init_transaction_response][:return]
 
-        WebServiceOutput::InitTransaction.new(
-          response[:url], response[:token]
-        )
+        WebServiceOutput::InitTransaction.new(response)
       end
 
       def transaction_result(token)

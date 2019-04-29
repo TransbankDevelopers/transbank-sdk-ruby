@@ -5,9 +5,9 @@ module Transbank
         attr_accessor :url
         attr_accessor :token
 
-        def initialize(url, token)
-          self.url = url
-          self.token = token
+        def initialize(params)
+          self.url = params.fetch(:url)
+          self.token = params.fetch(:token)
         end
       end
 
