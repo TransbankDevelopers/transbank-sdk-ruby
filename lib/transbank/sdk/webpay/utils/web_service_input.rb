@@ -24,6 +24,12 @@ module Transbank
             token_input: token
           }
         end
+
+        def acknowledge_transaction(token)
+          {
+            token_input: token
+          }
+        end
       end
     end
   end
