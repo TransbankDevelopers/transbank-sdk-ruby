@@ -64,24 +64,14 @@ module Transbank
         )
 
         WebServiceOutput::TransactionResult.new(
-          accounting_date: response[:accounting_date],
-          buy_order: response[:buy_order],
-          card_detail: WebServiceOutput::CardDetail.new(
-            card_number: response[:card_detail][:card_number]
-          ),
-          detail_output: WebServiceOutput::DetailOutput.new(
-            shares_number: response[:detail_output][:shares_number],
-            amount: response[:detail_output][:amount],
-            commerce_code: response[:detail_output][:commerce_code],
-            buy_order: response[:detail_output][:buy_order],
-            authorization_code: response[:detail_output][:authorization_code],
-            payment_type_code: response[:detail_output][:payment_type_code],
-            response_code: response[:detail_output][:response_code]
-          ),
-          session_id: response[:session_id],
-          transaction_date: response[:transaction_date],
-          url_redirection: response[:url_redirection],
-          vci: response[:vci]
+          response.merge(
+            card_detail: WebServiceOutput::CardDetail.new(
+              response[:card_detail]
+            ),
+            detail_output: WebServiceOutput::DetailOutput.new(
+              response[:detail_output]
+            )
+          )
         )
       end
 
