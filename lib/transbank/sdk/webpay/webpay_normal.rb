@@ -34,10 +34,7 @@ module Transbank
         )
         request_xml = ws_client.build_request(:init_transaction, message: input)
 
-        response = ws_client.call(
-          :init_transaction,
-          xml: XmlSigner.perform(request_xml.body, @configuration)
-        ).body.to_h[:init_transaction_response][:return]
+        response = call_webservice(ws_client, :init_transaction, request_xml)
 
         WebServiceOutput::InitTransaction.new(response)
       end
@@ -48,20 +45,13 @@ module Transbank
           :get_transaction_result,
           message: WebServiceInput.transaction_result(token)
         )
-        response = ws_client.call(
-          :get_transaction_result,
-          xml: XmlSigner.perform(request_xml.body, @configuration)
-        ).body.to_h[:get_transaction_result_response][:return]
+        response = call_webservice(ws_client, :get_transaction_result, request_xml)
 
         ack_xml = ws_client.build_request(
           :acknowledge_transaction,
           message: WebServiceInput.acknowledge_transaction(token)
         )
-
-        ws_client.call(
-          :acknowledge_transaction,
-          xml: XmlSigner.perform(ack_xml.body, @configuration)
-        )
+        call_webservice(ws_client, :acknowledge_transaction, ack_xml)
 
         WebServiceOutput::TransactionResult.new(
           response.merge(
@@ -79,6 +69,11 @@ module Transbank
 
       def wsdl
         WSDL_URL[@configuration.environment.to_sym]
+      end
+
+      def call_webservice(client, action, xml)
+        client.call(action, xml: XmlSigner.perform(xml.body, @configuration))
+              .body.to_h["#{action}_response".to_sym][:return]
       end
     end
   end
