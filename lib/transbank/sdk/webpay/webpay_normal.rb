@@ -26,7 +26,7 @@ module Transbank
       end
 
       def init_transaction(amount, buy_order, session_id, return_url, final_url)
-        ws_client = ::Savon.client(wsdl: wsdl)
+        ws_client = new_savon_client
         input = WebServiceInput.init_transaction(
           amount: amount, buy_order: buy_order, session_id: session_id,
           return_url: return_url, final_url: final_url,
@@ -40,7 +40,7 @@ module Transbank
       end
 
       def transaction_result(token)
-        ws_client = ::Savon.client(wsdl: wsdl)
+        ws_client = new_savon_client
         request_xml = ws_client.build_request(
           :get_transaction_result,
           message: WebServiceInput.transaction_result(token)
@@ -66,6 +66,10 @@ module Transbank
       end
 
       private
+
+      def new_savon_client
+        ::Savon.client(wsdl: wsdl, ssl_verify_mode: :peer)
+      end
 
       def wsdl
         WSDL_URL[@configuration.environment.to_sym]
