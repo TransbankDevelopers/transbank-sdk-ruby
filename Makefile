@@ -12,7 +12,7 @@ build: .built .bundled
 	touch .built
 
 .bundled: Gemfile
-	docker-compose run --rm web bundle install
+	docker-compose run web bundle install
 	touch .bundled
 
 logs:
