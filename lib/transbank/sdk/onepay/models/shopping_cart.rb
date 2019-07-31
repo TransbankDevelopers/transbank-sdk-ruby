@@ -2,7 +2,7 @@ module Transbank
   module Onepay
     # Represents a Shopping Cart, which contains [Item]s that the user wants to buy
     class ShoppingCart
-      include Utils::JSONUtils
+      include Transbank::Utils::JSONUtils
 
       # @return [Array<Item>] An [Array<Item>] with the [ShoppingCart] contents
       attr_reader :items

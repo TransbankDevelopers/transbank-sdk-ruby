@@ -1,7 +1,7 @@
 module Transbank
   module Onepay
     class Refund
-      extend Utils::NetHelper, Utils::RequestBuilder
+      extend Transbank::Utils::NetHelper, Utils::RequestBuilder
       # Manages Refunds
       REFUND_TRANSACTION = 'nullifytransaction'.freeze
       TRANSACTION_BASE_PATH = '/ewallet-plugin-api-services/services/transactionservice/'.freeze

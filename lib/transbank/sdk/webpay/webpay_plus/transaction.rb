@@ -2,7 +2,7 @@ module Transbank
   module Webpay
     module WebpayPlus
       class Transaction
-        extend Utils::NetHelper
+        extend Transbank::Utils::NetHelper
         CREATE_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions';
 
 

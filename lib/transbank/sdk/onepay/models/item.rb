@@ -1,7 +1,7 @@
 module Transbank
   module Onepay
     class Item
-      include Utils::JSONUtils
+      include Transbank::Utils::JSONUtils
       # An Item to be purchased by the user, and to be added to a [ShoppingCart]
 
       # @return [String] An item's description
