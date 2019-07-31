@@ -26,7 +26,7 @@ module Transbank
 
             url = base_url + CREATE_TRANSACTION_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            http_post(uri_string: url, body: body, headers: headers)
+            http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
           end
 
           def default_integration_params

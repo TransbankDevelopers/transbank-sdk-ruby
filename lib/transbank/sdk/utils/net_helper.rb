@@ -5,15 +5,15 @@ module Transbank
       # @param uri_string [String] an URI to post to
       # @param body [Hash] the body of your POST request
       # @return [Hash] the JSON.parse'd response body
-      def http_post(uri_string: nil, body:nil, headers: nil)
+      def http_post(uri_string: nil, body: nil, headers: nil, camel_case_keys: true)
         uri = URI.parse(uri_string)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = uri.scheme == 'https'
 
         request_headers = {'Content-Type' => 'application/json'}.merge(headers || {})
         request = Net::HTTP::Post.new(uri.path, request_headers)
-        camel_cased_body = keys_to_camel_case(body)
-        request.body = JSON.generate(camel_cased_body)
+        sendable_body = camel_case_keys ? keys_to_camel_case(body) : body
+        request.body = JSON.generate(sendable_body)
         result = http.request(request)
         JSON.parse(result.body)
       end
