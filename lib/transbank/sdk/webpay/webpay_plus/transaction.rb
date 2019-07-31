@@ -25,7 +25,7 @@ module Transbank
               amount: amount, return_url: return_url
             }
             url = base_url + CREATE_TRANSACTION_ENDPOINT
-            response = http_post(url, body)
+            response = http_post(uri_string: url, body: body)
 
 
 

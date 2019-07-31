@@ -24,7 +24,7 @@ module Transbank
                                               external_unique_number: external_unique_number,
                                               authorization_code: authorization_code,
                                               options: options)
-          response = http_post(refund_path, refund_request.to_h)
+          response = http_post(uri_string: refund_path, body: refund_request.to_h)
 
           if response.nil? || !response['responseCode']
             raise Errors::RefundCreateError, 'Could not obtain a response from the service.'
