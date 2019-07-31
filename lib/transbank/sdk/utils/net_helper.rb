@@ -33,6 +33,14 @@ module Transbank
       def snake_to_camel_case(str)
         str.split('_').reduce { |string, current_word| string + current_word.capitalize }
       end
+
+      def webpay_headers(commerce_code:, api_key:)
+        {
+          "Tbk-Api-Key-Id" => commerce_code,
+          "Tbk-Api-Key-Secret" => api_key
+        }
+      end
+
     end
   end
 end

@@ -19,16 +19,14 @@ module Transbank
               base_url = WebpayPlus::Base.integration_types[options.integration_type]
             end
 
-            headers = headers(commerce_code, api_key)
             body = {
               buy_order: buy_order, session_id: session_id,
               amount: amount, return_url: return_url
             }
+
             url = base_url + CREATE_TRANSACTION_ENDPOINT
-            response = http_post(uri_string: url, body: body)
-
-
-
+            headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+            http_post(uri_string: url, body: body, headers: headers)
           end
 
           def default_integration_params
@@ -38,16 +36,7 @@ module Transbank
               base_url: WebpayPlus::Base::integration_types[:TEST]
             }
           end
-
-          def headers(commerce_code, api_key)
-            {
-              "Tbk-Api-Key-Id" => commerce_code,
-              "Tbk-Api-Key-Secret" => api_key
-            }
-          end
-
         end
-
       end
     end
   end
