@@ -3,7 +3,7 @@ module Transbank
     ## Class Transaction
     #  This class creates or commits a Transaction (that is, a purchase)
     class Transaction
-      extend Utils::NetHelper, Utils::RequestBuilder
+      extend Transbank::Utils::NetHelper, Utils::RequestBuilder
 
       SEND_TRANSACTION = 'sendtransaction'.freeze
       COMMIT_TRANSACTION = 'gettransactionnumber'.freeze

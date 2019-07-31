@@ -15,6 +15,7 @@ module Transbank
           TEST: "https://webpay3gint.transbank.cl/"
         }
         class << self
+          attr_reader :integration_types
           attr_accessor :api_key, :integration_type, :commerce_code
 
           def current_integration_type_url

@@ -9,13 +9,16 @@ require "transbank/sdk/version"
 
 require 'transbank/sdk/onepay/errors/errors'
 
-require 'transbank/sdk/onepay/utils/utils'
+require 'transbank/sdk/utils/utils'
 
 require 'transbank/sdk/onepay/requests/requests'
 require 'transbank/sdk/onepay/responses/responses'
 
 require 'transbank/sdk/onepay/models/models'
 require 'transbank/sdk/onepay/base'
+
+require 'transbank/sdk/webpay/webpay_plus/webpay_plus'
+
 
 module Transbank
   module Onepay
