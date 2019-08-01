@@ -14,11 +14,22 @@ module Transbank
         request = Net::HTTP::Post.new(uri.path, request_headers)
         sendable_body = camel_case_keys ? keys_to_camel_case(body) : body
         request.body = JSON.generate(sendable_body)
-        result = http.request(request)
+        http.request(request)
         JSON.parse(result.body)
       end
 
-      # Required for sending data to Transbank.
+      def http_put(uri_string: nil, body: nil, headers: nil)
+        uri = URI.parse(uri_string)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = uri.scheme == 'https'
+
+        request_headers = {'Content-Type' => 'application/json'}.merge(headers || {})
+        request = Net::HTTP::Put.new(uri.path, request_headers)
+        request.body = JSON.generate(body)
+        http.request(request)
+      end
+
+      # Required for sending data to Transbank on Onepay.
       def keys_to_camel_case(hash)
         hash.reduce({}) do |new_hash, (key, val)|
           if val.is_a? Array
