@@ -73,6 +73,22 @@ module Transbank
             raise Errors::TransactionStatusError.new(body['error_message'], resp.code)
           end
 
+          def commit(token:, options: nil)
+            if options.nil?
+              api_key = default_integration_params[:api_key]
+              commerce_code = default_integration_params[:commerce_code]
+              base_url = default_integration_params[:base_url]
+            else
+              api_key = options.api_key || default_integration_params[:api_key]
+              commerce_code = options.commerce_code || default_integration_params[:api_key]
+              base_url = WebpayPlus::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
+            end
+            url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
+            headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+
+            http_put(uri_string: url, body: nil, headers: headers)
+          end
+
           def default_integration_params
             {
               api_key: WebpayPlus::Base::DEFAULT_API_KEY,
