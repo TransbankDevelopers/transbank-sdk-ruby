@@ -27,7 +27,7 @@ module Transbank
             url = base_url + CREATE_TRANSACTION_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
             resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
-            return TransactionCreateResponse.new(resp) if resp.value
+            return TransactionCreateResponse.new(resp) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCreateError.new(resp.body['error_message'], resp.code)
           end
 
@@ -45,7 +45,7 @@ module Transbank
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
             resp = http_put(uri_string: url, body: nil, headers: headers)
-            return TransactionCommitResponse.new(resp.body) if resp.value
+            return TransactionCommitResponse.new(resp.body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCommitError.new(resp.body['error_message'], resp.code)
           end
 
