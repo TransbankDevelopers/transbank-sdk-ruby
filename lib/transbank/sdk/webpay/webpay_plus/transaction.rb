@@ -87,7 +87,7 @@ module Transbank
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
             resp = http_put(uri_string: url, body: nil, headers: headers)
-            return TransactionCommitResponse.new(resp.body) if resp.value
+            return TransactionCommitResponse.new(resp.body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCommitError.new(resp.body['error_message'], resp.code)
           end
 
