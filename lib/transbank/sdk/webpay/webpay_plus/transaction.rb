@@ -27,7 +27,7 @@ module Transbank
             url = base_url + CREATE_TRANSACTION_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
             resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
-            return ::Transbank::Webpay::WebpayPlus::TransactionCreateResponse.new(resp) if resp.kind_of? Net::HTTPSuccess
+            return ::Transbank::Webpay::WebpayPlus::TransactionCreateResponse.new(resp.body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCreateError.new(resp.body['error_message'], resp.code)
           end
 
