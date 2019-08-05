@@ -86,7 +86,9 @@ module Transbank
             url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
-            http_put(uri_string: url, body: nil, headers: headers)
+            resp = http_put(uri_string: url, body: nil, headers: headers)
+            return TransactionCommitResponse.new(resp.body) if resp.value
+            raise TransactionCommitError(message: resp.body['error_message'], code: resp.code)
           end
 
           def default_integration_params
