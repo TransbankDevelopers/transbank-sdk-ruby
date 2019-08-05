@@ -15,7 +15,6 @@ module Transbank
         sendable_body = camel_case_keys ? keys_to_camel_case(body) : body
         request.body = JSON.generate(sendable_body)
         http.request(request)
-        JSON.parse(result.body)
       end
 
       def http_put(uri_string: nil, body: nil, headers: nil)
