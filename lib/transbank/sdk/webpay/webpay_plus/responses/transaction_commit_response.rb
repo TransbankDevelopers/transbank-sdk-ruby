@@ -12,7 +12,7 @@ module Transbank
         attr_accessor *FIELDS
 
         def initialize(json)
-          fields.each {|field| send("#{field}=", json["#{field}"]) }
+          FIELDS.each {|field| send("#{field}=", json["#{field}"]) }
         end
       end
     end
