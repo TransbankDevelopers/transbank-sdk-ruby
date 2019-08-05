@@ -87,8 +87,9 @@ module Transbank
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
             resp = http_put(uri_string: url, body: nil, headers: headers)
-            return ::Transbank::Webpay::WebpayPlus::TransactionCommitResponse.new(resp.body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::TransactionCommitError.new(resp.body['error_message'], resp.code)
+            body = JSON.parse(resp.body)
+            return ::Transbank::Webpay::WebpayPlus::TransactionCommitResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+            raise Errors::TransactionCommitError.new(body['error_message'], resp.code)
           end
 
           def default_integration_params
