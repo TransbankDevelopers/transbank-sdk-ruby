@@ -26,7 +26,9 @@ module Transbank
 
             url = base_url + CREATE_TRANSACTION_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
+            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
+            return TransactionCreateResponse.new(resp) if resp.value
+            raise TransactionCreateError(message: resp.body['error_message'], code: resp.code)
           end
 
           def commit(token:, options: nil)
@@ -42,14 +44,16 @@ module Transbank
             url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
-            http_put(uri_string: url, body: nil, headers: headers)
+            resp = http_put(uri_string: url, body: nil, headers: headers)
+            return TransactionCommitResponse.new(resp.body) if resp.value
+            raise TransactionCommitError(message: resp.body['error_message'], code: resp.code)
           end
 
           def default_integration_params
             {
               api_key: WebpayPlus::Base::DEFAULT_API_KEY,
               commerce_code: WebpayPlus::Base::DEFAULT_COMMERCE_CODE,
-              base_url: WebpayPlus::Base::integration_types[:TEST]
+              base_url: WebpayPlus::Base::current_integration_type_url
             }
           end
         end
