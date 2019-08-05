@@ -88,7 +88,7 @@ module Transbank
 
             resp = http_put(uri_string: url, body: nil, headers: headers)
             return TransactionCommitResponse.new(resp.body) if resp.value
-            raise Errors::TransactionCommitError, message: resp.body['error_message'], code: resp.code
+            raise Errors::TransactionCommitError, resp.body['error_message'], resp.code
           end
 
           def default_integration_params
