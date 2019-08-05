@@ -1,8 +1,11 @@
 module Transbank
   module Webpay
-    module Errors
-      class TransactionCreateError < WebpayError
+    module WebpayPlus
+      module Errors
+        class TransactionCreateError < WebpayError
+        end
       end
     end
   end
 end
+
