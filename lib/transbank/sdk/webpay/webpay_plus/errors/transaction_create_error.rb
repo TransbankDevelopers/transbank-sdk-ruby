@@ -2,7 +2,7 @@ module Transbank
   module Webpay
     module WebpayPlus
       module Errors
-        class TransactionCreateError < Webpay::WebpayError
+        class TransactionCreateError < ::Transbank::Webpay::Errors::WebpayError
         end
       end
     end
