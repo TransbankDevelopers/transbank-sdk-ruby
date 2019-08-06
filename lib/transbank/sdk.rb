@@ -17,4 +17,5 @@ require 'transbank/sdk/onepay/responses/responses'
 require 'transbank/sdk/onepay/models/models'
 require 'transbank/sdk/onepay/base'
 
+require 'transbank/sdk/transbank_error'
 require 'transbank/sdk/webpay/webpay_plus/webpay_plus'

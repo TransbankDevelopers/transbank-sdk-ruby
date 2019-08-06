@@ -1,7 +1,7 @@
 module Transbank
   module Webpay
     module Errors
-      class WebpayError < StandardError
+      class WebpayError < ::Transbank::Errors::TransbankError
         attr_accessor :message, :code
         def initialize(message, code)
           self.message = message
