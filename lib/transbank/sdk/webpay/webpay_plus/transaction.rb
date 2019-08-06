@@ -3,8 +3,9 @@ module Transbank
     module WebpayPlus
       class Transaction
         extend Transbank::Utils::NetHelper
-        CREATE_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions';
-        COMMIT_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions';
+        CREATE_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
+        COMMIT_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
+        TRANSACTION_STATUS_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
 
         class << self
 
@@ -49,6 +50,25 @@ module Transbank
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::WebpayPlus::TransactionCommitResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCommitError.new(body['error_message'], resp.code)
+          end
+
+          def status(token:, options: nil)
+            if options.nil?
+              api_key = default_integration_params[:api_key]
+              commerce_code = default_integration_params[:commerce_code]
+              base_url = default_integration_params[:base_url]
+            else
+              api_key = options.api_key || default_integration_params[:api_key]
+              commerce_code = options.commerce_code || default_integration_params[:api_key]
+              base_url = WebpayPlus::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
+            end
+
+            url = base_url + "#{TRANSACTION_STATUS_ENDPOINT}/#{token}"
+            headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+            resp = http_get(uri_string: url, headers: headers)
+            body = JSON.parse(resp.body)
+            return ::Transbank::Webpay::WebpayPlus::TransactionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+            raise Errors::TransactionStatusError.new(body['error_message'], resp.code)
           end
 
           def default_integration_params

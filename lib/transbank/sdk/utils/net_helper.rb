@@ -1,11 +1,19 @@
 module Transbank
   module Utils
     module NetHelper
+      def http_get(uri_string:, headers:nil)
+        uri = URI.parse(uri_string)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = uri.scheme == 'https'
+        request_headers = {'Content-Type' => 'application/json'}.merge(headers || {})
+        request = Net::HTTP::Get.new(uri.path, request_headers)
+        http.request(request)
+      end
       # POST a request to Transbank's servers, and return the parsed response
       # @param uri_string [String] an URI to post to
       # @param body [Hash] the body of your POST request
       # @return [Hash] the JSON.parse'd response body
-      def http_post(uri_string: nil, body: nil, headers: nil, camel_case_keys: true)
+      def http_post(uri_string:, body: nil, headers: nil, camel_case_keys: true)
         uri = URI.parse(uri_string)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = uri.scheme == 'https'
@@ -17,7 +25,7 @@ module Transbank
         http.request(request)
       end
 
-      def http_put(uri_string: nil, body: nil, headers: nil)
+      def http_put(uri_string:, body: nil, headers: nil)
         uri = URI.parse(uri_string)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = uri.scheme == 'https'
