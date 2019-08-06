@@ -5,7 +5,7 @@ module Transbank
 
         FIELDS =
           [:vci, :amount, :buy_order, :session_id,
-           :card_number, :accounting_date, :transaction_date,
+           :card_detail, :accounting_date, :transaction_date,
            :authorization_code, :payment_type_code, :response_code,
            :installments_amount, :installments_number, :balance]
 
