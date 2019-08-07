@@ -1,7 +1,7 @@
 module Transbank
   module Patpass
     module Errors
-      class PatpassError < StandardError
+      class PatpassError < ::Transbank::Errors::TransbankError
         attr_accessor :message, :code
         def initialize(message, code)
           self.message = message
@@ -12,3 +12,4 @@ module Transbank
     end
   end
 end
+
