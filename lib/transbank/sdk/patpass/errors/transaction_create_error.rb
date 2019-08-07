@@ -1,5 +1,5 @@
 module Transbank
-  module Onepay
+  module Patpass
     module Errors
       class TransactionCreateError < PatPassError
       end
