@@ -7,6 +7,7 @@ require 'base64'
 
 require "transbank/sdk/version"
 
+require 'transbank/sdk/transbank_error'
 require 'transbank/sdk/onepay/errors/errors'
 
 require 'transbank/sdk/utils/utils'
