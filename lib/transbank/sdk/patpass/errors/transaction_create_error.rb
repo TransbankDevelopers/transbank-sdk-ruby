@@ -1,7 +1,7 @@
 module Transbank
   module Patpass
     module Errors
-      class TransactionCreateError < PatPassError
+      class TransactionCreateError < PatpassError
       end
     end
   end
