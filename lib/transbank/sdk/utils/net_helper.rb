@@ -65,8 +65,8 @@ module Transbank
 
       def webpay_headers(commerce_code:, api_key:)
         {
-          "Tbk-Api-Key-Id" => commerce_code,
-          "Tbk-Api-Key-Secret" => api_key
+            "Tbk-Api-Key-Id" => commerce_code,
+            "Tbk-Api-Key-Secret" => api_key
         }
       end
 
