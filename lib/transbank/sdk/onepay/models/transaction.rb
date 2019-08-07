@@ -3,7 +3,7 @@ module Transbank
     ## Class Transaction
     #  This class creates or commits a Transaction (that is, a purchase)
     class Transaction
-      extend Utils::NetHelper, Utils::RequestBuilder
+      extend Transbank::Utils::NetHelper, Utils::RequestBuilder
 
       SEND_TRANSACTION = 'sendtransaction'.freeze
       COMMIT_TRANSACTION = 'gettransactionnumber'.freeze
@@ -40,7 +40,7 @@ module Transbank
                                               channel: channel,
                                               external_unique_number: external_unique_number,
                                               options: options)
-          response = http_post(transaction_create_path, create_request.to_h)
+          response = http_post(uri_string: transaction_create_path, body: create_request.to_h)
           validate_create_response!(response)
           transaction_create_response = TransactionCreateResponse.new response
           signature_is_valid = transaction_create_response.valid_signature?(options.fetch(:shared_secret))
@@ -62,7 +62,7 @@ module Transbank
           commit_request = commit_transaction(occ: occ,
                                               external_unique_number: external_unique_number,
                                               options: options)
-          response = http_post(transaction_commit_path, commit_request.to_h)
+          response = http_post(uri_string: transaction_commit_path, body: commit_request.to_h)
           validate_commit_response!(response)
           transaction_commit_response = TransactionCommitResponse.new(response)
           signature_is_valid = transaction_commit_response.valid_signature?(options.fetch(:shared_secret))

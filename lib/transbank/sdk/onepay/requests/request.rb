@@ -2,7 +2,7 @@ module Transbank
   module Onepay
     # Base module with methods & attributes common to Requests
     module Request
-      include Utils::JSONUtils, Utils::SignatureUtils
+      include Transbank::Utils::JSONUtils, Utils::SignatureUtils
       attr_accessor :api_key
       attr_accessor :app_key
 
