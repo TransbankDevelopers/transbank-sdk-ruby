@@ -1,6 +1,6 @@
 module Transbank
-  module Webpay
-    module WebpayPlus
+  module Patpass
+    module PatpassByWebpay
       class TransactionStatusResponse
 
         FIELDS =
