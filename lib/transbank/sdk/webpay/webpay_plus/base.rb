@@ -32,7 +32,7 @@ module Transbank
 
           def integration_type=(integration_type)
             type = integration_type.upcase.to_sym
-            return @integration_type = type.to_sym unless @integration_types[type.to_sym].nil?
+            return @integration_type = type unless @integration_types[type].nil?
             valid_values = @integration_types.keys.join(', ')
             raise Transbank::Webpay::Errors::IntegrationTypeError, "Invalid integration type, valid values are #{valid_values}"
           end
