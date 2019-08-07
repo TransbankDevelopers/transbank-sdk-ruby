@@ -5,6 +5,7 @@ module Transbank
 
         DEFAULT_API_KEY = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'.freeze
         DEFAULT_COMMERCE_CODE = '597055555550'.freeze
+        DEFAULT_MALL_COMMERCE_CODE = '597055555535'.freeze
 
         @api_key = DEFAULT_API_KEY
         @commerce_code = DEFAULT_COMMERCE_CODE
@@ -30,12 +31,6 @@ module Transbank
           def configure_for_testing
             @api_key = DEFAULT_API_KEY
             @commerce_code = DEFAULT_COMMERCE_CODE
-            self.integration_type = :TEST
-          end
-
-          def configure_mall_for_testing
-            @api_key = DEFAULT_API_KEY
-            @commerce_code = DEFAULT_MALL_COMMERCE_CODE
             self.integration_type = :TEST
           end
         end
