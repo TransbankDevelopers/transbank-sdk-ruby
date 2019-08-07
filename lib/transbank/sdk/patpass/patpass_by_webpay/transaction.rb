@@ -10,14 +10,10 @@ module Transbank
         class << self
 
           def create(buy_order:, session_id:, amount:, return_url:, options: nil)
-            api_key = default_integration_params[:api_key]
-            commerce_code = default_integration_params[:commerce_code]
-            base_url = default_integration_params[:base_url]
-            unless options.nil?
-              api_key = options.api_key || default_integration_params[:api_key]
-              commerce_code = options.commerce_code || default_integration_params[:api_key]
-              base_url = PatpassByWebpay::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
-            end
+
+            api_key = options.api_key || default_integration_params[:api_key]
+            commerce_code = options.commerce_code || default_integration_params[:api_key]
+            base_url = PatpassByWebpay::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
 
             body = {
                 buy_order: buy_order, session_id: session_id,
@@ -26,22 +22,19 @@ module Transbank
 
             url = base_url + CREATE_TRANSACTION_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
+            resp = NetHelper::http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             body = JSON.parse(resp.body)
-            return ::Transbank::Webpay::WebpayPlus::TransactionCreateResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+
+            return ::Transbank::Patpass::PatpassByWebpay::TransactionCreateResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCreateError.new(body['error_message'], resp.code)
           end
 
           def commit(token:, options: nil)
-            if options.nil?
-              api_key = default_integration_params[:api_key]
-              commerce_code = default_integration_params[:commerce_code]
-              base_url = default_integration_params[:base_url]
-            else
-              api_key = options.api_key || default_integration_params[:api_key]
-              commerce_code = options.commerce_code || default_integration_params[:api_key]
-              base_url = WebpayPlus::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
-            end
+
+            api_key = options.api_key || default_integration_params[:api_key]
+            commerce_code = options.commerce_code || default_integration_params[:api_key]
+            base_url = PatpassByWebpay::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
+
             url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
@@ -52,19 +45,13 @@ module Transbank
           end
 
           def status(token:, options: nil)
-            if options.nil?
-              api_key = default_integration_params[:api_key]
-              commerce_code = default_integration_params[:commerce_code]
-              base_url = default_integration_params[:base_url]
-            else
-              api_key = options.api_key || default_integration_params[:api_key]
-              commerce_code = options.commerce_code || default_integration_params[:api_key]
-              base_url = WebpayPlus::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
-            end
+            api_key = options.api_key || default_integration_params[:api_key]
+            commerce_code = options.commerce_code || default_integration_params[:api_key]
+            base_url = WebpayPlus::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
 
             url = base_url + "#{TRANSACTION_STATUS_ENDPOINT}/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            resp = http_get(uri_string: url, headers: headers)
+            resp = NetHelper::http_get(uri_string: url, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::WebpayPlus::TransactionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionStatusError.new(body['error_message'], resp.code)
