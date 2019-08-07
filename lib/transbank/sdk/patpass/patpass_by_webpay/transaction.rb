@@ -22,7 +22,8 @@ module Transbank
 
             url = base_url + CREATE_TRANSACTION_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            resp = NetHelper::http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
+
+            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             body = JSON.parse(resp.body)
 
             return ::Transbank::Patpass::PatpassByWebpay::TransactionCreateResponse.new(body) if resp.kind_of? Net::HTTPSuccess
@@ -40,7 +41,7 @@ module Transbank
 
             resp = http_put(uri_string: url, body: nil, headers: headers)
             body = JSON.parse(resp.body)
-            return ::Transbank::Webpay::WebpayPlus::TransactionCommitResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+            return ::Transbank::Patpass::PatpassByWebpay::TransactionCommitResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCommitError.new(body['error_message'], resp.code)
           end
 
@@ -51,17 +52,17 @@ module Transbank
 
             url = base_url + "#{TRANSACTION_STATUS_ENDPOINT}/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            resp = NetHelper::http_get(uri_string: url, headers: headers)
+            resp = http_get(uri_string: url, headers: headers)
             body = JSON.parse(resp.body)
-            return ::Transbank::Webpay::WebpayPlus::TransactionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+            return ::Transbank::Patpass::PatpassByWebpay::TransactionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionStatusError.new(body['error_message'], resp.code)
           end
 
           def default_integration_params
             {
-                api_key: WebpayPlus::Base::DEFAULT_API_KEY,
-                commerce_code: WebpayPlus::Base::DEFAULT_COMMERCE_CODE,
-                base_url: WebpayPlus::Base::current_integration_type_url
+                api_key: PatpassByWebpay::Base::DEFAULT_API_KEY,
+                commerce_code: PatpassByWebpay::Base::DEFAULT_COMMERCE_CODE,
+                base_url: PatpassByWebpay::Base::current_integration_type_url
             }
           end
         end
