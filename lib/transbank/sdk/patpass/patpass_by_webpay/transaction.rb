@@ -11,9 +11,9 @@ module Transbank
 
           def create(buy_order:, session_id:, amount:, return_url:, options: nil)
 
-            api_key = options.api_key || default_integration_params[:api_key]
-            commerce_code = options.commerce_code || default_integration_params[:api_key]
-            base_url = PatpassByWebpay::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
+            api_key = options&.api_key || default_integration_params[:api_key]
+            commerce_code = options&.commerce_code || default_integration_params[:api_key]
+            base_url = PatpassByWebpay::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
 
             body = {
                 buy_order: buy_order, session_id: session_id,
@@ -32,9 +32,9 @@ module Transbank
 
           def commit(token:, options: nil)
 
-            api_key = options.api_key || default_integration_params[:api_key]
-            commerce_code = options.commerce_code || default_integration_params[:api_key]
-            base_url = PatpassByWebpay::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
+            api_key = options&.api_key || default_integration_params[:api_key]
+            commerce_code = options&.commerce_code || default_integration_params[:api_key]
+            base_url = PatpassByWebpay::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
 
             url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
@@ -46,9 +46,9 @@ module Transbank
           end
 
           def status(token:, options: nil)
-            api_key = options.api_key || default_integration_params[:api_key]
-            commerce_code = options.commerce_code || default_integration_params[:api_key]
-            base_url = WebpayPlus::Base.integration_types[options.integration_type] || default_integration_params[:base_url]
+            api_key = options&.api_key || default_integration_params[:api_key]
+            commerce_code = options&.commerce_code || default_integration_params[:api_key]
+            base_url = WebpayPlus::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
 
             url = base_url + "#{TRANSACTION_STATUS_ENDPOINT}/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
