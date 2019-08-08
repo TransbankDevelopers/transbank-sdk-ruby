@@ -64,7 +64,6 @@ module Transbank
             integration_type = options&.integration_type || default_integration_params[:integration_type]
             base_url = integration_type.nil? ? WebpayPlus::Base::integration_type[:TEST] : WebpayPlus::Base.integration_type_url(integration_type)
 
-
             url = base_url + "#{TRANSACTION_STATUS_ENDPOINT}/#{token}"
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
             resp = http_get(uri_string: url, headers: headers)
