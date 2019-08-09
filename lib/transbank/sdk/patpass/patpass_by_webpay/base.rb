@@ -21,7 +21,7 @@ module Transbank
             type = integration_type.upcase.to_sym
             return @integration_types[type] unless @integration_types[type].nil?
             valid_values = @integration_types.keys.join(', ')
-            raise Transbank::Patpass::PatpassByWebpay::Errors::IntegrationTypeError, "Invalid integration type, valid values are #{valid_values}"
+            raise Transbank::Patpass::Errors::IntegrationTypeError, "Invalid integration type, valid values are #{valid_values}"
           end
 
           def current_integration_type_url
@@ -32,7 +32,8 @@ module Transbank
             type = integration_type.upcase.to_sym
             return @integration_type = type unless @integration_types[type].nil?
             valid_values = @integration_types.keys.join(', ')
-            raise Transbank::Patpass::PatpassByWebpay::Errors::IntegrationTypeError, "Invalid integration type, valid values are #{valid_values}"
+            Transbank::Patpass::Errors::IntegrationTypeError
+            raise Transbank::Patpass::Errors::IntegrationTypeError, "Invalid integration type, valid values are #{valid_values}"
           end
 
           def configure_for_testing
