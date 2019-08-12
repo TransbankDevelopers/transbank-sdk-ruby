@@ -7,6 +7,7 @@ require 'transbank/sdk/webpay/webpay_plus/responses/webpay_plus_responses'
 require 'transbank/sdk/webpay/webpay_plus/transaction'
 
 require 'transbank/sdk/webpay/webpay_plus/mall/responses/webpay_plus_mall_responses'
+require 'transbank/sdk/webpay/webpay_plus/mall/mall_transaction'
 
 module Transbank
   module Webpay
