@@ -21,7 +21,7 @@ module Transbank
                     session_id: session_id,
                     details: details,
                     return_url: return_url}
-            resp = http_post(uri_string: url, body: body, headers: headers)
+            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             json = JSON.parse(resp.body)
             return ::Transbank::Webpay::WebpayPlus::TransactionCreateResponse.new(json) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionCreateError.new(json['error_message'], resp.code)
