@@ -7,7 +7,7 @@ module Transbank
           :details,
           :buy_order,
           :session_id,
-          :card_number,
+          :card_detail,
           :accounting_date,
           :transaction_date
         ]
