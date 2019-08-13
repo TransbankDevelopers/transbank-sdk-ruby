@@ -13,6 +13,9 @@ require 'transbank/sdk/webpay/webpay_plus/deferred/errors/webpay_plus_deferred_e
 require 'transbank/sdk/webpay/webpay_plus/deferred/responses/webpay_plus_deferred_responses'
 require 'transbank/sdk/webpay/webpay_plus/deferred/deferred_transaction'
 
+require 'transbank/sdk/webpay/webpay_plus/mall_deferred/mall_deferred_transaction'
+
+
 module Transbank
   module Webpay
      module WebpayPlus
