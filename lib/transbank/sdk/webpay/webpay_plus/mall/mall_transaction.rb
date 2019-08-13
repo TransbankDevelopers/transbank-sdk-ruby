@@ -53,7 +53,7 @@ module Transbank
               commerce_code: child_commerce_code,
               amount: amount
             }
-            resp = http_post(uri_string: url, body: body, headers: headers)
+            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             json = JSON.parse(resp.body)
             return ::Transbank::Webpay::WebpayPlus::TransactionRefundResponse.new(json) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionRefundError.new(json['error_message'], resp.code)
