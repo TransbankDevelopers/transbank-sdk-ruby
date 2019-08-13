@@ -7,6 +7,7 @@ module Transbank
         COMMIT_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
         TRANSACTION_STATUS_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
         REFUND_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions/:token/refunds'
+        TRANSACTION_CAPTURE_ENDPOINT = '/rswebpaytransaction/api/webpay/v1.0/transactions/:token/capture'
         class << self
 
           def create(buy_order:, session_id:, amount:, return_url:, options: nil)
@@ -43,7 +44,7 @@ module Transbank
             raise Errors::TransactionCommitError.new(body['error_message'], resp.code)
           end
 
-          def refund(token:, amount:, options:nil)
+          def refund(token:, amount:, options: nil)
             api_key = options&.api_key || default_integration_params[:api_key]
             commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
             integration_type = options&.integration_type || default_integration_params[:integration_type]
@@ -70,6 +71,25 @@ module Transbank
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::WebpayPlus::TransactionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::TransactionStatusError.new(body['error_message'], resp.code)
+          end
+
+          def capture(token:, buy_order:, authorization_code:, capture_amount:, options: nil)
+            api_key = options&.api_key || default_integration_params[:api_key]
+            commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
+            integration_type = options&.integration_type || default_integration_params[:integration_type]
+            base_url = integration_type.nil? ? WebpayPlus::Base::integration_type[:TEST] : WebpayPlus::Base.integration_type_url(integration_type)
+
+            url = base_url + TRANSACTION_CAPTURE_ENDPOINT.gsub(':token', token)
+            headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+            body = {
+                    buy_order: buy_order,
+                    authorization_code: authorization_code,
+                    capture_amount: capture_amount
+                    }
+            resp = http_put(uri_string: url, body: body, headers: headers)
+            body = JSON.parse(resp.body)
+            return ::Transbank::Webpay::WebpayPlus::TransactionCaptureResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+            raise Errors::TransactionCaptureError.new(body['error_message'], resp.code)
           end
 
           def default_integration_params
