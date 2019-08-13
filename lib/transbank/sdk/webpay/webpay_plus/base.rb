@@ -7,6 +7,7 @@ module Transbank
         DEFAULT_COMMERCE_CODE = '597055555532'.freeze
         DEFAULT_MALL_COMMERCE_CODE = '597055555535'.freeze
         DEFAULT_MALL_CHILD_COMMERCE_CODES = ['597055555536'.freeze,'597055555537'.freeze].freeze;
+        DEFAULT_DEFERRED_COMMERCE_CODE = '597055555540'.freeze
 
         @api_key = DEFAULT_API_KEY
         @commerce_code = DEFAULT_COMMERCE_CODE
