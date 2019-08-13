@@ -59,7 +59,7 @@ module Transbank
             raise Errors::TransactionRefundError.new(json['error_message'], resp.code)
           end
 
-          def status
+          def status(token:, options: nil)
             api_key = options&.api_key || default_integration_params[:api_key]
             commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
             integration_type = options&.integration_type || default_integration_params[:integration_type]
