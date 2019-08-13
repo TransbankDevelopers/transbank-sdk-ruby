@@ -12,4 +12,5 @@
 Gemfile.lock
 .built
 .bundled
+.DS_Store
 
