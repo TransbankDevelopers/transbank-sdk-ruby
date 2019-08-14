@@ -74,7 +74,7 @@ module Transbank
             raise Errors::TransactionStatusError.new(json['error_message'], resp.code)
           end
 
-          def capture(child_commerce_code:, buy_order:, authorization_code:, capture_amount:)
+          def capture(token:, child_commerce_code:, buy_order:, authorization_code:, capture_amount:)
             api_key = options&.api_key || default_integration_params[:api_key]
             commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
             integration_type = options&.integration_type || default_integration_params[:integration_type]
