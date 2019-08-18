@@ -15,9 +15,11 @@ module Transbank
           LIVE: "https://webpay3g.transbank.cl/",
           TEST: "https://webpay3gint.transbank.cl/"
         }
-        attr_reader :integration_types
-        attr_accessor :api_key, :integration_type, :commerce_code
+
         class << self
+          attr_reader :integration_types
+          attr_accessor :api_key, :integration_type, :commerce_code
+
           def integration_type_url(integration_type)
             type = integration_type.upcase.to_sym
             return @integration_types[type] unless @integration_types[type].nil?
