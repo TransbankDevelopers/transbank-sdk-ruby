@@ -2,7 +2,8 @@ module Transbank
   module Webpay
     module Oneclick
       class MallTransaction
-
+        extend Transbank::Utils::NetHelper
+        
         AUTHORIZE_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/transactions'.freeze
         TRANSACTION_STATUS_ENDPONT = 'rswebpaytransaction/api/oneclick/v1.0/transactions/:buy_order'.freeze
         TRANSACTION_REFUND_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/transactions/:buy_order/refunds'.freeze

@@ -2,6 +2,8 @@ module Transbank
   module Webpay
     module Oneclick
       class MallInscription
+        extend Transbank::Utils::NetHelper
+        
         INSCRIPTION_START_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/inscriptions'.freeze
         INSCRIPTION_FINISH_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/inscriptions/:token'.freeze
         INSCRIPTION_DELETE_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/inscriptions'.freeze
