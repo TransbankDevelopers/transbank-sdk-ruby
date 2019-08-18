@@ -1,0 +1,62 @@
+module Transbank
+  module Webpay
+    module Oneclick
+      class MallInscription
+        INSCRIPTION_START_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/inscriptions'.freeze
+        INSCRIPTION_FINISH_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/inscriptions/:token'.freeze
+        INSCRIPTION_DELETE_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/inscriptions'.freeze
+
+        def start(user_name:, email:, response_url:, options: nil)
+          api_key = options&.api_key || default_integration_params[:api_key]
+          commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
+          integration_type = options&.integration_type || default_integration_params[:integration_type]
+          base_url = integration_type.nil? ? Oneclick::Base::integration_type[:TEST] : Oneclick::Base.integration_type_url(integration_type)
+
+          url = base_url + INSCRIPTION_START_ENDPOINT
+          headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+
+          body = {
+            user_name: user_name,
+            email: email,
+            response_url: response_url
+          }
+          resp = http_post(uri_string: url, body: body, headers: headers)
+          body = JSON.parse(resp.body)
+          return ::Transbank::Webpay::Oneclick::MallInscriptionStartResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+          raise Errors::MallInscriptionStartError.new(body['error_message'], resp.code)
+        end
+
+        def finish(token:, options: nil)
+          api_key = options&.api_key || default_integration_params[:api_key]
+          commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
+          integration_type = options&.integration_type || default_integration_params[:integration_type]
+          base_url = integration_type.nil? ? Oneclick::Base::integration_type[:TEST] : Oneclick::Base.integration_type_url(integration_type)
+
+          url = base_url + INSCRIPTION_FINISH_ENDPOINT
+          headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+
+          resp = http_put(uri_string: url, headers: headers)
+          body = JSON.parse(resp.body)
+          return ::Transbank::Webpay::Oneclick::MallInscriptionFinishResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+          raise Errors::MallInscriptionFinishError.new(body['error_message'], resp.code)
+        end
+
+        def delete(tbk_user:, user_name:, options: nil)
+
+          api_key = options&.api_key || default_integration_params[:api_key]
+          commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
+          integration_type = options&.integration_type || default_integration_params[:integration_type]
+          base_url = integration_type.nil? ? Oneclick::Base::integration_type[:TEST] : Oneclick::Base.integration_type_url(integration_type)
+
+          url = base_url + INSCRIPTION_DELETE_ENDPOINT.gsub(':token', token)
+          headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+          body = {tbk_user: tbk_user, user_name: user_name}
+          resp = http_delete(uri_string: url, body: body, headers: headers)
+          body = JSON.parse(resp.body)
+          return ::Transbank::Webpay::Oneclick::MallInscriptionDeleteResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+          raise Errors::MallInscriptionDeleteError.new(body['error_message'], resp.code)
+        end
+      end
+    end
+  end
+end

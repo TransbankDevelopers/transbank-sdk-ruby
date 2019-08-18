@@ -36,6 +36,17 @@ module Transbank
         http.request(request)
       end
 
+      def http_delete(uri_string:, body: nil, headers: nil)
+        uri = URI.parse(uri_string)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = uri.scheme == 'https'
+
+        request_headers = {'Content-Type' => 'application/json'}.merge(headers || {})
+        request = Net::HTTP::Delete.new(uri.path, request_headers)
+        request.body = JSON.generate(body)
+        http.request(request)
+      end
+
       # Required for sending data to Transbank on Onepay.
       def keys_to_camel_case(hash)
         hash.reduce({}) do |new_hash, (key, val)|
