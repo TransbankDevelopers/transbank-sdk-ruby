@@ -2,23 +2,22 @@ module Transbank
   module Webpay
     module Oneclick
       class Base
+        DEFAULT_API_KEY = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'.freeze
+
+        DEFAULT_ONECLICK_MALL_COMMERCE_CODE = '597055555541'.freeze
+        DEFAULT_ONECLICK_MALL_CHILD_COMMERCE_CODES = ['597055555542'.freeze,
+                                                      '597055555543'.freeze].freeze
+
+        @api_key = DEFAULT_API_KEY
+        @commerce_code = DEFAULT_ONECLICK_MALL_COMMERCE_CODE
+        @integration_type = :TEST
+        @integration_types = {
+          LIVE: "https://webpay3g.transbank.cl/",
+          TEST: "https://webpay3gint.transbank.cl/"
+        }
+        attr_reader :integration_types
+        attr_accessor :api_key, :integration_type, :commerce_code
         class << self
-          DEFAULT_API_KEY = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'.freeze
-
-          DEFAULT_ONECLICK_MALL_COMMERCE_CODE = '597055555541'.freeze
-          DEFAULT_ONECLICK_MALL_CHILD_COMMERCE_CODES = ['597055555542'.freeze,
-                                                        '597055555543'.freeze].freeze
-
-          @api_key = DEFAULT_API_KEY
-          @commerce_code = DEFAULT_ONECLICK_MALL_COMMERCE_CODE
-          @integration_type = :TEST
-          @integration_types = {
-            LIVE: "https://webpay3g.transbank.cl/",
-            TEST: "https://webpay3gint.transbank.cl/"
-          }
-          attr_reader :integration_types
-          attr_accessor :api_key, :integration_type, :commerce_code
-
           def integration_type_url(integration_type)
             type = integration_type.upcase.to_sym
             return @integration_types[type] unless @integration_types[type].nil?
