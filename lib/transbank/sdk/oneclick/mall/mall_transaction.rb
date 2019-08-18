@@ -3,7 +3,7 @@ module Transbank
     module Oneclick
       class MallTransaction
         extend Transbank::Utils::NetHelper
-        
+
         AUTHORIZE_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/transactions'.freeze
         TRANSACTION_STATUS_ENDPONT = 'rswebpaytransaction/api/oneclick/v1.0/transactions/:buy_order'.freeze
         TRANSACTION_REFUND_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.0/transactions/:buy_order/refunds'.freeze
@@ -28,7 +28,7 @@ module Transbank
             resp = http_post(uri_string: url, body: body, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallTransactionAuthorizeResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::MallTransactionAuthorizeError.new(body['error_message'], resp.code)
+            raise Oneclick::Errors::MallTransactionAuthorizeError.new(body['error_message'], resp.code)
           end
 
           def status(buy_order:, options: nil)
@@ -42,7 +42,7 @@ module Transbank
             resp = http_get(uri_string: url, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallTransactionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::MallTransactionStatusError.new(body['error_message'], resp.code)
+            raise Oneclick::Errors::MallTransactionStatusError.new(body['error_message'], resp.code)
           end
 
           def refund(buy_order:, child_commerce_code:, child_buy_order:, amount:,
@@ -62,7 +62,7 @@ module Transbank
             resp = http_post(uri_string: url, body: body, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallTransactionRefundResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::MallTransactionRefundError.new(body['error_message'], resp.code)
+            raise Oneclick::Errors::MallTransactionRefundError.new(body['error_message'], resp.code)
           end
 
           def default_integration_params

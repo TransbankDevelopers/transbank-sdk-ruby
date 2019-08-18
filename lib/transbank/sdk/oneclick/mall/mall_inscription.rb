@@ -25,7 +25,7 @@ module Transbank
             resp = http_post(uri_string: url, body: body, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallInscriptionStartResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::MallInscriptionStartError.new(body['error_message'], resp.code)
+            raise Oneclick::Errors::MallInscriptionStartError.new(body['error_message'], resp.code)
           end
 
           def finish(token:, options: nil)
@@ -40,7 +40,7 @@ module Transbank
             resp = http_put(uri_string: url, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallInscriptionFinishResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::MallInscriptionFinishError.new(body['error_message'], resp.code)
+            raise Oneclick::Errors::MallInscriptionFinishError.new(body['error_message'], resp.code)
           end
 
           def delete(tbk_user:, user_name:, options: nil)
@@ -56,7 +56,7 @@ module Transbank
             resp = http_delete(uri_string: url, body: body, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallInscriptionDeleteResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::MallInscriptionDeleteError.new(body['error_message'], resp.code)
+            raise Oneclick::Errors::MallInscriptionDeleteError.new(body['error_message'], resp.code)
           end
 
           def default_integration_params
