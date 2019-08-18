@@ -56,6 +56,15 @@ module Transbank
             return ::Transbank::Webpay::Oneclick::MallInscriptionDeleteResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Errors::MallInscriptionDeleteError.new(body['error_message'], resp.code)
           end
+
+          def default_integration_params
+            {
+              api_key: Oneclick::Base::DEFAULT_API_KEY,
+              commerce_code: Oneclick::Base::DEFAULT_ONECLICK_MALL_COMMERCE_CODE,
+              integration_type: Oneclick::Base::integration_type,
+              base_url: Oneclick::Base::current_integration_type_url
+            }
+          end
         end
       end
     end
