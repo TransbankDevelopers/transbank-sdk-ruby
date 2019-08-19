@@ -49,9 +49,9 @@ module Transbank
             integration_type = options&.integration_type || default_integration_params[:integration_type]
             base_url = integration_type.nil? ? Oneclick::Base::integration_type[:TEST] : Oneclick::Base.integration_type_url(integration_type)
 
-            url = base_url + INSCRIPTION_DELETE_ENDPOINT.gsub(':token', token)
+            url = base_url + INSCRIPTION_DELETE_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            body = {tbk_user: tbk_user, user_name: user_name}
+            body = {tbk_user: tbk_user, username: user_name}
             resp = http_delete(uri_string: url, body: body, headers: headers)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallInscriptionDeleteResponse.new(body) if resp.kind_of? Net::HTTPSuccess
