@@ -25,7 +25,7 @@ module Transbank
               buy_order: parent_buy_order,
               details: details
             }
-            resp = http_post(uri_string: url, body: body, headers: headers)
+            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallTransactionAuthorizeResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Oneclick::Errors::MallTransactionAuthorizeError.new(body['error_message'], resp.code)
@@ -59,7 +59,7 @@ module Transbank
               commerce_code: child_commerce_code,
               amount: amount
             }
-            resp = http_post(uri_string: url, body: body, headers: headers)
+            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallTransactionRefundResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Oneclick::Errors::MallTransactionRefundError.new(body['error_message'], resp.code)

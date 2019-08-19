@@ -22,7 +22,7 @@ module Transbank
               email: email,
               response_url: response_url
             }
-            resp = http_post(uri_string: url, body: body, headers: headers)
+            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallInscriptionStartResponse.new(body) if resp.kind_of? Net::HTTPSuccess
             raise Oneclick::Errors::MallInscriptionStartError.new(body['error_message'], resp.code)
