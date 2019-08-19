@@ -10,7 +10,7 @@ module Transbank
 
         class << self
 
-          def authorize(user_name:, tbk_user:, parent_buy_order:, details:,
+          def authorize(username:, tbk_user:, parent_buy_order:, details:,
                         options: nil)
             api_key = options&.api_key || default_integration_params[:api_key]
             commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
@@ -35,7 +35,7 @@ module Transbank
             details_hash[:installments_number] = details.fetch('installments_number')
 
             body = {
-              user_name: user_name,
+              username: username,
               tbk_user: tbk_user,
               buy_order: parent_buy_order,
               details: details_hash
