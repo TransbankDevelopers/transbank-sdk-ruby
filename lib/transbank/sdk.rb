@@ -19,3 +19,5 @@ require 'transbank/sdk/onepay/models/models'
 require 'transbank/sdk/onepay/base'
 
 require 'transbank/sdk/webpay/webpay_plus/webpay_plus'
+
+require 'transbank/sdk/oneclick/oneclick'
