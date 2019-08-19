@@ -18,7 +18,7 @@ module Transbank
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
             body = {
-              user_name: user_name,
+              username: user_name,
               email: email,
               response_url: response_url
             }
