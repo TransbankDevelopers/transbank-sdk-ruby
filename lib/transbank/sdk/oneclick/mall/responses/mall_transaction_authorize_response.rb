@@ -2,7 +2,7 @@ module Transbank
   module Webpay
     module Oneclick
       class MallTransactionAuthorizeResponse
-        FIELDS = [:buy_order, :session_id, :card_details, :expiration_date,
+        FIELDS = [:buy_order, :session_id, :card_detail, :expiration_date,
                   :accounting_date, :transaction_date, :details]
 
         attr_accessor *FIELDS
