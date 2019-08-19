@@ -19,11 +19,26 @@ module Transbank
 
             url = base_url + AUTHORIZE_TRANSACTION_ENDPOINT
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+
+            # We need to make sure the hash's keys are strings (or symbols)
+            # since Ruby doesnt have hahes with indifferent access
+            # I chose to make them strings
+            details = details.reduce({}) do |acc, (k, v)|
+              acc[k.to_s] = v
+              acc
+            end
+
+            details_hash = {}
+            details_hash[:amount] = details.fetch('amount')
+            details_hash[:buy_order] = details.fetch('buy_order')
+            details_hash[:commerce_code] = details.fetch('commerce_code')
+            details_hash[:installments_number] = details.fetch('installments_number')
+
             body = {
               user_name: user_name,
               tbk_user: tbk_user,
               buy_order: parent_buy_order,
-              details: details
+              details: details_hash
             }
             resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             body = JSON.parse(resp.body)
