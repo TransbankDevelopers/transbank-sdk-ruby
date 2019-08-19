@@ -2,8 +2,8 @@ module Transbank
   module Webpay
     module Oneclick
       class MallTransactionRefundResponse
-        FIELDS =  [:type, :authorizationCode,  :authorizationDate,
-                   :nullifiedAmount, :balance, :responseCode]
+        FIELDS =  [:type, :authorization_code,  :authorization_date,
+                   :nullified_amount, :balance, :response_code]
         
         attr_accessor *FIELDS
 
