@@ -53,8 +53,8 @@ module Transbank
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
             body = {tbk_user: tbk_user, username: user_name}
             resp = http_delete(uri_string: url, body: body, headers: headers)
-            body = JSON.parse(resp.body)
-            return ::Transbank::Webpay::Oneclick::MallInscriptionDeleteResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+            code = resp.code
+            return ::Transbank::Webpay::Oneclick::MallInscriptionDeleteResponse.new(code) if resp.kind_of? Net::HTTPSuccess
             raise Oneclick::Errors::MallInscriptionDeleteError.new(body['error_message'], resp.code)
           end
 
