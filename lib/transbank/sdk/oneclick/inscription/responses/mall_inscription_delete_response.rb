@@ -6,7 +6,7 @@ module Transbank
         def initialize(code)
           code = code.to_i
           @code = code
-          if code == 200
+          if code == 204
             @status = 'OK'
           elsif code == 404
             @status = 'Not found'
