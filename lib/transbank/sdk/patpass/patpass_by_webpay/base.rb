@@ -32,7 +32,6 @@ module Transbank
             type = integration_type.upcase.to_sym
             return @integration_type = type unless @integration_types[type].nil?
             valid_values = @integration_types.keys.join(', ')
-            Transbank::Patpass::Errors::IntegrationTypeError
             raise Transbank::Patpass::Errors::IntegrationTypeError, "Invalid integration type, valid values are #{valid_values}"
           end
 
