@@ -21,7 +21,7 @@ module Transbank
         request_headers = {'Content-Type' => 'application/json'}.merge(headers || {})
         request = Net::HTTP::Post.new(uri.path, request_headers)
         sendable_body = camel_case_keys ? keys_to_camel_case(body) : body
-        request.body = JSON.generate(sendable_body)
+        request.body = sendable_body.to_json
         http.request(request)
       end
 
@@ -65,8 +65,8 @@ module Transbank
 
       def webpay_headers(commerce_code:, api_key:)
         {
-          "Tbk-Api-Key-Id" => commerce_code,
-          "Tbk-Api-Key-Secret" => api_key
+            "Tbk-Api-Key-Id" => commerce_code,
+            "Tbk-Api-Key-Secret" => api_key
         }
       end
 

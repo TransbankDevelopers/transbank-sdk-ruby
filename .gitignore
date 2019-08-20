@@ -12,5 +12,5 @@
 Gemfile.lock
 .built
 .bundled
+.rakeTasks
 .DS_Store
-
