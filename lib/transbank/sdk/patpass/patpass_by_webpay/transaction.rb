@@ -81,7 +81,7 @@ module Transbank
           end
 
           def wpm_detail_fields
-            %i(service_id card_corder_id card_holder_name card_holder_last_name1
+            %i(service_id card_holder_id card_holder_name card_holder_last_name1
                card_holder_last_name2 card_holder_mail cellphone_number expiration_date
                commerce_mail uf_flag)
           end
