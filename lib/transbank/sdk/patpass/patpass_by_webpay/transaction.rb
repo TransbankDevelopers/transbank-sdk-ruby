@@ -72,23 +72,16 @@ module Transbank
 
           private
           def wpm_details(details)
-            # First we make sure that all keys are strings
-            det =
-              details.reduce({}) do |acc, (k, v)|
-                    acc[k.to_s] = v
-                    acc
-              end
-
-            # Then we check against the wpm_detail_fields
+            # Check against the wpm_detail_fields
             # If one is missing, KeyError will be raised
             wpm_detail_fields.reduce({}) do |acc, field|
-              acc[field] = det.fetch(field)
+              acc[field] = details.fetch(field) { details.fetch(field.to_s) }
               acc
             end
           end
 
           def wpm_detail_fields
-            %w(service_id card_corder_id card_holder_name card_holder_last_name1
+            %i(service_id card_corder_id card_holder_name card_holder_last_name1
                card_holder_last_name2 card_holder_mail cellphone_number expiration_date
                commerce_mail uf_flag)
           end
