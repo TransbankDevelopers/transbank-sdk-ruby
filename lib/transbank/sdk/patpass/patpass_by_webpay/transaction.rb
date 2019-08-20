@@ -16,12 +16,13 @@ module Transbank
             integration_type = options&.integration_type || default_integration_params[:integration_type]
             base_url = integration_type.nil? ? PatpassByWebpay::Base::integration_types[:TEST] : PatpassByWebpay::Base.integration_type_url(integration_type)
 
+            wpm_detail = wpm_details(details)
             body = {
                 buy_order: buy_order,
                 session_id: session_id,
                 amount: amount,
                 return_url: return_url,
-                wpm_detail: details
+                wpm_detail: wpm_detail
             }
 
             url = base_url + CREATE_TRANSACTION_ENDPOINT
@@ -67,6 +68,29 @@ module Transbank
                 commerce_code: PatpassByWebpay::Base::DEFAULT_COMMERCE_CODE,
                 base_url: PatpassByWebpay::Base::current_integration_type_url
             }
+          end
+
+          private
+          def wpm_details(details)
+            # First we make sure that all keys are strings
+            det =
+              details.reduce({}) do |acc, (k, v)|
+                    acc[k.to_s] = v
+                    acc
+              end
+
+            # Then we check against the wpm_detail_fields
+            # If one is missing, KeyError will be raised
+            wpm_detail_fields.reduce({}) do |acc, field|
+              acc[field] = det.fetch(field)
+              acc
+            end
+          end
+
+          def wpm_detail_fields
+            %w(service_id card_corder_id card_holder_name card_holder_last_name1
+               card_holder_last_name2 card_holder_mail cellphone_number expiration_date
+               commerce_mail uf_flag)
           end
         end
       end
