@@ -41,6 +41,7 @@ module Transbank
             base_url = PatpassByWebpay::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
 
             url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
+            binding.pry
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
             resp = http_put(uri_string: url, body: nil, headers: headers)
