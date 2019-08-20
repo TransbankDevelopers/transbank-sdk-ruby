@@ -37,11 +37,10 @@ module Transbank
           def commit(token:, options: nil)
 
             api_key = options&.api_key || default_integration_params[:api_key]
-            commerce_code = options&.commerce_code || default_integration_params[:api_key]
+            commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
             base_url = PatpassByWebpay::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
 
             url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
-            binding.pry
             headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
             resp = http_put(uri_string: url, body: nil, headers: headers)
@@ -52,7 +51,7 @@ module Transbank
 
           def status(token:, options: nil)
             api_key = options&.api_key || default_integration_params[:api_key]
-            commerce_code = options&.commerce_code || default_integration_params[:api_key]
+            commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
             base_url = PatpassByWebpay::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
 
             url = base_url + "#{TRANSACTION_STATUS_ENDPOINT}/#{token}"
