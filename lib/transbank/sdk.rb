@@ -22,3 +22,5 @@ require 'transbank/sdk/webpay/webpay_plus/webpay_plus'
 
 require 'transbank/sdk/oneclick/oneclick'
 require 'transbank/sdk/patpass/patpass_by_webpay/patpass_by_webpay'
+
+require 'transbank/sdk/transaccion_completa/transaccion_completa'
