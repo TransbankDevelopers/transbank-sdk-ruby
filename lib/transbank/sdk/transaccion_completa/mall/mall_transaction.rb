@@ -10,8 +10,8 @@ module Transbank
       REFUND_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions/:token/refunds'
 
       class << self
-        def create(buy_order:, session_id:,card_number:,
-                   card_expiration_date:, details:, options:nil)
+        def create(buy_order:, session_id:,card_number:, card_expiration_date:,
+                   details:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
           commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
           integration_type = options&.integration_type || default_integration_params[:integration_type]
@@ -32,7 +32,7 @@ module Transbank
           raise Errors::TransactionCreateError.new(body['error_message'], resp.code)
         end
 
-        def installments(token:, installments_number:, buy_order:, commerce_code:, options:nil)
+        def installments(token:,installments_number:, child_buy_order:, child_commerce_code:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
           commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
           integration_type = options&.integration_type || default_integration_params[:integration_type]
@@ -42,8 +42,8 @@ module Transbank
           headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
 
           body = {
-            commerce_code: commerce_code,
-            buy_order: buy_order,
+            commerce_code: child_commerce_code,
+            buy_order: child_buy_order,
             installments_number: installments_number
           }
 
@@ -53,7 +53,7 @@ module Transbank
           raise Errors::TransactionInstallmentsError.new(body['error_message'], resp.code)
         end
 
-        def commit(token:, commerce_code:, buy_order:, id_query_installments:, deferred_period_index:,
+        def commit(token:, child_commerce_code:, child_buy_order:, id_query_installments:, deferred_period_index:,
                    grace_period:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
           commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
@@ -63,8 +63,8 @@ module Transbank
           url = base_url + COMMIT_TRANSACTION_ENDPOINT.gsub(':token', token)
           headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
           body = {
-            commerce_code: commerce_code,
-            buy_order: buy_order,
+            commerce_code: child_commerce_code,
+            buy_order: child_buy_order,
             id_query_installments: id_query_installments,
             deferred_period_index: deferred_period_index,
             grace_period: grace_period
@@ -90,15 +90,15 @@ module Transbank
           raise Errors::TransactionStatusError.new(body['error_message'], resp.code)
         end
 
-        def refund(token:, buy_order:, commerce_code:, amount:, options:nil)
+        def refund(token:, child_buy_order:, child_commerce_code:, amount:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
           commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
           integration_type = options&.integration_type || default_integration_params[:integration_type]
           base_url = integration_type.nil? ? TransaccionCompleta::Base::integration_type[:TEST] : TransaccionCompleta::Base.integration_type_url(integration_type)
 
           body = {
-            buy_order: buy_order,
-            commerce_code: commerce_code,
+            buy_order: child_buy_order,
+            commerce_code: child_commerce_code,
             amount: amount
           }
 
