@@ -97,6 +97,15 @@ module Transbank
           return ::Transbank::TransaccionCompleta::TransactionRefundResponse.new(body) if resp.kind_of? Net::HTTPSuccess
           raise Errors::TransactionRefundError.new(body['error_message'], resp.code)
         end
+
+        def default_integration_params
+          {
+            api_key: TransaccionCompleta::Base::DEFAULT_API_KEY,
+            commerce_code: TransaccionCompleta::Base::DEFAULT_COMMERCE_CODE,
+            integration_type: TransaccionCompleta::Base::integration_type,
+            base_url: TransaccionCompleta::Base::current_integration_type_url
+          }
+        end
       end
     end
   end
