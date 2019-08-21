@@ -31,7 +31,7 @@ module Transbank
           raise Errors::TransactionCreateError.new(body['error_message'], resp.code)
         end
 
-        def installments(token:,options:nil)
+        def installments(token:, installments_number:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
           commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
           integration_type = options&.integration_type || default_integration_params[:integration_type]
@@ -39,7 +39,10 @@ module Transbank
 
           url = base_url + TRANSACTION_INSTALLMENTS_ENDPOINT.gsub(':token', token)
           headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-          resp = http_post(uri_string: url, headers: headers, camel_case_keys: false)
+
+          body = {installments_number: installments_number}
+
+          resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
           body = JSON.parse(resp.body)
           return ::Transbank::TransaccionCompleta::TransactionInstallmentsResponse.new(body) if resp.kind_of? Net::HTTPSuccess
           raise Errors::TransactionInstallmentsError.new(body['error_message'], resp.code)
