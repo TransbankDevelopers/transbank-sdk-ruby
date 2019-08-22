@@ -54,7 +54,6 @@ module Transbank
             end
           end
           .map(&:value)
-          .map { |res| JSON.parse(res.body) }
 
           # body = {
           #   commerce_code: commerce_code,
@@ -64,9 +63,11 @@ module Transbank
 
        #   resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
          # body = JSON.parse(resp.body)
-          return ::Transbank::TransaccionCompleta::MallTransactionInstallmentsResponse.new(resp) if resp.all? { |res| res.kind_of? Net::HTTPSuccess}
-          binding.pry
-          raise Errors::TransactionInstallmentsError.new(resp['error_message'], resp.code)
+          if resp.all? { |res| res.kind_of? Net::HTTPSuccess }
+            return resp.map { |res| ::Transbank::TransaccionCompleta::TransactionInstallmentsResponse.new(res.body)}
+          end
+
+          raise Errors::TransactionInstallmentsError.new(resp, resp.code)
         end
 
         def commit(token:,details:, options:nil)

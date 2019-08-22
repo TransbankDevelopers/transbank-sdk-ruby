@@ -3,8 +3,8 @@ module Transbank
     class MallTransactionInstallmentsResponse
 
       attr_accessor :value
-      def initialize(json)
-        @value = json
+      def initialize(responses)
+        @value = responses
       end
     end
   end
