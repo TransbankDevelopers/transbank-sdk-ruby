@@ -64,7 +64,10 @@ module Transbank
        #   resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
          # body = JSON.parse(resp.body)
           if resp.all? { |res| res.kind_of? Net::HTTPSuccess }
-            return resp.map { |res| ::Transbank::TransaccionCompleta::TransactionInstallmentsResponse.new(res.body)}
+            return resp.map do |res|
+              body = JSON.parse(res.body)
+              ::Transbank::TransaccionCompleta::TransactionInstallmentsResponse.new(body)
+            end
           end
 
           raise Errors::TransactionInstallmentsError.new(resp, resp.code)
