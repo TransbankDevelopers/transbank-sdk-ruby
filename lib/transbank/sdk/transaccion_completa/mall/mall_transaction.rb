@@ -32,18 +32,18 @@ module Transbank
           raise Errors::TransactionCreateError.new(body['error_message'], resp.code)
         end
 
-        def installments(token:,installments_number:, child_buy_order:, child_commerce_code:, options:nil)
+        def installments(token:,installments_number:, buy_order:, commerce_code:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
-          commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
+          base_commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
           integration_type = options&.integration_type || default_integration_params[:integration_type]
           base_url = integration_type.nil? ? TransaccionCompleta::Base::integration_type[:TEST] : TransaccionCompleta::Base.integration_type_url(integration_type)
 
           url = base_url + TRANSACTION_INSTALLMENTS_ENDPOINT.gsub(':token', token)
-          headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
+          headers = webpay_headers(commerce_code: base_commerce_code, api_key: api_key)
 
           body = {
-            commerce_code: child_commerce_code,
-            buy_order: child_buy_order,
+            commerce_code: commerce_code,
+            buy_order: buy_order,
             installments_number: installments_number
           }
 
