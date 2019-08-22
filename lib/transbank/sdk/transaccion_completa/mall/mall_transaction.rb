@@ -32,7 +32,7 @@ module Transbank
           raise Errors::TransactionCreateError.new(body['error_message'], resp.code)
         end
 
-        def installments(token:,installments_number:, buy_order:, commerce_code:, options:nil)
+        def installments(token:, details:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
           base_commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
           integration_type = options&.integration_type || default_integration_params[:integration_type]
@@ -41,15 +41,28 @@ module Transbank
           url = base_url + TRANSACTION_INSTALLMENTS_ENDPOINT.gsub(':token', token)
           headers = webpay_headers(commerce_code: base_commerce_code, api_key: api_key)
 
-          body = {
-            commerce_code: commerce_code,
-            buy_order: buy_order,
-            installments_number: installments_number
-          }
+          detail = installments_details(details)
 
-          resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
-          body = JSON.parse(resp.body)
-          return ::Transbank::TransaccionCompleta::TransactionInstallmentsResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+          resp = detail.map do |det|
+            body =  {
+              commerce_code: det[:commerce_code],
+              buy_order: det[:buy_order],
+              installments_number: det[:installments_number]
+            }
+            Thread.new { http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false) }
+          end
+          .map(&:value)
+          .map { |res| JSON.parse(res.body) }
+
+          # body = {
+          #   commerce_code: commerce_code,
+          #   buy_order: buy_order,
+          #   installments_number: installments_number
+          # }
+
+       #   resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
+         # body = JSON.parse(resp.body)
+          return ::Transbank::TransaccionCompleta::MallTransactionInstallmentsResponse.new(body) if resp.kind_of? Net::HTTPSuccess
           raise Errors::TransactionInstallmentsError.new(body['error_message'], resp.code)
         end
 
@@ -136,6 +149,17 @@ module Transbank
             }
           end
         end
+
+        def installments_details(details)
+          details.map do |det|
+            {
+              installments_number: det.fetch('installments_number') { det.fetch(:installments_number) },
+              buy_order: det.fetch('buy_order') { det.fetch(:buy_order) },
+              commerce_code: det.fetch('commerce_code') { det.fetch(:commerce_code) }
+            }
+          end
+        end
+
       end
     end
   end
