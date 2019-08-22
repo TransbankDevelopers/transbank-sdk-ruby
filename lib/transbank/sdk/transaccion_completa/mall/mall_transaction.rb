@@ -17,7 +17,7 @@ module Transbank
           integration_type = options&.integration_type || default_integration_params[:integration_type]
           base_url = integration_type.nil? ? TransaccionCompleta::Base::integration_type[:TEST] : TransaccionCompleta::Base.integration_type_url(integration_type)
 
-          detail = form_details(details)
+          detail = create_details(details)
           body = {
             buy_order: buy_order, session_id: session_id,
             card_number: card_number, card_expiration_date: card_expiration_date,
@@ -53,8 +53,7 @@ module Transbank
           raise Errors::TransactionInstallmentsError.new(body['error_message'], resp.code)
         end
 
-        def commit(token:, child_commerce_code:, child_buy_order:, id_query_installments:, deferred_period_index:,
-                   grace_period:, options:nil)
+        def commit(token:,details:, options:nil)
           api_key = options&.api_key || default_integration_params[:api_key]
           commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
           integration_type = options&.integration_type || default_integration_params[:integration_type]
@@ -62,13 +61,9 @@ module Transbank
 
           url = base_url + COMMIT_TRANSACTION_ENDPOINT.gsub(':token', token)
           headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-          body = {
-            commerce_code: child_commerce_code,
-            buy_order: child_buy_order,
-            id_query_installments: id_query_installments,
-            deferred_period_index: deferred_period_index,
-            grace_period: grace_period
-          }
+
+          detail = commit_details(details)
+          body = {  details: detail }
 
           resp = http_put(uri_string: url, body: body,  headers: headers)
           body = JSON.parse(resp.body)
@@ -120,12 +115,24 @@ module Transbank
         end
 
         private
-        def form_details(details)
+        def create_details(details)
           details.map do |det|
             {
               amount: det.fetch('amount') { det.fetch(:amount) },
               commerce_code: det.fetch('commerce_code') { det.fetch(:commerce_code) },
               buy_order: det.fetch('buy_order') { det.fetch(:buy_order) }
+            }
+          end
+        end
+
+        def commit_details(details)
+          details.map do |det|
+            {
+              commerce_code: det.fetch('commerce_code'){ det.fetch(:commerce_code) },
+              buy_order: det.fetch('buy_order'){ det.fetch(:buy_order) },
+              id_query_installments: det.fetch('id_query_installments'){ det.fetch(:id_query_installments) },
+              deferred_period_index: det.fetch('deferred_period_index'){ det.fetch(:deferred_period_index) },
+              grace_period: det.fetch('grace_period'){ det.fetch(:grace_period) }
             }
           end
         end
