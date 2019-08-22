@@ -44,12 +44,14 @@ module Transbank
           detail = installments_details(details)
 
           resp = detail.map do |det|
-            body =  {
-              commerce_code: det[:commerce_code],
-              buy_order: det[:buy_order],
-              installments_number: det[:installments_number]
-            }
-            Thread.new { http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false) }
+            Thread.new do
+              body =  {
+                commerce_code: det[:commerce_code],
+                buy_order: det[:buy_order],
+                installments_number: det[:installments_number]
+              }
+              http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
+            end
           end
           .map(&:value)
           .map { |res| JSON.parse(res.body) }
