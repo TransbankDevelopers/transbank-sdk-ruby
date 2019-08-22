@@ -64,8 +64,8 @@ module Transbank
 
        #   resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
          # body = JSON.parse(resp.body)
-          return ::Transbank::TransaccionCompleta::MallTransactionInstallmentsResponse.new(resp) if resp.kind_of? Net::HTTPSuccess
-          raise Errors::TransactionInstallmentsError.new(body['error_message'], resp.code)
+          return ::Transbank::TransaccionCompleta::MallTransactionInstallmentsResponse.new(resp) if resp.all? { |res| res.kind_of? Net::HTTPSuccess}
+          raise Errors::TransactionInstallmentsError.new(resp['error_message'], resp.code)
         end
 
         def commit(token:,details:, options:nil)
