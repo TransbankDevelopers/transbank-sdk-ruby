@@ -44,25 +44,14 @@ module Transbank
           detail = installments_details(details)
 
           resp = detail.map do |det|
-            Thread.new do
               body =  {
                 commerce_code: det[:commerce_code],
                 buy_order: det[:buy_order],
                 installments_number: det[:installments_number]
               }
               http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
-            end
           end
-          .map(&:value)
 
-          # body = {
-          #   commerce_code: commerce_code,
-          #   buy_order: buy_order,
-          #   installments_number: installments_number
-          # }
-
-       #   resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
-         # body = JSON.parse(resp.body)
           if resp.all? { |res| res.kind_of? Net::HTTPSuccess }
             return resp.map do |res|
               body = JSON.parse(res.body)
