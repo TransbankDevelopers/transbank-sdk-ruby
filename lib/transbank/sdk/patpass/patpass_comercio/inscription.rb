@@ -44,6 +44,7 @@ module Transbank
             resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             body = JSON.parse(resp.body)
             return ::Transbank::Patpass::PatpassComercio::InscriptionStartResponse.new(body) if resp.kind_of? Net::HTTPSuccess
+            binding.pry
             raise Errors::InscriptionStartError.new(body['error_message'], resp.code)
           end
 
