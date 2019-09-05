@@ -9,15 +9,15 @@ module Transbank
 
 
         FIELDS = %i(
-          url name first_last_name second_last_name rut service_id final_url commerce_code max_amount
+          url name first_last_name second_last_name rut service_id final_url max_amount
           phone_number mobile_number patpass_name person_email commerce_email address city
         )
 
         class << self
-          def start(url:, name:, first_last_name:, second_last_name:, rut:, service_id:, final_url:, commerce_code:, max_amount:,
+          def start(url:, name:, first_last_name:, second_last_name:, rut:, service_id:, final_url:, max_amount:,
             phone_number:, mobile_number:, patpass_name:, person_email:, commerce_email:, address:, city:, options: nil)
             api_key = options&.api_key || default_integration_params[:api_key]
-            #commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
+            commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
             integration_type = options&.integration_type || default_integration_params[:integration_type]
             base_url = integration_type.nil? ? PatpassComercio::Base::integration_types[:TEST] : PatpassComercio::Base.integration_type_url(integration_type)
 
