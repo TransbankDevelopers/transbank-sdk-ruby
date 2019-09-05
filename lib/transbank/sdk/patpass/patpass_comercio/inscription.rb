@@ -64,6 +64,15 @@ module Transbank
             raise Errors::InscriptionStatusError.new(body['error_message'], resp.code)
           end
 
+          def default_integration_params
+            {
+                api_key: Patpass::PatpassComercio::Base::DEFAULT_API_KEY,
+                commerce_code: Patpass::PatpassComercio::Base::DEFAULT_COMMERCE_CODE,
+                integration_type: Patpass::PatpassComercio::Base::integration_type,
+                base_url: Patpass::PatpassComercio::Base::current_integration_type_url
+            }
+          end
+
 
 
 
