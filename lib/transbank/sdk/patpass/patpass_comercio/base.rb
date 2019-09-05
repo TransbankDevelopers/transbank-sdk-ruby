@@ -3,8 +3,8 @@ module Transbank
     module PatpassComercio
       class Base
 
-        DEFAULT_API_KEY = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'.freeze
-        DEFAULT_COMMERCE_CODE = '597055555550'.freeze
+        DEFAULT_API_KEY = 'cxxXQgGD9vrVe4M41FIt'.freeze
+        DEFAULT_COMMERCE_CODE = '28299257'.freeze
 
         @api_key = DEFAULT_API_KEY
         @commerce_code = DEFAULT_COMMERCE_CODE
