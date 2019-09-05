@@ -10,8 +10,8 @@ module Transbank
         @commerce_code = DEFAULT_COMMERCE_CODE
         @integration_type = :TEST
         @integration_types = {
-           LIVE: "https://www.pagoautomaticocontarjetas.cl",
-           TEST: "https://pagoautomaticocontarjetasint.transbank.cl"
+           LIVE: "https://www.pagoautomaticocontarjetas.cl/",
+           TEST: "https://pagoautomaticocontarjetasint.transbank.cl/"
         }
         class << self
           attr_reader :integration_types
