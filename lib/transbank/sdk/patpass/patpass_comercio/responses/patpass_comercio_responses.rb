@@ -1,2 +1,2 @@
-require File.expand_path('inscription_start_response')
-require File.expand_path('inscription_status_response')
+require 'transbank/sdk/patpass/patpass_comercio/responses/inscription_start_response'
+require 'transbank/sdk/patpass/patpass_comercio/responses/inscription_status_response'
