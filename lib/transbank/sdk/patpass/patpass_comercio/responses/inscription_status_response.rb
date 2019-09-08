@@ -2,10 +2,10 @@ module Transbank
   module Patpass
     module PatpassComercio
       class InscriptionStatusResponse
-        attr_accessor :status, :url_voucher
+        attr_accessor :authorized, :voucher_url
         def initialize(json)
-          self.status = json['status']
-          self.url_voucher = json['urlVoucher']
+          self.authorized = json['authorized']
+          self.voucher_url = json['voucherUrl']
         end
       end
     end
