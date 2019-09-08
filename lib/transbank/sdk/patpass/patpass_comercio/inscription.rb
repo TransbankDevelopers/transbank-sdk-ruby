@@ -60,9 +60,10 @@ module Transbank
             url = base_url + INSCRIPTION_STATUS_ENDPOINT
             headers = patpass_comercio_headers(commerce_code: commerce_code, api_key: api_key)
             resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
-            body = JSON.parse(resp.body)
-            return ::Transbank::Patpass::PatpassComercio::InscriptionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::InscriptionStatusError.new(body['error_message'], resp.code)
+            resp_body = JSON.parse(resp.body)
+            binding.pry
+            return ::Transbank::Patpass::PatpassComercio::InscriptionStatusResponse.new(resp_body) if resp.kind_of? Net::HTTPSuccess
+            raise Errors::InscriptionStatusError.new(resp_body['error_message'], resp.code)
           end
 
           def default_integration_params
