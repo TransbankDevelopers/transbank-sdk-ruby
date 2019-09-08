@@ -61,7 +61,7 @@ module Transbank
             resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
             resp_body = JSON.parse(resp.body)
             return ::Transbank::Patpass::PatpassComercio::InscriptionStatusResponse.new(resp_body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::InscriptionStatusError.new(resp_body['error_message'], resp.code)
+            raise Errors::InscriptionStatusError.new(resp_body['description'], resp.code)
           end
 
           def default_integration_params
@@ -72,17 +72,7 @@ module Transbank
                 base_url: Patpass::PatpassComercio::Base::current_integration_type_url
             }
           end
-
-
-
-
-
-
         end
-
-
-
-
       end
     end
   end
