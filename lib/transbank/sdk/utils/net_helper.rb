@@ -70,6 +70,13 @@ module Transbank
         }
       end
 
+      def patpass_comercio_headers(commerce_code:, api_key:)
+        {
+            "commercecode" => commerce_code,
+            "Authorization" => api_key
+        }
+      end
+
     end
   end
 end
