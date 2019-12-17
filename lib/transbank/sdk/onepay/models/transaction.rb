@@ -42,7 +42,7 @@ module Transbank
                                               options: options)
           response = http_post(uri_string: transaction_create_path, body: create_request.to_h)
           validate_create_response!(response)
-          transaction_create_response = TransactionCreateResponse.new response
+          transaction_create_response = TransactionCreateResponse.new JSON.parse(response.body)
           signature_is_valid = transaction_create_response.valid_signature?(options.fetch(:shared_secret))
           unless signature_is_valid
             raise Errors::SignatureError, "The response's signature is not valid."
@@ -64,7 +64,7 @@ module Transbank
                                               options: options)
           response = http_post(uri_string: transaction_commit_path, body: commit_request.to_h)
           validate_commit_response!(response)
-          transaction_commit_response = TransactionCommitResponse.new(response)
+          transaction_commit_response = TransactionCommitResponse.new(JSON.parse(response.body))
           signature_is_valid = transaction_commit_response.valid_signature?(options.fetch(:shared_secret))
           unless signature_is_valid
             raise Errors::SignatureError, "The response's signature is not valid."
@@ -101,8 +101,9 @@ module Transbank
             raise Errors::TransactionCommitError, 'Could not obtain a response from the service.'
           end
 
-          unless response.fetch('responseCode') == 'OK'
-            msg = "#{response.fetch('responseCode')} : #{response.fetch('description')}"
+          unless JSON.parse(response.body).fetch('responseCode') == 'OK'
+            body = JSON.parse(response.body)
+            msg = "#{body.fetch('responseCode')} : #{body.fetch('description')}"
             raise Errors::TransactionCommitError,  msg
           end
           response
@@ -113,8 +114,9 @@ module Transbank
             raise Errors::TransactionCreateError, 'Could not obtain a response from the service.'
           end
 
-          unless response.fetch('responseCode') == 'OK'
-            msg = "#{response.fetch('responseCode')} : #{response['description']}"
+          unless JSON.parse(response.body).fetch('responseCode') == 'OK'
+            body = JSON.parse(response.body)
+            msg = "#{body.fetch('responseCode')} : #{body['description']}"
             raise Errors::TransactionCreateError, msg
           end
           response

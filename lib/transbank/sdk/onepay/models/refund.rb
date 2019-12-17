@@ -25,12 +25,11 @@ module Transbank
                                               authorization_code: authorization_code,
                                               options: options)
           response = http_post(uri_string: refund_path, body: refund_request.to_h)
-
-          if response.nil? || !response['responseCode']
+          if response.nil? || !JSON.parse(response.body)['responseCode']
             raise Errors::RefundCreateError, 'Could not obtain a response from the service.'
           end
 
-          refund_create_response = RefundCreateResponse.new(response)
+          refund_create_response = RefundCreateResponse.new(JSON.parse(response.body))
 
           unless refund_create_response.response_ok?
             raise Errors::RefundCreateError, refund_create_response.full_description
