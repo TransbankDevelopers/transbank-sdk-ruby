@@ -1,7 +1,7 @@
 module Transbank
   module Onepay
     class Refund
-      extend Utils::NetHelper, Utils::RequestBuilder
+      extend Transbank::Utils::NetHelper, Utils::RequestBuilder
       # Manages Refunds
       REFUND_TRANSACTION = 'nullifytransaction'.freeze
       TRANSACTION_BASE_PATH = '/ewallet-plugin-api-services/services/transactionservice/'.freeze
@@ -24,13 +24,12 @@ module Transbank
                                               external_unique_number: external_unique_number,
                                               authorization_code: authorization_code,
                                               options: options)
-          response = http_post(refund_path, refund_request.to_h)
-
-          if response.nil? || !response['responseCode']
+          response = http_post(uri_string: refund_path, body: refund_request.to_h)
+          if response.nil? || !JSON.parse(response.body)['responseCode']
             raise Errors::RefundCreateError, 'Could not obtain a response from the service.'
           end
 
-          refund_create_response = RefundCreateResponse.new(response)
+          refund_create_response = RefundCreateResponse.new(JSON.parse(response.body))
 
           unless refund_create_response.response_ok?
             raise Errors::RefundCreateError, refund_create_response.full_description
