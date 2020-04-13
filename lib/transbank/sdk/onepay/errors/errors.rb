@@ -8,6 +8,7 @@ require 'transbank/sdk/onepay/errors/shopping_cart_error'
 require 'transbank/sdk/onepay/errors/signature_error'
 require 'transbank/sdk/onepay/errors/transaction_commit_error'
 require 'transbank/sdk/onepay/errors/transaction_create_error'
+require 'transbank/sdk/onepay/errors/invalid_amount_error'
 
 module Transbank
   module Onepay

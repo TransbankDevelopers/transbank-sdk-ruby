@@ -26,6 +26,7 @@ module Transbank
                      authorization_code: nil,
                      issued_at: nil,
                      signature: nil)
+        Validators::AmountValidator::validate nullify_amount, true
         @nullify_amount = nullify_amount
         @occ = occ
         @external_unique_number = external_unique_number

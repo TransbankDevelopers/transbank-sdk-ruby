@@ -2,6 +2,7 @@ module Transbank
   module Onepay
     class Item
       include Transbank::Utils::JSONUtils
+
       # An Item to be purchased by the user, and to be added to a [ShoppingCart]
 
       # @return [String] An item's description
@@ -55,13 +56,9 @@ module Transbank
       end
 
       # @param amount [Integer] The value of each unit of [Item]
-      # @raise [ItemError] when amount cannot be null.
-      # @raise [ArgumentError] when amount is not an Integer.
+      # @raise [InvalidAmountError] when amount is invalid.
       def amount=(amount)
-        raise Errors::ItemError, "Amount cannot be null" if amount.nil?
-        if amount != Integer(amount)
-          raise ArgumentError, "Amount is not an Integer"
-        end
+        Validators::AmountValidator.validate amount
         @amount = amount
       end
 

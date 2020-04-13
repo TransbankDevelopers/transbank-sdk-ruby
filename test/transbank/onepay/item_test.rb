@@ -84,10 +84,10 @@ class ItemTest < Transbank::Onepay::Test
   def test_raises_if_amount_is_nil
     json = {"description": "something pretty", "quantity": 5, "amount": nil}
     error =
-        assert_raises Transbank::Onepay::Errors::ItemError do
+        assert_raises Transbank::Onepay::Errors::InvalidAmountError do
           Transbank::Onepay::Item.new json
         end
-    assert_equal error.message, "Amount cannot be null"
+    assert_equal error.message, Transbank::Onepay::Errors::InvalidAmountError::NOT_NUMERIC_MESSAGE
   end
 
   def test_raises_if_amount_is_a_string
