@@ -236,6 +236,22 @@ class TransactionTest < Transbank::Onepay::Test
     Transbank::Onepay::Base.callback_url = original_callback_url
   end
 
+  def test_transaction_succeeds_when_channel_is_mobile_and_callback_url_as_options
+    WebMock.allow_net_connect!
+    original_callback_url = Transbank::Onepay::Base.callback_url
+    Transbank::Onepay::Base.callback_url = nil
+
+    cart = Transbank::Onepay::Mocks::ShoppingCartMocks[0]
+    options = { callback_url: "http://some.callback.url" }
+
+    response = Transbank::Onepay::Transaction.create(shopping_cart: cart, options: options)
+    assert_equal response.response_code, "OK"
+    assert_equal response.description, "OK"
+    refute_nil response.qr_code_as_base64
+  ensure
+    Transbank::Onepay::Base.callback_url = original_callback_url
+  end
+
   def test_transaction_fails_when_channel_is_app_and_app_scheme_is_null
     original_app_scheme = Transbank::Onepay::Base.app_scheme
     Transbank::Onepay::Base.app_scheme = nil

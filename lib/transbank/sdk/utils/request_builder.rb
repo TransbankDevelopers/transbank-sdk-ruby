@@ -21,7 +21,7 @@ module Transbank
             items_quantity: shopping_cart.items_quantity,
             issued_at: issued_at,
             items: shopping_cart.items,
-            callback_url: Base.callback_url,
+            callback_url: options[:callback_url],
             channel: channel,
             app_scheme: Base.app_scheme,
             commerce_logo_url: options[:commerce_logo_url],
@@ -79,15 +79,18 @@ module Transbank
 
         # Return the default options values:
         # api_key: Base::api_key
-        # app_key: Base::current_integration_type_app_key
         # shared_secret: Base::shared_secret
+        # commerce_logo_url: Base::commerce_logo_url
+        # qr_width_height: Base::qr_width_height
+        # callback: Base::callback_url
         # @return [Hash] a hash with the aforementioned keys/values
         def default_options
           {
             api_key: Base::api_key,
             shared_secret: Base::shared_secret,
             commerce_logo_url: Base::commerce_logo_url,
-            qr_width_height: Base::qr_width_height
+            qr_width_height: Base::qr_width_height,
+            callback_url:  Base.callback_url
           }
         end
       end
