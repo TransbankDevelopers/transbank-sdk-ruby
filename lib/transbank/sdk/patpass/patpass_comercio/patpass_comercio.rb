@@ -1,0 +1,5 @@
+require 'transbank/sdk/patpass/patpass_comercio/errors/patpass_comercio_errors'
+require 'transbank/sdk/patpass/patpass_comercio/responses/patpass_comercio_responses'
+require 'transbank/sdk/patpass/patpass_comercio/base'
+require 'transbank/sdk/patpass/patpass_comercio/options'
+require 'transbank/sdk/patpass/patpass_comercio/inscription'
