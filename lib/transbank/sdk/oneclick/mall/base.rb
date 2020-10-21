@@ -5,8 +5,16 @@ module Transbank
         DEFAULT_API_KEY = '579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C'.freeze
 
         DEFAULT_ONECLICK_MALL_COMMERCE_CODE = '597055555541'.freeze
-        DEFAULT_ONECLICK_MALL_CHILD_COMMERCE_CODES = ['597055555542'.freeze,
-                                                      '597055555543'.freeze].freeze
+        DEFAULT_ONECLICK_MALL_CHILD_COMMERCE_CODES = [
+          '597055555542'.freeze,
+          '597055555543'.freeze
+        ].freeze
+
+        DEFAULT_ONECLICK_MALL_DEFERRED_COMMERCE_CODE = '597055555547'.freeze
+        DEFAULT_ONECLICK_MALL_DEFERRED_CHILD_COMMERCE_CODES = [
+          '597055555548'.freeze,
+          '597055555549'.freeze
+        ].freeze
 
         @api_key = DEFAULT_API_KEY
         @commerce_code = DEFAULT_ONECLICK_MALL_COMMERCE_CODE
