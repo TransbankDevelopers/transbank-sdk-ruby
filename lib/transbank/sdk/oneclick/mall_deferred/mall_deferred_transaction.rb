@@ -24,7 +24,7 @@ module Transbank
             resp = http_put(uri_string: url, headers: headers, body: body)
             body = JSON.parse(resp.body)
             return ::Transbank::Webpay::Oneclick::MallDeferredTransactionCaptureResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Oneclick::Errors::Oneclick::MallDeferredTransactionCaptureError.new(body['error_message'], resp.code)
+            raise Oneclick::Errors::MallDeferredTransactionCaptureError.new(body['error_message'], resp.code)
           end
 
           def default_integration_params
