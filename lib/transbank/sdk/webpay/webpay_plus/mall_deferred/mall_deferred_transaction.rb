@@ -102,7 +102,6 @@ module Transbank
               base_url: WebpayPlus::Base::current_integration_type_url
             }
           end
-
         end
       end
     end

@@ -56,4 +56,3 @@ module Transbank
     end
   end
 end
-

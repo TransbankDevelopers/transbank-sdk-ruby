@@ -55,7 +55,6 @@ module Transbank
             @commerce_code = DEFAULT_MALL_COMMERCE_CODE
             self.integration_type = :TEST
           end
-
         end
       end
     end
