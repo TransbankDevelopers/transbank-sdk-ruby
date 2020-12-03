@@ -4,8 +4,15 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.3.1] - 2020-10-29
+## [1.4.0] - 2020-12-03
+### Added
+- Se agregan métodos de configuración para integración a Webpay Plus en sus modalidades diferidas y mall diferida.
+- Se agregan métodos de configuración para integración a Webpay Oneclick en su modalidad mall diferida.
 
+### Fixed
+- Se arregla forma en que se lee configuración del SDK, estaba tomando valores de una constante en vez de la variable de clase correspondiente. Este arreglo es para todos los productos con la excepción de Onepay
+
+## [1.3.1] - 2020-10-29
 ### Fixed
 - Se revierte commit que elimina requires necesarios para productos REST
 
