@@ -64,8 +64,8 @@ module Transbank
 
           def default_integration_params
             {
-                api_key: PatpassByWebpay::Base::DEFAULT_API_KEY,
-                commerce_code: PatpassByWebpay::Base::DEFAULT_COMMERCE_CODE,
+                api_key: PatpassByWebpay::Base.api_key,
+                commerce_code: PatpassByWebpay::Base.commerce_code,
                 base_url: PatpassByWebpay::Base::current_integration_type_url
             }
           end

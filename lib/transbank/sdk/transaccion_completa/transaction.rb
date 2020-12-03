@@ -103,8 +103,8 @@ module Transbank
 
         def default_integration_params
           {
-            api_key: TransaccionCompleta::Base::DEFAULT_API_KEY,
-            commerce_code: TransaccionCompleta::Base::DEFAULT_COMMERCE_CODE,
+            api_key: TransaccionCompleta::Base.api_key,
+            commerce_code: TransaccionCompleta::Base.commerce_code,
             integration_type: TransaccionCompleta::Base::integration_type,
             base_url: TransaccionCompleta::Base::current_integration_type_url
           }

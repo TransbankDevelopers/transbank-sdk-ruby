@@ -96,8 +96,8 @@ module Transbank
 
           def default_integration_params
             {
-              api_key: WebpayPlus::Base::DEFAULT_API_KEY,
-              commerce_code: WebpayPlus::Base::DEFAULT_MALL_DEFERRED_COMMERCE_CODE,
+              api_key: WebpayPlus::Base.api_key,
+              commerce_code: WebpayPlus::Base.commerce_code,
               integration_type: WebpayPlus::Base::integration_type,
               base_url: WebpayPlus::Base::current_integration_type_url
             }
