@@ -7,8 +7,8 @@ module Transbank
         class << self
           def default_integration_params
             {
-              api_key: Oneclick::Base::DEFAULT_API_KEY,
-              commerce_code: Oneclick::Base::DEFAULT_ONECLICK_MALL_DEFERRED_COMMERCE_CODE,
+              api_key: Oneclick::Base.api_key,
+              commerce_code: Oneclick::Base.commerce_code,
               integration_type: Oneclick::Base::integration_type,
               base_url: Oneclick::Base::current_integration_type_url
             }

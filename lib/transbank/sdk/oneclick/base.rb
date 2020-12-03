@@ -51,6 +51,12 @@ module Transbank
             @commerce_code = DEFAULT_ONECLICK_MALL_COMMERCE_CODE
             self.integration_type = :TEST
           end
+
+          def configure_mall_deferred_for_testing
+            @api_key = DEFAULT_API_KEY
+            @commerce_code = DEFAULT_ONECLICK_MALL_DEFERRED_COMMERCE_CODE
+            self.integration_type = :TEST
+          end
         end
       end
     end
