@@ -7,7 +7,7 @@ module Transbank
         COMMIT_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
         TRANSACTION_STATUS_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
         REFUND_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions/:token/refunds'
-        TRANSACTION_CAPTURE_ENDPOINT = '/rswebpaytransaction/api/webpay/v1.0/transactions/:token/capture'
+        TRANSACTION_CAPTURE_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions/:token/capture'
         class << self
 
           def create(buy_order:, session_id:, amount:, return_url:, options: nil)
