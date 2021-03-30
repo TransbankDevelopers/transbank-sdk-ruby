@@ -4,6 +4,12 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2021-03-30
+### Fixed
+- Se agrega parámetro de estado faltante en respuesta de Commit y Status en Webpay Plus
+- Se agrega dependencia JSON (~> 2.0) para evitar problemas al recibir respuesta de Commit
+- Se arregla endpoint de captura en Webpay Plus
+
 ## [1.4.0] - 2020-12-03
 ### Added
 - Se agregan métodos de configuración para integración a Webpay Plus en sus modalidades diferidas y mall diferida.
