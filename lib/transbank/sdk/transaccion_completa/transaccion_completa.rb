@@ -3,3 +3,5 @@ require 'transbank/sdk/transaccion_completa/responses/transaccion_completa_respo
 require 'transbank/sdk/transaccion_completa/options'
 require 'transbank/sdk/transaccion_completa/base'
 require 'transbank/sdk/transaccion_completa/transaction'
+require 'transbank/sdk/transaccion_completa/mall/mall_transaction'
+require 'transbank/sdk/transaccion_completa/mall/responses/mall_transaction_responses'
