@@ -1,10 +1,7 @@
 module Transbank
   module TransaccionCompleta
-    class MallTransactionCommitResponse
-      FIELDS = %i[
-        buy_order session_id card_detail expiration_date
-        accounting_date transaction_date details
-      ]
+    class TransactionCaptureResponse
+      FIELDS = %i[token authorization_code authorization_date captured_amount response_code].freeze
       attr_accessor(*FIELDS)
 
       def initialize(json)
