@@ -4,6 +4,10 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2021-04-12
+### Added
+- Se agrega captura diferida en Transacción Completa y Transacción Completa Mall
+
 ## [1.4.1] - 2021-03-30
 ### Fixed
 - Se agrega parámetro de estado faltante en respuesta de Commit y Status en Webpay Plus
