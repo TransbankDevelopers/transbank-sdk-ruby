@@ -1,93 +1,41 @@
 module Transbank
   module Patpass
     module PatpassByWebpay
-      class Transaction
-        extend Transbank::Utils::NetHelper
-        CREATE_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
-        COMMIT_TRANSACTION_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
-        TRANSACTION_STATUS_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.0/transactions'
-
-        class << self
-
-          def create(buy_order:, session_id:, amount:, return_url:, details: ,options: nil)
-
-            api_key = options&.api_key || default_integration_params[:api_key]
-            commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
-            integration_type = options&.integration_type || default_integration_params[:integration_type]
-            base_url = integration_type.nil? ? PatpassByWebpay::Base::integration_types[:TEST] : PatpassByWebpay::Base.integration_type_url(integration_type)
-
-            wpm_detail = wpm_details(details)
-            body = {
-                buy_order: buy_order,
-                session_id: session_id,
-                amount: amount,
-                return_url: return_url,
-                wpm_detail: wpm_detail
-            }
-
-            url = base_url + CREATE_TRANSACTION_ENDPOINT
-            headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            resp = http_post(uri_string: url, body: body, headers: headers, camel_case_keys: false)
-            body = JSON.parse(resp.body)
-
-            return ::Transbank::Patpass::PatpassByWebpay::TransactionCreateResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::TransactionCreateError.new(body['error_message'], resp.code)
-          end
-
-          def commit(token:, options: nil)
-
-            api_key = options&.api_key || default_integration_params[:api_key]
-            commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
-            base_url = PatpassByWebpay::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
-
-            url = base_url + COMMIT_TRANSACTION_ENDPOINT + "/#{token}"
-            headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-
-            resp = http_put(uri_string: url, body: nil, headers: headers)
-            body = JSON.parse(resp.body)
-            return ::Transbank::Patpass::PatpassByWebpay::TransactionCommitResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::TransactionCommitError.new(body['error_message'], resp.code)
-          end
-
-          def status(token:, options: nil)
-            api_key = options&.api_key || default_integration_params[:api_key]
-            commerce_code = options&.commerce_code || default_integration_params[:commerce_code]
-            base_url = PatpassByWebpay::Base.integration_types[options&.integration_type] || default_integration_params[:base_url]
-
-            url = base_url + "#{TRANSACTION_STATUS_ENDPOINT}/#{token}"
-            headers = webpay_headers(commerce_code: commerce_code, api_key: api_key)
-            resp = http_get(uri_string: url, headers: headers)
-            body = JSON.parse(resp.body)
-            return ::Transbank::Patpass::PatpassByWebpay::TransactionStatusResponse.new(body) if resp.kind_of? Net::HTTPSuccess
-            raise Errors::TransactionStatusError.new(body['error_message'], resp.code)
-          end
-
-          def default_integration_params
-            {
-                api_key: PatpassByWebpay::Base.api_key,
-                commerce_code: PatpassByWebpay::Base.commerce_code,
-                base_url: PatpassByWebpay::Base::current_integration_type_url
-            }
-          end
-
-          private
-          def wpm_details(details)
-            # Check against the wpm_detail_fields
-            # If one is missing, KeyError will be raised
-            wpm_detail_fields.reduce({}) do |acc, field|
-              acc[field] = details.fetch(field) { details.fetch(field.to_s) }
-              acc
-            end
-          end
-
-          def wpm_detail_fields
-            %i(service_id card_holder_id card_holder_name card_holder_last_name1
-               card_holder_last_name2 card_holder_mail cellphone_number expiration_date
-               commerce_mail uf_flag)
-          end
+      class Transaction < ::Transbank::Common::BaseTransaction
+        DEFAULT_ENVIRONMENT = :integration
+        RESOURCES_URL = ::Transbank::Common::ApiConstants::WEBPAY_ENDPOINT
+        CREATE_ENDPOINT = (RESOURCES_URL + '/transactions/').freeze
+        COMMIT_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}').freeze
+        STATUS_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}').freeze
+    
+        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::PATPASS_BY_WEBPAY, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
+          super
         end
+    
+        def create(buy_order, session_id, amount, return_url, details)
+          request_service = ::Transbank::Shared::RequestService.new(
+            @environment, CREATE_ENDPOINT, @commerce_code, @api_key
+          )
+          request_service.post({
+                                 buy_order: buy_order, session_id: session_id, amount: amount, return_url: return_url, wpm_detail: details
+                               })
+        end
+    
+        def commit(token)
+          request_service = ::Transbank::Shared::RequestService.new(
+            @environment, format(COMMIT_ENDPOINT, token: token), @commerce_code, @api_key
+          )
+          request_service.put({})
+        end
+
+        def status(token)
+          request_service = ::Transbank::Shared::RequestService.new(
+            @environment, format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key
+          )
+          request_service.get
+        end
+      
       end
     end
   end
 end
-

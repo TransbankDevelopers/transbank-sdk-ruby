@@ -1,7 +1,0 @@
-require 'transbank/sdk/transaccion_completa/errors/transaccion_completa_error'
-require 'transbank/sdk/transaccion_completa/errors/transaction_create_error'
-require 'transbank/sdk/transaccion_completa/errors/transaction_commit_error'
-require 'transbank/sdk/transaccion_completa/errors/transaction_installments_error'
-require 'transbank/sdk/transaccion_completa/errors/transaction_refund_error'
-require 'transbank/sdk/transaccion_completa/errors/transaction_status_error'
-require 'transbank/sdk/transaccion_completa/errors/transaction_capture_error'
