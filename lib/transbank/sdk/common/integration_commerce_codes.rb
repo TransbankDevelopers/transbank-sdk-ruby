@@ -1,14 +1,19 @@
 # Contains the Webpay, Oneclick and Patpass Comercio constants for testing.
 module Transbank
   module Common  
-    class IntegrationCommerceCodes
+    module IntegrationCommerceCodes
       WEBPAY_PLUS = '597055555532'.freeze
       WEBPAY_PLUS_MODAL = '597055555584'.freeze
       WEBPAY_PLUS_DEFERRED = '597055555540'.freeze
+
       WEBPAY_PLUS_MALL = '597055555535'.freeze
-      #WEBPAY_PLUS_MALL_CHILD1 = '597055555536'.freeze
-      #WEBPAY_PLUS_MALL_CHILD2 = '597055555537'.freeze
-      WEBPAY_PLUS_MALL_CHILD_COMMERCE_CODES = ['597055555582'.freeze, '597055555583'.freeze].freeze
+      WEBPAY_PLUS_MALL_CHILD1 = '597055555536'.freeze
+      WEBPAY_PLUS_MALL_CHILD2 = '597055555537'.freeze
+      WEBPAY_PLUS_MALL_CHILD_COMMERCE_CODES = [
+        '597055555582'.freeze, 
+        '597055555583'.freeze
+      ].freeze
+
       WEBPAY_PLUS_MALL_DEFERRED = '597055555581'.freeze
       WEBPAY_PLUS_MALL_DEFERRED_CHILD1 = '597055555582'.freeze
       WEBPAY_PLUS_MALL_DEFERRED_CHILD2 = '597055555583'.freeze
