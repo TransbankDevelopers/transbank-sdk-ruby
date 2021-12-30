@@ -6,10 +6,9 @@ require 'minitest/reporters'
 Minitest::Reporters.use!
 require 'webmock/minitest'
 require 'transbank/sdk'
-require_relative './transbank/onepay/mocks/mocks'
 
 module Transbank
-  module Onepay
+  module WebPayPlus
     class Test < Minitest::Test
       include WebMock::API
     end

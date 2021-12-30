@@ -6,14 +6,19 @@ module Transbank
         integration: 'https://webpay3gint.transbank.cl/'
       }
 
-      def initialize(environment, endpoint, commerce_code, api_key)
-        @url = ENVIRONMENTS[environment] + endpoint
-        @headers = headers(commerce_code, api_key)
+      def initialize(environment=nil, endpoint, commerce_code, api_key)
+        @commerce_code = commerce_code
+        @api_key = api_key
+        if environment.nil?
+          @url =  endpoint
+        else
+          @url = ENVIRONMENTS[environment] + endpoint
+        end
+        @headers = headers(@commerce_code, @api_key)
       end
 
-      def initialize(endpoint, commerce_code, api_key)
-        @url = endpoint
-        @headers = headersPatpass(commerce_code, api_key)
+      def set_patpass()
+        @headers = headers_patpass(@commerce_code, @api_key)
       end
 
       def post(body)
@@ -42,10 +47,15 @@ module Transbank
 
         response = http.request(http_method)
         if response.is_a? Net::HTTPSuccess
-          return nil if response.body.blank?
+          return nil if response.body.empty?
           return JSON.parse(response.body)
         end
-        raise TransbankError, "Transbank Error: #{JSON.parse(response.body)['error_message']}"
+        body = JSON.parse(response.body)
+        if body.key?("description")
+          raise TransbankError, "Transbank Error: #{body['code']} - #{body['description']}"
+        else
+          raise TransbankError, "Transbank Error: #{body['error_message']}"
+        end
       end
 
       def build_client
@@ -71,7 +81,7 @@ module Transbank
         }
       end
 
-      def headersPatpass(commerce_code, api_key)
+      def headers_patpass(commerce_code, api_key)
         {
           'commercecode' => commerce_code.to_s,
           'Authorization' => api_key,

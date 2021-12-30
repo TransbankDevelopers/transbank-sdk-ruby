@@ -1,27 +1,25 @@
 require 'uri'
 require 'net/http'
-require 'json'
-require 'openssl'
-require 'base64'
-
 
 require "transbank/sdk/version"
 
-require 'transbank/sdk/transbank_error'
-require 'transbank/sdk/onepay/errors/errors'
+require 'transbank/sdk/common/api_constants'
+require 'transbank/sdk/common/base_transaction'
+require 'transbank/sdk/common/integration_api_keys'
+require 'transbank/sdk/common/integration_commerce_codes'
+require 'transbank/sdk/common/validation'
 
-require 'transbank/sdk/utils/utils'
+require 'transbank/sdk/shared/request_service'
+require 'transbank/sdk/shared/transbank_error'
 
-require 'transbank/sdk/onepay/requests/requests'
-require 'transbank/sdk/onepay/responses/responses'
+require 'transbank/sdk/webpay/webpay_plus/transaction'
+require 'transbank/sdk/webpay/webpay_plus/mall_transaction'
 
-require 'transbank/sdk/onepay/models/models'
-require 'transbank/sdk/onepay/base'
+require 'transbank/sdk/webpay/oneclick/mall_transaction'
+require 'transbank/sdk/webpay/oneclick/mall_inscription'
 
-require 'transbank/sdk/webpay/webpay_plus/webpay_plus'
+require 'transbank/sdk/webpay/transaccion_completa/transaction'
+require 'transbank/sdk/webpay/transaccion_completa/mall_transaction'
 
-require 'transbank/sdk/oneclick/oneclick'
-require 'transbank/sdk/patpass/patpass_by_webpay/patpass_by_webpay'
-require 'transbank/sdk/patpass/patpass_comercio/patpass_comercio'
-
-require 'transbank/sdk/transaccion_completa/transaccion_completa'
+require 'transbank/sdk/patpass/patpass_by_webpay/transaction'
+require 'transbank/sdk/patpass/patpass_comercio/inscription'

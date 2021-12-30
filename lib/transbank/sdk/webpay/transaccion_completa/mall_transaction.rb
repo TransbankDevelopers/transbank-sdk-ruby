@@ -12,7 +12,7 @@ module Transbank
         CAPTURE_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/capture').freeze
     
         def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::TRANSACCION_COMPLETA_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
-          super
+          super(commerce_code, api_key, environment)
         end
 
         def create(buy_order, session_id, card_number, card_expiration_date, details, cvv = nil)

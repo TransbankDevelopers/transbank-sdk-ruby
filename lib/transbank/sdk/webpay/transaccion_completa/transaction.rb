@@ -16,6 +16,12 @@ module Transbank
         end
     
         def create(buy_order, session_id, amount, cvv, card_number, card_expiration_date)
+
+          Transbank::Common::Validation.has_text_with_max_length(buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "buy_order")
+          Transbank::Common::Validation.has_text_with_max_length(session_id, Transbank::Common::ApiConstants::SESSION_ID_LENGTH, "session_id")
+          Transbank::Common::Validation.has_text_with_max_length(card_number, Transbank::Common::ApiConstants::CARD_NUMBER_LENGTH, "card_number")
+          Transbank::Common::Validation.has_text_with_max_length(card_expiration_date, Transbank::Common::ApiConstants::CARD_EXPIRATION_DATE_LENGTH, "card_expiration_date")
+
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, CREATE_ENDPOINT, @commerce_code, @api_key
           )

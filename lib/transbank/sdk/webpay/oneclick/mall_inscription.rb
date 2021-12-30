@@ -13,6 +13,11 @@ module Transbank
         end
     
         def start(username, email, response_url)
+          
+          Transbank::Common::Validation.has_text_with_max_length(username, Transbank::Common::ApiConstants::USER_NAME_LENGTH, "username")
+          Transbank::Common::Validation.has_text_with_max_length(email, Transbank::Common::ApiConstants::EMAIL_LENGTH, "email")
+          Transbank::Common::Validation.has_text_with_max_length(response_url, Transbank::Common::ApiConstants::RETURN_URL_LENGTH, "response_url")
+
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, START_ENDPOINT, @commerce_code, @api_key
           )
@@ -22,6 +27,9 @@ module Transbank
         end
 
         def finish(token)
+
+          Transbank::Common::Validation.has_text_with_max_length(token, Transbank::Common::ApiConstants::TOKEN_LENGTH, "token")
+
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, format(FINISH_ENDPOINT, token: token), @commerce_code, @api_key
           )
@@ -29,6 +37,10 @@ module Transbank
         end 
 
         def delete(tbk_user, username)
+
+          Transbank::Common::Validation.has_text_with_max_length(tbk_user, Transbank::Common::ApiConstants::TBK_USER_LENGTH, "tbk_user")
+          Transbank::Common::Validation.has_text_with_max_length(username, Transbank::Common::ApiConstants::USER_NAME_LENGTH, "username")
+
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, DELETE_ENDPOINT, @commerce_code, @api_key
           )
