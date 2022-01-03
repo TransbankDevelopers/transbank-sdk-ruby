@@ -1,7 +1,7 @@
 module Transbank
   module Webpay
     module WebpayPlus
-      class Transaction < ::Transbank::Common::BaseTransaction
+      class MallTransaction < ::Transbank::Common::BaseTransaction
         DEFAULT_ENVIRONMENT = :integration
         RESOURCES_URL = ::Transbank::Common::ApiConstants::WEBPAY_ENDPOINT
         CREATE_ENDPOINT = (RESOURCES_URL + '/transactions/').freeze
@@ -10,11 +10,11 @@ module Transbank
         REFUND_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/refunds').freeze
         CAPTURE_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/capture').freeze
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
-          super(commerce_code, api_key, environment)
+        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
+          super
         end
-    
-        def create(buy_order, session_id, amount, return_url)
+
+        def create(buy_order, session_id, return_url, details)
 
           Transbank::Common::Validation.has_text_with_max_length(buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "buy_order")
           Transbank::Common::Validation.has_text_with_max_length(session_id, Transbank::Common::ApiConstants::SESSION_ID_LENGTH, "session_id")
@@ -24,7 +24,7 @@ module Transbank
             @environment, CREATE_ENDPOINT, @commerce_code, @api_key
           )
           request_service.post({
-                                 buy_order: buy_order, session_id: session_id, amount: amount, return_url: return_url
+                                 buy_order: buy_order, session_id: session_id, return_url: return_url, details: details
                                })
         end
     
@@ -48,18 +48,22 @@ module Transbank
           request_service.get
         end
     
-        def refund(token, amount)
+        def refund(token, buy_order, child_commerce_code, amount)
 
-          Transbank::Common::Validation.has_text_with_max_length(token, Transbank::Common::ApiConstants::TOKEN_LENGTH, "token")
+          Transbank::Common::Validation.has_text_with_max_length(buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "buy_order")
+          Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
+          Transbank::Common::Validation.has_text_with_max_length(child_buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "child_buy_order")
 
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, format(REFUND_ENDPOINT, token: token), @commerce_code, @api_key
           )
-          request_service.post(amount: amount)
+          request_service.post(buy_order: buy_order, commerce_code: child_commerce_code, amount: amount)
         end     
         
-        def capture(token, buy_order, authorization_code, amount)
-          
+        def capture(child_commerce_code, token, buy_order, authorization_code, capture_amount)
+
+            
+          Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
           Transbank::Common::Validation.has_text_with_max_length(token, Transbank::Common::ApiConstants::TOKEN_LENGTH, "token")
           Transbank::Common::Validation.has_text_with_max_length(buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "buy_order")
           Transbank::Common::Validation.has_text_with_max_length(authorization_code, Transbank::Common::ApiConstants::AUTHORIZATION_CODE_LENGTH, "authorization_code")
@@ -67,9 +71,9 @@ module Transbank
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, format(CAPTURE_ENDPOINT, token: token), @commerce_code, @api_key
           )
-          request_service.put(buy_order: buy_order, authorization_code: authorization_code, capture_amount: amount)
+          request_service.put(commerce_code: child_commerce_code, buy_order: buy_order, authorization_code: authorization_code, capture_amount: capture_amount)
         end 
-      end
+      end  
     end
   end
 end
