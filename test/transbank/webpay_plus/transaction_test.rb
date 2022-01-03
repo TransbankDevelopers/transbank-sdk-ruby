@@ -4,7 +4,7 @@ class TransactionTest < Transbank::WebPayPlus::Test
 
     def setup
         @transaction_create_url = "https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/"
-        mock_create = '{"token": "AAAAAAAAAAAAAA",
+        mock_create = '{"token": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                         "url": "https://webpay3gint.transbank.cl/webpayserver/initTransaction"}'
         stub_request(:post, @transaction_create_url)
             .with(body:  /.*/ , headers: {'Content-Type' => 'application/json'})
