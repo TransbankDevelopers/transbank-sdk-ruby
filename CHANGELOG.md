@@ -4,6 +4,29 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2022-01-03
+
+### Removed
+
+- Se elimina Onepay
+
+### Changed
+
+- Se agrega soporte a Webpay Modal
+- Se migra el api desde la versión 1.0 a la versión 1.2
+- Ahora el método de retorno al crear la transacción en WebPayPlus debe tener soporte GET (cuando es exitosa) y POST (cuando se retorna sin concluir el ingreso de la tarjeta)
+- Ahora el método de retorno al inscribirse en Oneclick debe tener soporte GET (cuando es exitosa) y POST (cuando se retorna sin concluir la inscripción)
+- Se refactoriza y migra todos los productos desde clases estáticas a clases instanciables
+- Se unifica 'Transaction' y 'DeferredTransaction' en WebpayPlus
+- Se unifica 'MallTransaction' y 'MallDeferredTransaction' en WebpayPlus y Oneclick
+
+### Added
+
+- Se agrega soporte a Webpay Modal
+- Se agregan validaciones de obligatoriedad y tamaño de los parámetros a los métodos de WebpayPlus, Oneclick, Webpay Modal, Transacción Completa
+- Se agrega un módulo de constantes con los códigos de comercio de integración: 'IntegrationCommerceCodes'
+- Se agrega un módulo de constantes con las claves de comercio de integración: 'IntegrationApiKeys'
+
 ## [1.5.1] - 2021-04-12
 ### Added
 - Se agrega captura diferida en Transacción Completa y Transacción Completa Mall
