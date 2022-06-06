@@ -50,9 +50,9 @@ module Transbank
     
         def refund(token, buy_order, child_commerce_code, amount)
 
+          Transbank::Common::Validation.has_text_with_max_length(token, Transbank::Common::ApiConstants::TOKEN_LENGTH, "token")
           Transbank::Common::Validation.has_text_with_max_length(buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "buy_order")
           Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
-          Transbank::Common::Validation.has_text_with_max_length(child_buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "child_buy_order")
 
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, format(REFUND_ENDPOINT, token: token), @commerce_code, @api_key
