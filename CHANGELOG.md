@@ -4,6 +4,10 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2022-06-14
+### Fixed
+- Se soluciona error en método refund para transacciones Webpay Plus Mall. Muchas gracias por tu aporte @danirod
+
 ## [2.0.0] - 2022-01-03
 
 ### Removed
