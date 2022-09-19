@@ -4,6 +4,20 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2022-09-19
+
+### Fixed
+
+- Se soluciona el método 'has_text_with_max_length' para que valide los atributos nulos
+
+### Changed
+
+- Se migra el API desde la versión 1.2 a la versión 1.3
+
+### Added
+
+- Se agrega los métodos 'increaseAmount', 'increaseAuthorizationDate', 'reversePreAuthorizedAmount', 'deferredCaptureHistory' a las versiones diferidas de WebpayPlus, WebpayPlus Mall, Oneclick Mall, Transaccion Completa y Transaccion Completa Mall
+
 ## [2.0.1] - 2022-06-14
 ### Fixed
 - Se soluciona error en método refund para transacciones Webpay Plus Mall. Muchas gracias por tu aporte @danirod
