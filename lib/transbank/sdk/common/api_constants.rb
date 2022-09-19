@@ -1,8 +1,8 @@
 module Transbank
   module Common  
     module ApiConstants
-        WEBPAY_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.2'.freeze
-        ONECLICK_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.2'.freeze
+        WEBPAY_ENDPOINT = 'rswebpaytransaction/api/webpay/v1.3'.freeze
+        ONECLICK_ENDPOINT = 'rswebpaytransaction/api/oneclick/v1.3'.freeze
         PATPASS_ENDPOINT = 'restpatpass/v1/services'.freeze
 
         BUY_ORDER_LENGTH = 26;
