@@ -46,16 +46,22 @@ module Transbank
         http_method = build_method(method, uri, body)
 
         response = http.request(http_method)
+        
         if response.is_a? Net::HTTPSuccess
-          return nil if response.body.empty?
+          return nil if response.body.nil? || response.body.empty? 
           return JSON.parse(response.body)
         end
-        body = JSON.parse(response.body)
-        if body.key?("description")
-          raise TransbankError, "Transbank Error: #{body['code']} - #{body['description']}"
-        else
-          raise TransbankError, "Transbank Error: #{body['error_message']}"
+
+        if !response.body.blank? 
+          body = JSON.parse(response.body)
+          if body.key?("description")
+            raise TransbankError, "Transbank Error: #{body['code']} - #{body['description']}"
+          else
+            raise TransbankError, "Transbank Error: #{body['error_message']}"
+          end
         end
+
+        raise TransbankError, "Transbank Error: HTTP-STATUS #{response&.code}"
       end
 
       def build_client
