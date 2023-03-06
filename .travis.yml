@@ -6,5 +6,8 @@ deploy:
   on:
     tags: true
     repo: TransbankDevelopers/transbank-sdk-ruby
+before_install:
+  - gem update --system 2.4.1 
+  - gem --version
 rvm:
-  - 2.7.7
+  - 2.4.1

@@ -4,7 +4,7 @@ SDK Oficial de Transbank
 
 ## Requisitos:
 
-- Ruby 2.7.7+
+- Ruby 2.4+
 
 # Instalación
 
