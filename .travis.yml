@@ -9,6 +9,6 @@ deploy:
 before_install:
   - gem update --system 2.4.1 
   - gem --version
-  - gem install bundler
+  - gem install bundler -v 1.17.3
 rvm:
   - 2.4.1
