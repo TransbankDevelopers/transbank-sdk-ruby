@@ -7,4 +7,4 @@ deploy:
     tags: true
     repo: TransbankDevelopers/transbank-sdk-ruby
 rvm:
-  - 2.4.1
+  - 2.7.7
