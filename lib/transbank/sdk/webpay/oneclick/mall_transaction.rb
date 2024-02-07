@@ -8,10 +8,6 @@ module Transbank
         STATUS_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}').freeze
         REFUND_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/refunds').freeze
         CAPTURE_ENDPOINT = (RESOURCES_URL + '/transactions/capture').freeze
-        INCREASE_AMOUNT_ENDPOINT = (RESOURCES_URL + '/transactions/amount').freeze
-        INCREASE_AUTHORIZATION_DATE_ENDPOINT = (RESOURCES_URL + '/transactions/authorization_date').freeze
-        REVERSE_PRE_AUTHORIZED_AMOUNT_ENDPOINT = (RESOURCES_URL + '/transactions/reverse/amount').freeze
-        DEFERRED_CAPTURE_HISTORY_ENDPOINT = (RESOURCES_URL + '/transactions/details').freeze
     
         def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::ONECLICK_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
           super(commerce_code, api_key, environment)
@@ -63,54 +59,6 @@ module Transbank
             @environment, format(REFUND_ENDPOINT, token: buy_order), @commerce_code, @api_key
           )
           request_service.post(detail_buy_order: child_buy_order, commerce_code: child_commerce_code, amount: amount)
-        end
-        
-        def increase_amount(child_commerce_code, child_buy_order, authorization_code, amount)
-          
-          Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
-          Transbank::Common::Validation.has_text_with_max_length(child_buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "child_buy_order")
-          Transbank::Common::Validation.has_text_with_max_length(authorization_code, Transbank::Common::ApiConstants::AUTHORIZATION_CODE_LENGTH, "authorization_code")
-
-          request_service = ::Transbank::Shared::RequestService.new(
-            @environment, INCREASE_AMOUNT_ENDPOINT, @commerce_code, @api_key
-          )
-          request_service.put(commerce_code: child_commerce_code, buy_order: child_buy_order, authorization_code: authorization_code, amount: amount)
-        end
-
-        def increase_authorization_date(child_commerce_code, child_buy_order, authorization_code)
-          
-          Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
-          Transbank::Common::Validation.has_text_with_max_length(child_buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "child_buy_order")
-          Transbank::Common::Validation.has_text_with_max_length(authorization_code, Transbank::Common::ApiConstants::AUTHORIZATION_CODE_LENGTH, "authorization_code")
-
-          request_service = ::Transbank::Shared::RequestService.new(
-            @environment, INCREASE_AUTHORIZATION_DATE_ENDPOINT, @commerce_code, @api_key
-          )
-          request_service.put(commerce_code: child_commerce_code, buy_order: child_buy_order, authorization_code: authorization_code)
-        end
-
-        def reverse_pre_authorized_amount(child_commerce_code, child_buy_order, authorization_code, amount)
-          
-          Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
-          Transbank::Common::Validation.has_text_with_max_length(child_buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "child_buy_order")
-          Transbank::Common::Validation.has_text_with_max_length(authorization_code, Transbank::Common::ApiConstants::AUTHORIZATION_CODE_LENGTH, "authorization_code")
-
-          request_service = ::Transbank::Shared::RequestService.new(
-            @environment, REVERSE_PRE_AUTHORIZED_AMOUNT_ENDPOINT, @commerce_code, @api_key
-          )
-          request_service.put(commerce_code: child_commerce_code, buy_order: child_buy_order, authorization_code: authorization_code, amount: amount)
-        end
-
-        def deferred_capture_history(child_commerce_code, child_buy_order, authorization_code)
-          
-          Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
-          Transbank::Common::Validation.has_text_with_max_length(child_buy_order, Transbank::Common::ApiConstants::BUY_ORDER_LENGTH, "child_buy_order")
-          Transbank::Common::Validation.has_text_with_max_length(authorization_code, Transbank::Common::ApiConstants::AUTHORIZATION_CODE_LENGTH, "authorization_code")
-
-          request_service = ::Transbank::Shared::RequestService.new(
-            @environment, DEFERRED_CAPTURE_HISTORY_ENDPOINT, @commerce_code, @api_key
-          )
-          request_service.post(commerce_code: child_commerce_code, buy_order: child_buy_order, authorization_code: authorization_code)
         end
       end  
     end
