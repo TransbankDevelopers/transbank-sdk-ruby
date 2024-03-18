@@ -46,7 +46,8 @@ module Transbank
         http_method = build_method(method, uri, body)
 
         response = http.request(http_method)
-        
+        puts response.body
+        binding.pry
         if response.is_a? Net::HTTPSuccess
           return nil if response.body.nil? || response.body.empty? 
           return JSON.parse(response.body)

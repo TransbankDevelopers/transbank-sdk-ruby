@@ -19,6 +19,7 @@ module Transbank
           request_service = ::Transbank::Shared::RequestService.new(
             @environment, CREATE_ENDPOINT, @commerce_code, @api_key
           )
+          puts "holaaaaa buy_order: #{buy_order}, session_id: #{session_id}, card_number: #{card_number}, card_expiration_date: #{card_expiration_date}, details: #{details}, cvv: #{cvv}"
           request_service.post({
                                  buy_order: buy_order, session_id: session_id, card_number: card_number, card_expiration_date: card_expiration_date, details: details, cvv: cvv
                                })
