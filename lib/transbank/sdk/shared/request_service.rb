@@ -46,24 +46,21 @@ module Transbank
         http_method = build_method(method, uri, body)
 
         response = http.request(http_method)
-        puts response.body
-        binding.pry
+        
         if response.is_a? Net::HTTPSuccess
           return nil if response.body.nil? || response.body.empty? 
           return JSON.parse(response.body)
         end
-        
+
         if !response.body.to_s.empty? 
           body = JSON.parse(response.body)
           if body.key?("description")
-            print "entre"
             raise TransbankError, "Transbank Error: #{body['code']} - #{body['description']}"
           else
-            print "entre aca"
             raise TransbankError, "Transbank Error: #{body['error_message']}"
           end
         end
-        print "entre aca 2"
+
         raise TransbankError, "Transbank Error: HTTP-STATUS #{response&.code}"
       end
 
