@@ -52,7 +52,7 @@ module Transbank
           return JSON.parse(response.body)
         end
 
-        if !response.body.blank? 
+        if !response.body.to_s.empty? 
           body = JSON.parse(response.body)
           if body.key?("description")
             raise TransbankError, "Transbank Error: #{body['code']} - #{body['description']}"
