@@ -37,6 +37,30 @@ La documentación relevante para usar este SDK es:
 
 ## Información para contribuir y desarrollar este SDK
 
+#### Short lead tokens
+
+`WIP` = En progreso.
+
+`feat` = Nuevos features.
+
+`fix` = Corrección de un bug.
+
+`docs` = Cambios solo de documentación.
+
+`style` = Cambios que no afectan el significado del código. (espaciado, formateo de código, comillas faltantes, etc)
+
+`refactor` = Un cambio en el código que no arregla un bug ni agrega una funcionalidad.
+
+`perf` = Cambio que mejora el rendimiento.
+
+`test` = Agregar test faltantes o los corrige.
+
+`chore` = Cambios en el build o herramientas auxiliares y librerías.
+
+`revert` = Revierte un commit.
+
+`release` = Para liberar una nueva versión.
+
 ### Standares
 
 - Para los commits respetamos las siguientes normas: https://chris.beams.io/posts/git-commit/
@@ -64,30 +88,6 @@ La documentación relevante para usar este SDK es:
 - La descripción del PR debe detallar los cambios.
 - La descripción del PR debe incluir evidencias de que los test se ejecutan de forma correcta.
 - Se pueden usar gif o videos para complementar la descripción o evidenciar el funcionamiento del PR.
-
-#### Short lead tokens
-
-`WIP` = En progreso.
-
-`feat` = Nuevos features.
-
-`fix` = Corrección de un bug.
-
-`docs` = Cambios solo de documentación.
-
-`style` = Cambios que no afectan el significado del código. (espaciado, formateo de código, comillas faltantes, etc)
-
-`refactor` = Un cambio en el código que no arregla un bug ni agrega una funcionalidad.
-
-`perf` = Cambio que mejora el rendimiento.
-
-`test` = Agregar test faltantes o los corrige.
-
-`chore` = Cambios en el build o herramientas auxiliares y librerías.
-
-`revert` = Revierte un commit.
-
-`release` = Para liberar una nueva versión.
 
 ### Todas las mezclas a master se hacen mediante Pull Request.
 
