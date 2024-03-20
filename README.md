@@ -9,23 +9,26 @@ SDK Oficial de Transbank
 # Instalación
 
 Puedes instalar el SDK directamente
+
 ```bash
 gem install transbank-sdk
 ```
 
 o añadirlo a tu `Gemfile`
+
 ```ruby
 gem 'transbank-sdk'
 ```
+
 y luego ejecutar
+
 ```bash
 bundle install
 ```
-## Documentación 
+
+## Documentación
 
 Puedes encontrar toda la documentación de cómo usar este SDK en el sitio https://www.transbankdevelopers.cl.
-
-Actualmente este SDK contiene sólo Onepay.
 
 La documentación relevante para usar este SDK es:
 
@@ -34,45 +37,62 @@ La documentación relevante para usar este SDK es:
 
 ## Información para contribuir y desarrollar este SDK
 
-### Requerimientos
-- Docker
-- Make
-- Plugin de editorconfig para tu editor favorito.
+#### Short lead tokens
+
+`WIP` = En progreso.
+
+`feat` = Nuevos features.
+
+`fix` = Corrección de un bug.
+
+`docs` = Cambios solo de documentación.
+
+`style` = Cambios que no afectan el significado del código. (espaciado, formateo de código, comillas faltantes, etc)
+
+`refactor` = Un cambio en el código que no arregla un bug ni agrega una funcionalidad.
+
+`perf` = Cambio que mejora el rendimiento.
+
+`test` = Agregar test faltantes o los corrige.
+
+`chore` = Cambios en el build o herramientas auxiliares y librerías.
+
+`revert` = Revierte un commit.
+
+`release` = Para liberar una nueva versión.
 
 ### Standares
 
 - Para los commits respetamos las siguientes normas: https://chris.beams.io/posts/git-commit/
 - Usamos ingles, para los mensajes de commit.
 - Se pueden usar tokens como WIP, en el subject de un commit, separando el token con `:`, por ejemplo:
-`WIP: This is a useful commit message`
+  `WIP: This is a useful commit message`
 - Para los nombres de ramas también usamos ingles.
 - Se asume, que una rama de feature no mezclada, es un feature no terminado.
 - El nombre de las ramas va en minúsculas.
 - Las palabras se separan con `-`.
 - Las ramas comienzan con alguno de los short lead tokens definidos, por ejemplo: `feat/tokens-configuration`
 
-#### Short lead tokens
-##### Commits
-- WIP = Trabajo en progreso.
-##### Ramas
-- feat = Nuevos features
-- chore = Tareas, que no son visibles al usuario.
-- bug = Resolución de bugs.
+### **Reglas** 📖
+
+1. Todo PR debe incluir test o evidencia de que funcione correctamente(gif, foto).
+2. El PR debe tener 2 o más aprobaciones para poder mezclarse.
+3. Si un commit revierte un commit anterior deberá comenzar con "revert:" seguido del mensaje del commit anterior.
+
+### **Pull Request**
+
+- Usar un lenguaje imperativo y en tiempo presente: "change" no "changed" ni "changes".
+- El título del los PR y mensajes de commit no pueden comenzar con una letra mayúscula.
+- No se debe usar punto final en los títulos o descripción de los commits.
+- El título del PR debe comenzar con el short lead token definido para la rama, seguido de : y una breve descripción del cambio.
+- La descripción del PR debe detallar los cambios.
+- La descripción del PR debe incluir evidencias de que los test se ejecutan de forma correcta.
+- Se pueden usar gif o videos para complementar la descripción o evidenciar el funcionamiento del PR.
 
 ### Todas las mezclas a master se hacen mediante Pull Request.
 
-### Test
-Primero y solamente una vez para instalar gemas debes usar el siguiente comando en una terminal.
-```bash
-make build
-```
-
-Para ejecutar los test localmente debes usar el siguiente comando en una terminal.
-```bash
-make
-```
-
 ### Deploy de una nueva versión.
+
 Para generar una nueva versión, se debe crear un PR (con un título "Prepare release X.Y.Z" con los valores que correspondan para `X`, `Y` y `Z`). Se debe seguir el estándar semver para determinar si se incrementa el valor de `X` (si hay cambios no retrocompatibles), `Y` (para mejoras retrocompatibles) o `Z` (si sólo hubo correcciones a bugs).
 
 En ese PR deben incluirse los siguientes cambios:
