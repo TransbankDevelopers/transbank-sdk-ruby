@@ -10,7 +10,7 @@ module Transbank
         REFUND_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/refunds').freeze
         CAPTURE_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/capture').freeze
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
+        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
           super
         end
 
@@ -21,7 +21,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(return_url, Transbank::Common::ApiConstants::RETURN_URL_LENGTH, "return_url")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, CREATE_ENDPOINT, @commerce_code, @api_key
+            @environment, CREATE_ENDPOINT, @commerce_code, @api_key, @timeout
           )
           request_service.post({
                                  buy_order: buy_order, session_id: session_id, return_url: return_url, details: details
@@ -33,7 +33,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(token, Transbank::Common::ApiConstants::TOKEN_LENGTH, "token")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(COMMIT_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(COMMIT_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.put({})
         end
@@ -43,7 +43,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(token, Transbank::Common::ApiConstants::TOKEN_LENGTH, "token")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.get
         end
@@ -55,7 +55,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(child_commerce_code, Transbank::Common::ApiConstants::COMMERCE_CODE_LENGTH, "child_commerce_code")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(REFUND_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(REFUND_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.post(buy_order: buy_order, commerce_code: child_commerce_code, amount: amount)
         end     
@@ -69,7 +69,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(authorization_code, Transbank::Common::ApiConstants::AUTHORIZATION_CODE_LENGTH, "authorization_code")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(CAPTURE_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(CAPTURE_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.put(commerce_code: child_commerce_code, buy_order: buy_order, authorization_code: authorization_code, capture_amount: capture_amount)
         end

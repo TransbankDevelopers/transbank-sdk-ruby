@@ -11,7 +11,7 @@ module Transbank
         REFUND_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/refunds').freeze
         CAPTURE_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/capture').freeze
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::TRANSACCION_COMPLETA, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
+        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::TRANSACCION_COMPLETA, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
           super
         end
     
@@ -23,7 +23,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(card_expiration_date, Transbank::Common::ApiConstants::CARD_EXPIRATION_DATE_LENGTH, "card_expiration_date")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, CREATE_ENDPOINT, @commerce_code, @api_key
+            @environment, CREATE_ENDPOINT, @commerce_code, @api_key, @timeout
           )
           request_service.post({
                                  buy_order: buy_order, session_id: session_id, amount: amount, cvv: cvv, card_number: card_number, card_expiration_date: card_expiration_date
@@ -32,35 +32,35 @@ module Transbank
 
         def installments(token, installments_number)
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(INSTALLMENTS_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(INSTALLMENTS_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.post({installments_number: installments_number})
         end
     
         def commit(token, id_query_installments, deferred_period_index, grace_period)
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(COMMIT_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(COMMIT_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.put({id_query_installments: id_query_installments, deferred_period_index: deferred_period_index, grace_period: grace_period})
         end
 
         def status(token)
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.get
         end
     
         def refund(token, amount)
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(REFUND_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(REFUND_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.post(amount: amount)
         end     
         
         def capture(token, buy_order, authorization_code, amount)
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(CAPTURE_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(CAPTURE_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.put(buy_order: buy_order, authorization_code: authorization_code, capture_amount: amount)
         end
