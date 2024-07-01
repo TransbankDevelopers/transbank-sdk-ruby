@@ -12,13 +12,13 @@ module Transbank
           integration: 'https://pagoautomaticocontarjetasint.transbank.cl/'
         }
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::PATPASS_COMERCIO, api_key = ::Transbank::Common::IntegrationApiKeys::PATPASS_COMERCIO, environment = DEFAULT_ENVIRONMENT)
+        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::PATPASS_COMERCIO, api_key = ::Transbank::Common::IntegrationApiKeys::PATPASS_COMERCIO, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
           super(commerce_code, api_key, environment)
         end
     
         def start(url, name, last_name, second_last_name, rut, service_id, final_url, max_amount, phone, cell_phone, patpass_name, person_email, commerce_email, address, city)
           request_service = ::Transbank::Shared::RequestService.new(
-            ENVIRONMENTS[@environment] + START_ENDPOINT, @commerce_code, @api_key
+            ENVIRONMENTS[@environment] + START_ENDPOINT, @commerce_code, @api_key, @timeout
           )
           request_service.set_patpass();
           request_service.post({
@@ -44,7 +44,7 @@ module Transbank
 
         def status(token)
           request_service = ::Transbank::Shared::RequestService.new(
-            ENVIRONMENTS[@environment] + format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key
+            ENVIRONMENTS[@environment] + format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.set_patpass();
           request_service.post({token: token})

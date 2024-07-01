@@ -8,18 +8,17 @@ module Transbank
         FINISH_ENDPOINT = (RESOURCES_URL + '/inscriptions/%{token}').freeze
         DELETE_ENDPOINT = (RESOURCES_URL + '/inscriptions').freeze
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::ONECLICK_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
+        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::ONECLICK_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
           super
         end
     
         def start(username, email, response_url)
-          
           Transbank::Common::Validation.has_text_with_max_length(username, Transbank::Common::ApiConstants::USER_NAME_LENGTH, "username")
           Transbank::Common::Validation.has_text_with_max_length(email, Transbank::Common::ApiConstants::EMAIL_LENGTH, "email")
           Transbank::Common::Validation.has_text_with_max_length(response_url, Transbank::Common::ApiConstants::RETURN_URL_LENGTH, "response_url")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, START_ENDPOINT, @commerce_code, @api_key
+            @environment, START_ENDPOINT, @commerce_code, @api_key, @timeout
           )
           request_service.post({
             username: username, email: email, response_url: response_url
@@ -31,7 +30,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(token, Transbank::Common::ApiConstants::TOKEN_LENGTH, "token")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, format(FINISH_ENDPOINT, token: token), @commerce_code, @api_key
+            @environment, format(FINISH_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
           )
           request_service.put({})
         end 
@@ -42,7 +41,7 @@ module Transbank
           Transbank::Common::Validation.has_text_with_max_length(username, Transbank::Common::ApiConstants::USER_NAME_LENGTH, "username")
 
           request_service = ::Transbank::Shared::RequestService.new(
-            @environment, DELETE_ENDPOINT, @commerce_code, @api_key
+            @environment, DELETE_ENDPOINT, @commerce_code, @api_key, @timeout
           )
           request_service.delete({tbk_user: tbk_user, username: username})
         end  

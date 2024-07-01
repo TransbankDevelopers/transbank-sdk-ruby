@@ -2,7 +2,7 @@ module Transbank
   module Common  
     class BaseTransaction
       
-      def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT)
+      def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT, timeout)
           @commerce_code = commerce_code
           @api_key = api_key
           unless %i[production integration].include?(environment)
@@ -10,6 +10,7 @@ module Transbank
           end
     
           @environment = environment
+          @timeout = timeout
       end
     end
   end
