@@ -6,14 +6,12 @@ module Transbank
         integration: 'https://webpay3gint.transbank.cl/'
       }
 
-      def initialize(environment=nil, endpoint, commerce_code, api_key)
+      def initialize(environment, endpoint, commerce_code, api_key, timeout)
+        @timeout = timeout
         @commerce_code = commerce_code
         @api_key = api_key
-        if environment.nil?
-          @url =  endpoint
-        else
-          @url = ENVIRONMENTS[environment] + endpoint
-        end
+        @url = ENVIRONMENTS[environment] + endpoint
+
         @headers = headers(@commerce_code, @api_key)
       end
 
@@ -68,6 +66,8 @@ module Transbank
         uri = URI.parse(@url)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = uri.scheme == 'https'
+        http.open_timeout = @timeout 
+        http.read_timeout = @timeout
         [uri, http]
       end
 
