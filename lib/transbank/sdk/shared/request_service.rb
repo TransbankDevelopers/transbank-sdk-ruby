@@ -6,11 +6,11 @@ module Transbank
         integration: 'https://webpay3gint.transbank.cl/'
       }
 
-      def initialize(environment, endpoint, commerce_code, api_key, timeout)
+      def initialize(endpoint, commerce_code, api_key, timeout)
         @timeout = timeout
         @commerce_code = commerce_code
         @api_key = api_key
-        @url = ENVIRONMENTS[environment] + endpoint
+        @url = endpoint
 
         @headers = headers(@commerce_code, @api_key)
       end
