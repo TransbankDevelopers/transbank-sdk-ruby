@@ -12,6 +12,9 @@ require 'transbank/sdk/common/validation'
 require 'transbank/sdk/shared/request_service'
 require 'transbank/sdk/shared/transbank_error'
 
+require 'transbank/sdk/webpay/options'
+require 'transbank/sdk/patpass/options'
+
 require 'transbank/sdk/webpay/webpay_plus/transaction'
 require 'transbank/sdk/webpay/webpay_plus/mall_transaction'
 
