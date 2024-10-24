@@ -2,7 +2,7 @@ module Transbank
   module Patpass
     module PatpassComercio
       class Inscription < ::Transbank::Common::BaseTransaction
-        DEFAULT_ENVIRONMENT = :integration
+        private_class_method :new
         RESOURCES_URL = ::Transbank::Common::ApiConstants::PATPASS_ENDPOINT
         START_ENDPOINT = (RESOURCES_URL + '/patInscription').freeze
         STATUS_ENDPOINT = (RESOURCES_URL + '/status').freeze
@@ -12,8 +12,31 @@ module Transbank
           integration: 'https://pagoautomaticocontarjetasint.transbank.cl/'
         }
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::PATPASS_COMERCIO, api_key = ::Transbank::Common::IntegrationApiKeys::PATPASS_COMERCIO, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
-          super(commerce_code, api_key, environment)
+        def initialize(options)
+          super
+        end
+
+        def self.new(options)
+          super(options)
+        end
+
+        def self.build_for_integration(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :integration
+          )
+          
+          new(options)
+        end
+
+        def self.build_for_production(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :production
+          )
+          new(options)
         end
     
         def start(url, name, last_name, second_last_name, rut, service_id, final_url, max_amount, phone, cell_phone, patpass_name, person_email, commerce_email, address, city)
