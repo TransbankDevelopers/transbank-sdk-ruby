@@ -8,7 +8,7 @@ module Transbank
         STATUS_ENDPOINT = (RESOURCES_URL + '/status').freeze
 
         ENVIRONMENTS = {
-          production: 'https://www.pagoautomaticocontarjetas.cl',
+          production: 'https://www.pagoautomaticocontarjetas.cl/',
           integration: 'https://pagoautomaticocontarjetasint.transbank.cl/'
         }
     
@@ -41,7 +41,7 @@ module Transbank
     
         def start(url, name, last_name, second_last_name, rut, service_id, final_url, max_amount, phone, cell_phone, patpass_name, person_email, commerce_email, address, city)
           request_service = ::Transbank::Shared::RequestService.new(
-            ENVIRONMENTS[@environment] + START_ENDPOINT, @commerce_code, @api_key, @timeout
+            @environment, ENVIRONMENTS[@environment] + START_ENDPOINT, @commerce_code, @api_key, @timeout, true
           )
           request_service.set_patpass();
           request_service.post({
@@ -67,7 +67,7 @@ module Transbank
 
         def status(token)
           request_service = ::Transbank::Shared::RequestService.new(
-            ENVIRONMENTS[@environment] + format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key, @timeout
+           @environment, ENVIRONMENTS[@environment] + format(STATUS_ENDPOINT, token: token), @commerce_code, @api_key, @timeout, true
           )
           request_service.set_patpass();
           request_service.post({token: token})
