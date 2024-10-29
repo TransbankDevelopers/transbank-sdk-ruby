@@ -2,15 +2,38 @@ module Transbank
   module Webpay
     module Oneclick
       class MallTransaction < ::Transbank::Common::BaseTransaction
-        DEFAULT_ENVIRONMENT = :integration
+        private_class_method :new
         RESOURCES_URL = ::Transbank::Common::ApiConstants::ONECLICK_ENDPOINT
         AUTHORIZE_ENDPOINT = (RESOURCES_URL + '/transactions').freeze
         STATUS_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}').freeze
         REFUND_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/refunds').freeze
         CAPTURE_ENDPOINT = (RESOURCES_URL + '/transactions/capture').freeze
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::ONECLICK_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
-          super(commerce_code, api_key, environment, timeout)
+        def initialize(options)
+          super
+        end
+
+        def self.new(options)
+          super(options)
+        end
+
+        def self.build_for_integration(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :integration
+          )
+          
+          new(options)
+        end
+
+        def self.build_for_production(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :production
+          )
+          new(options)
         end
     
         def authorize(username, tbk_user, parent_buy_order, details)

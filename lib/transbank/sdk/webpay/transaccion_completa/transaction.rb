@@ -2,7 +2,7 @@ module Transbank
   module Webpay
     module TransaccionCompleta
       class Transaction < ::Transbank::Common::BaseTransaction
-        DEFAULT_ENVIRONMENT = :integration
+        private_class_method :new
         RESOURCES_URL = ::Transbank::Common::ApiConstants::WEBPAY_ENDPOINT
         CREATE_ENDPOINT = (RESOURCES_URL + '/transactions/').freeze
         INSTALLMENTS_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/installments').freeze
@@ -11,8 +11,31 @@ module Transbank
         REFUND_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/refunds').freeze
         CAPTURE_ENDPOINT = (RESOURCES_URL + '/transactions/%{token}/capture').freeze
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::TRANSACCION_COMPLETA, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
+        def initialize(options)
           super
+        end
+
+        def self.new(options)
+          super(options)
+        end
+
+        def self.build_for_integration(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :integration
+          )
+          
+          new(options)
+        end
+
+        def self.build_for_production(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :production
+          )
+          new(options)
         end
     
         def create(buy_order, session_id, amount, cvv, card_number, card_expiration_date)

@@ -2,14 +2,37 @@ module Transbank
   module Webpay
     module Oneclick
       class MallInscription < ::Transbank::Common::BaseTransaction
-        DEFAULT_ENVIRONMENT = :integration
+        private_class_method :new
         RESOURCES_URL = ::Transbank::Common::ApiConstants::ONECLICK_ENDPOINT
         START_ENDPOINT = (RESOURCES_URL + '/inscriptions').freeze
         FINISH_ENDPOINT = (RESOURCES_URL + '/inscriptions/%{token}').freeze
         DELETE_ENDPOINT = (RESOURCES_URL + '/inscriptions').freeze
     
-        def initialize(commerce_code = ::Transbank::Common::IntegrationCommerceCodes::ONECLICK_MALL, api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, environment = DEFAULT_ENVIRONMENT, timeout = ::Transbank::Common::ApiConstants::REQUEST_TIMEOUT)
+        def initialize(options)
           super
+        end
+
+        def self.new(options)
+          super(options)
+        end
+
+        def self.build_for_integration(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :integration
+          )
+          
+          new(options)
+        end
+
+        def self.build_for_production(commerce_code, api_key)
+          options = Options.new(
+            commerce_code,
+            api_key,
+            :production
+          )
+          new(options)
         end
     
         def start(username, email, response_url)
