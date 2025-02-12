@@ -35,7 +35,7 @@ class TransactionTest < Transbank::WebPayPlus::Test
     end
     
     def test_webpayplus_create_validation_success
-        transaction = Transbank::Webpay::WebpayPlus::Transaction.new(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, :integration)
+        transaction = Transbank::Webpay::WebpayPlus::Transaction.build_for_integration(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY)
         response = transaction.create("buy_order_test", "session_id_test", 100, "http://test.com")
         assert_equal response["token"].length, Transbank::Common::ApiConstants::TOKEN_LENGTH
     end
@@ -43,7 +43,7 @@ class TransactionTest < Transbank::WebPayPlus::Test
     def test_webpayplus_create_validation_buy_order_not_ok
         buy_order_length = Transbank::Common::ApiConstants::BUY_ORDER_LENGTH 
         error= assert_raises Transbank::Shared::TransbankError do
-            transaction = Transbank::Webpay::WebpayPlus::Transaction.new(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, :integration)
+            transaction = Transbank::Webpay::WebpayPlus::Transaction.build_for_integration(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY)
             transaction.create("A"*(buy_order_length+1), "session_id_test", 100, "http://test.com")
         end
         assert_equal error.message, 'buy_order is too long, the maximum length is %d' % buy_order_length
@@ -53,7 +53,7 @@ class TransactionTest < Transbank::WebPayPlus::Test
     def test_webpayplus_create_validation_session_id_not_ok
         session_id_length = Transbank::Common::ApiConstants::SESSION_ID_LENGTH 
         error= assert_raises Transbank::Shared::TransbankError do
-            transaction = Transbank::Webpay::WebpayPlus::Transaction.new(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, :integration)
+            transaction = Transbank::Webpay::WebpayPlus::Transaction.build_for_integration(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY)
             transaction.create("buy_order_test", "A"*(session_id_length+1), 100, "http://test.com")
         end
         assert_equal error.message, 'session_id is too long, the maximum length is %d' % Transbank::Common::ApiConstants::SESSION_ID_LENGTH 
@@ -63,14 +63,14 @@ class TransactionTest < Transbank::WebPayPlus::Test
     def test_webpayplus_create_validation_return_url_not_ok
         return_url_length = Transbank::Common::ApiConstants::RETURN_URL_LENGTH 
         error= assert_raises Transbank::Shared::TransbankError do
-            transaction = Transbank::Webpay::WebpayPlus::Transaction.new(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, :integration)
+            transaction = Transbank::Webpay::WebpayPlus::Transaction.build_for_integration(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY)
             transaction.create("buy_order_test", "session_id_test", 100, "A"*(return_url_length+1))
         end
         assert_equal error.message, 'return_url is too long, the maximum length is %d' % Transbank::Common::ApiConstants::RETURN_URL_LENGTH 
     end
 
     def test_webpayplus_create_validation_commit_success
-        transaction = Transbank::Webpay::WebpayPlus::Transaction.new(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, :integration)
+        transaction = Transbank::Webpay::WebpayPlus::Transaction.build_for_integration(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY)
         response = transaction.commit("token_test")
         assert_equal response["status"], "AUTHORIZED"
     end
@@ -78,7 +78,7 @@ class TransactionTest < Transbank::WebPayPlus::Test
     def test_webpayplus_create_validation_commit_token_not_ok
         token_length = Transbank::Common::ApiConstants::TOKEN_LENGTH
         error= assert_raises Transbank::Shared::TransbankError do
-            transaction = Transbank::Webpay::WebpayPlus::Transaction.new(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY, :integration)
+            transaction = Transbank::Webpay::WebpayPlus::Transaction.build_for_integration(Transbank::Common::IntegrationCommerceCodes::WEBPAY_PLUS,api_key = ::Transbank::Common::IntegrationApiKeys::WEBPAY)
             transaction.commit("A"*(token_length+1))
         end
         assert_equal error.message, 'token is too long, the maximum length is %d' % Transbank::Common::ApiConstants::TOKEN_LENGTH 
