@@ -24,7 +24,5 @@ require 'transbank/sdk/webpay/oneclick/mall_inscription'
 require 'transbank/sdk/webpay/transaccion_completa/transaction'
 require 'transbank/sdk/webpay/transaccion_completa/mall_transaction'
 
-require 'transbank/sdk/patpass/patpass_by_webpay/transaction'
 require 'transbank/sdk/patpass/patpass_comercio/inscription'
 
-require 'transbank/sdk/webpay/webpay_plus_modal/transaction'

@@ -5,6 +5,32 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.0.0] - 2025-05-05
+
+Esta versión no tiene cambios en el comportamiento de las funcionalidades de la API.
+
+¡Importante!
+
+El SDK ya no apunta por defecto al ambiente de integración. Ahora es necesario configurar de forma explícita las credenciales. Para esto se debe inicializar explícitamente los objetos de los distintos productos, ya sea utilizando la clase Options o a través de los nuevos métodos build_for_integration y build_for_production. Además, notar que ahora la versión mínima de Ruby a la 2.7.
+
+### Agrega
+- Se agrega el parámetro timeout para que pueda modificarse en todos los productos.
+- Se agregan los métodos build_for_integration y build_for_production a todos los productos
+
+### Actualiza
+- Se actualiza la versión mínima soportada de Ruby a la 2.7
+- Se configura por defecto el timeout a 600 segundos para todas las peticiones.
+- Se actualizan las versiones de las dependencias.
+- Se actualizan los test.
+
+### Borra
+- Se elimina el constructor por defecto en Webpayplus
+- Se elimina el constructor por defecto en Oneclick
+- Se elimina el constructor por defecto en Patpass Comercio
+- Se elimina el constructor por defecto en Full Transaction y Mall Full Transaction
+- Se elimina el código que hace referencia al producto ‘Webpay Modal’
+- Se elimina el código que hace referencia al producto ‘Patpass by webpay’
+
 ## [4.0.0] - 2024-03-20
 
 ### Changed
