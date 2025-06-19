@@ -1,3 +1,9 @@
+require 'simplecov'
+SimpleCov.start do
+  enable_coverage :branch
+  add_filter '/test/'  # No incluyas los archivos de test en el reporte
+end
+
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
 require "minitest/autorun"
