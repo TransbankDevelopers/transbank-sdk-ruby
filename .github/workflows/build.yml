@@ -3,6 +3,7 @@ name: Ruby CI
 on:
   pull_request:
     types: [synchronize, opened, reopened]
+  workflow_dispatch:  
 
 jobs:
   build:
@@ -16,7 +17,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7' # Ajusta según tu versión
+          ruby-version: '2.7' 
 
       - name: Install dependencies
         run: |
@@ -24,7 +25,7 @@ jobs:
           bundle install
 
       - name: Run tests
-        run: bundle exec rake test # o bundle exec rspec
+        run: bundle exec rake test 
 
   sonar-cloud-check:
     runs-on: ubuntu-latest
@@ -37,7 +38,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '2.7' # Ajusta según tu versión
+          ruby-version: '2.7' 
 
       - name: Install dependencies
         run: |
@@ -45,7 +46,7 @@ jobs:
           bundle install
 
       - name: Run tests with coverage
-        run: bundle exec rake test # o bundle exec rspec
+        run: bundle exec rake test 
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
