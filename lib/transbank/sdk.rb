@@ -20,9 +20,9 @@ require 'transbank/sdk/webpay/webpay_plus/mall_transaction'
 
 require 'transbank/sdk/webpay/oneclick/mall_transaction'
 require 'transbank/sdk/webpay/oneclick/mall_inscription'
+require 'transbank/sdk/webpay/oneclick/mall_bin_info'
 
 require 'transbank/sdk/webpay/transaccion_completa/transaction'
 require 'transbank/sdk/webpay/transaccion_completa/mall_transaction'
 
 require 'transbank/sdk/patpass/patpass_comercio/inscription'
-
