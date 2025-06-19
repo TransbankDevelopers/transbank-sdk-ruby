@@ -55,7 +55,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=transbankdevelopers
-            -Dsonar.organization=TransbankDevelopers_transbank-sdk-ruby
+            -Dsonar.projectKey=TransbankDevelopers_transbank-sdk-ruby
+            -Dsonar.organization=transbankdevelopers
             -Dsonar.ruby.coverage.reportPaths=coverage/.resultset.json
             -Dsonar.branch.name=${{ github.head_ref || github.ref_name }}
