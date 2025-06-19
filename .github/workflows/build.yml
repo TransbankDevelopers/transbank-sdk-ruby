@@ -56,7 +56,12 @@ jobs:
             exit 1
           else
             echo "✅ Archivo de cobertura encontrado."
-          fi        
+          fi   
+
+      - name: Mostrar resumen de cobertura
+        run: |
+          echo "Contenido de coverage/.resultset.json:"
+          head -n 30 coverage/.resultset.json || echo "Archivo vacío"     
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
