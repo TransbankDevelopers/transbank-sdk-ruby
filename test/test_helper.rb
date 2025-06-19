@@ -2,6 +2,7 @@ require 'simplecov'
 SimpleCov.start do
   enable_coverage :branch
   add_filter '/test/' 
+  root File.expand_path("../..", __FILE__)
 end
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
