@@ -3,7 +3,6 @@ name: Ruby CI
 on:
   pull_request:
     types: [synchronize, opened, reopened]
-  workflow_dispatch:  
 
 jobs:
   build:
