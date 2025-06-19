@@ -47,6 +47,17 @@ jobs:
       - name: Run tests with coverage
         run: bundle exec rake test 
 
+      - name: Validar archivo de cobertura
+        run: |
+          echo "🔍 Verificando que coverage/.resultset.json exista..."
+          if [ ! -f coverage/.resultset.json ]; then
+            echo "❌ Error: El archivo coverage/.resultset.json no fue generado."
+            echo "🧪 Asegúrate de que SimpleCov esté correctamente configurado."
+            exit 1
+          else
+            echo "✅ Archivo de cobertura encontrado."
+          fi        
+
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
