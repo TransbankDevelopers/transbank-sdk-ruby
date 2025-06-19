@@ -1,3 +1,9 @@
+require 'simplecov'
+SimpleCov.start do
+  enable_coverage :branch
+  add_filter '/test/' 
+end
+
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
 require "minitest/autorun"
@@ -15,7 +21,6 @@ module Transbank
   end
 end
 
-# Alias the 'continue, step, etc' commands to the shorter byebug versions
 if defined?(PryByebug)
   Pry.commands.alias_command 'c', 'continue'
   Pry.commands.alias_command 's', 'step'
