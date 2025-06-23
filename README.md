@@ -4,7 +4,7 @@ SDK Oficial de Transbank
 
 ## Requisitos:
 
-- Ruby 2.4+
+- Ruby 2.7+
 
 # Instalación
 
@@ -26,6 +26,12 @@ y luego ejecutar
 bundle install
 ```
 
+## Ejecutar Test
+
+```bash
+bundle exec rake test
+```
+
 ## Documentación
 
 Puedes encontrar toda la documentación de cómo usar este SDK en el sitio https://www.transbankdevelopers.cl.
@@ -35,9 +41,22 @@ La documentación relevante para usar este SDK es:
 - Documentación sobre [ambientes, deberes del comercio, puesta en producción,
   etc](https://www.transbankdevelopers.cl/documentacion/como_empezar#ambientes).
 
-## Información para contribuir y desarrollar este SDK
 
-#### Short lead tokens
+## Información para contribuir a este proyecto
+
+### Forma de trabajo
+
+- Para los mensajes de commits, nos basamos en las [Git Commit Guidelines de Angular](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#commits).
+- Usamos inglés para los nombres de ramas y mensajes de commit.
+- Los mensajes de commit no deben llevar punto final.
+- Los mensajes de commit deben usar un lenguaje imperativo y estar en tiempo presente, por ejemplo, usar "change" en lugar de "changed" o "changes".
+- Los nombres de las ramas deben estar en minúsculas y las palabras deben separarse con guiones (-).
+- Todas las fusiones a la rama principal se deben realizar mediante solicitudes de Pull Request(PR). ⬇️
+- Se debe emplear tokens como "WIP" en el encabezado de un commit, separados por dos puntos (:), por ejemplo, "WIP: this is a useful commit message".
+- Una rama con nuevas funcionalidades que no tenga un PR, se considera que está en desarrollo.
+- Los nombres de las ramas deben comenzar con uno de los tokens definidos. Por ejemplo: "feat/tokens-configurations".
+
+### Short lead tokens permitidos
 
 `WIP` = En progreso.
 
@@ -61,45 +80,40 @@ La documentación relevante para usar este SDK es:
 
 `release` = Para liberar una nueva versión.
 
-### Standares
+### Creación de un Pull Request
 
-- Para los commits respetamos las siguientes normas: https://chris.beams.io/posts/git-commit/
-- Usamos ingles, para los mensajes de commit.
-- Se pueden usar tokens como WIP, en el subject de un commit, separando el token con `:`, por ejemplo:
-  `WIP: This is a useful commit message`
-- Para los nombres de ramas también usamos ingles.
-- Se asume, que una rama de feature no mezclada, es un feature no terminado.
-- El nombre de las ramas va en minúsculas.
-- Las palabras se separan con `-`.
-- Las ramas comienzan con alguno de los short lead tokens definidos, por ejemplo: `feat/tokens-configuration`
+- El PR debe estar enfocado en un cambio en concreto, por ejemplo, agregar una nueva funcionalidad o solucionar un error, pero un solo PR no puede agregar una nueva funcionalidad y arreglar un error.
+- El título del los PR y mensajes de commit no debe comenzar con una letra mayúscula.
+- No se debe usar punto final en los títulos.
+- El título del PR debe comenzar con el short lead token definido para la rama, seguido de ":"" y una breve descripción del cambio.
+- La descripción del PR debe detallar los cambios que se están incorporando.
+- La descripción del PR debe incluir evidencias de que los test se ejecutan de forma correcta o incluir evidencias de que los cambios funcionan y no afectan la funcionalidad previa del proyecto.
+- Se pueden agregar capturas, gif o videos para complementar la descripción o demostrar el funcionamiento del PR.
 
-### **Reglas** 📖
+#### Flujo de trabajo
 
-1. Todo PR debe incluir test o evidencia de que funcione correctamente(gif, foto).
-2. El PR debe tener 2 o más aprobaciones para poder mezclarse.
-3. Si un commit revierte un commit anterior deberá comenzar con "revert:" seguido del mensaje del commit anterior.
+1. Crea tu rama desde develop.
+2. Haz un push de los commits y publica la nueva rama.
+3. Abre un Pull Request apuntando tus cambios a develop.
+4. Espera a la revisión de los demás integrantes del equipo.
+5. Para poder mezclar los cambios se debe contar con 2 aprobaciones de los revisores y no tener alertas por parte de las herramientas de inspección.
 
-### **Pull Request**
+### Esquema de flujo con git
 
-- Usar un lenguaje imperativo y en tiempo presente: "change" no "changed" ni "changes".
-- El título del los PR y mensajes de commit no pueden comenzar con una letra mayúscula.
-- No se debe usar punto final en los títulos o descripción de los commits.
-- El título del PR debe comenzar con el short lead token definido para la rama, seguido de : y una breve descripción del cambio.
-- La descripción del PR debe detallar los cambios.
-- La descripción del PR debe incluir evidencias de que los test se ejecutan de forma correcta.
-- Se pueden usar gif o videos para complementar la descripción o evidenciar el funcionamiento del PR.
+![gitflow](https://wac-cdn.atlassian.com/dam/jcr:cc0b526e-adb7-4d45-874e-9bcea9898b4a/04%20Hotfix%20branches.svg?cdnVersion=1324)
 
-### Todas las mezclas a master se hacen mediante Pull Request.
+## Generar una nueva versión
 
-### Deploy de una nueva versión.
-
-Para generar una nueva versión, se debe crear un PR (con un título "Prepare release X.Y.Z" con los valores que correspondan para `X`, `Y` y `Z`). Se debe seguir el estándar semver para determinar si se incrementa el valor de `X` (si hay cambios no retrocompatibles), `Y` (para mejoras retrocompatibles) o `Z` (si sólo hubo correcciones a bugs).
+Para generar una nueva versión, se debe crear un PR (con un título "release: prepare release X.Y.Z" con los valores que correspondan para `X`, `Y` y `Z`). Se debe seguir el estándar [SemVer](https://semver.org/lang/es/) para determinar si se incrementa el valor de `X` (si hay cambios no retrocompatibles), `Y` (para mejoras retrocompatibles) o `Z` (si sólo hubo correcciones a bugs).
 
 En ese PR deben incluirse los siguientes cambios:
 
-1. Modificar el archivo `CHANGELOG.md` para incluir una nueva entrada (al comienzo) para `X.Y.Z` que explique en español los cambios **de cara al usuario del SDK**.
-2. Modificar [version.rb](./lib/transbank/sdk/version.rb) para poner la nueva versión que corresponde.
+1. Modificar el archivo `CHANGELOG.md` para incluir una nueva entrada (al comienzo) para `X.Y.Z` que explique en español los cambios.
+2. Modificar el archivo [version.rb](./lib/transbank/sdk/version.rb) y modificar la versión.
 
-Luego de obtener aprobación del pull request, debe mezclarse a master e inmediatamente generar un release en GitHub con el tag `vX.Y.Z`. En la descripción del release debes poner lo mismo que agregaste al changelog.
+Luego de obtener aprobación del PR, debe mezclarse a master e inmediatamente generar un release en GitHub con el tag `vX.Y.Z`. En la descripción del release debes poner lo mismo que agregaste al changelog.
 
 Con eso Github Actions generará automáticamente una nueva versión de la librería y la publicará en RubyGems.
+
+
+Posterior a la liberación debes mezclar la rama release en develop, finalmente realizar un rebase de la rama develop utilizando como base la rama main.
