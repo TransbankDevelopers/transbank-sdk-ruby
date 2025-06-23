@@ -4,7 +4,7 @@ SDK Oficial de Transbank
 
 ## Requisitos:
 
-- Ruby 2.4+
+- Ruby 2.7+
 
 # Instalación
 
@@ -61,7 +61,7 @@ La documentación relevante para usar este SDK es:
 
 `release` = Para liberar una nueva versión.
 
-### Standares
+### Estandares
 
 - Para los commits respetamos las siguientes normas: https://chris.beams.io/posts/git-commit/
 - Usamos ingles, para los mensajes de commit.
