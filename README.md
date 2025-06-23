@@ -10,7 +10,7 @@ SDK Oficial de Transbank
 
 Puedes instalar el SDK directamente
 
-```shell
+```bash
 gem install transbank-sdk
 ```
 
@@ -22,12 +22,13 @@ gem 'transbank-sdk'
 
 y luego ejecutar
 
-```shell
+```bash
 bundle install
 ```
 
 ## Ejecutar Test
-```shell
+
+```bash
 bundle exec rake test
 ```
 
