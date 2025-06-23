@@ -1,5 +1,5 @@
 module Transbank
   module Sdk
-    VERSION = '4.0.0'
+    VERSION = '5.1.0'
   end
 end
