@@ -12,6 +12,7 @@ Esta versión agrega una clase para la nueva funcionalidad de la API de OneClick
 ### Agrega
 
 - Se agrega la clase `MallBinInfo` , la cual contiene el método `query_bin` para la consulta de información de una tarjeta registrada en Oneclick.
+
 ## [5.0.0] - 2025-05-05
 
 Esta versión no tiene cambios en el comportamiento de las funcionalidades de la API.
