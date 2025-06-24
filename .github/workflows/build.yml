@@ -1,31 +1,14 @@
 name: Ruby CI
 
 on:
+  push:
+    branches:
+      - master
+      - develop
   pull_request:
     types: [synchronize, opened, reopened]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1' 
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install
-
-      - name: Run tests
-        run: bundle exec rake test 
-
   sonar-cloud-check:
     runs-on: ubuntu-latest
 
@@ -37,7 +20,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1' 
+          ruby-version: "3.1"
 
       - name: Install dependencies
         run: |
@@ -45,7 +28,7 @@ jobs:
           bundle install
 
       - name: Run tests with coverage
-        run: bundle exec rake test 
+        run: bundle exec rake test
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
