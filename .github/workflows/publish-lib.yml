@@ -12,7 +12,7 @@ name: Publish Ruby Gem
 on:
   push:
     tags:
-      - '*'
+      - "*"
 
 jobs:
   build:
@@ -23,9 +23,13 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        with:
+          fetch-depth: 0
+
       - name: Set up Ruby 2.7
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@0dafeac902942906541bc140009cdbf32665b601
         with:
           ruby-version: 2.7
       - run: |
